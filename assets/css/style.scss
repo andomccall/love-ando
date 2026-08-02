@@ -34,9 +34,9 @@ body {
 .page-header::before {
   content: "";
   display: block;
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 0.5rem;
+  width: 210px;
+  height: 96px;
+  margin: 0 auto 1rem;
   background: url('/assets/img/la-bug.svg') center center / contain no-repeat;
 }
 
