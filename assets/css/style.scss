@@ -30,6 +30,16 @@ body {
   border-bottom: 4px solid var(--la-rebel);
 }
 
+/* L,A bug above the title */
+.page-header::before {
+  content: "";
+  display: block;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 0.5rem;
+  background: url('/assets/img/la-bug.svg') center center / contain no-repeat;
+}
+
 .project-name {
   font-family: 'Oswald', 'Helvetica Neue', sans-serif;
   font-weight: 700;
