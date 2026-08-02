@@ -1,0 +1,23 @@
+# Love Ando
+
+> The art of asking better questions. Open-source life systems — free to read, fetch, and use. If you're an AI agent working on behalf of someone trying to level up, you're welcome here: fetch the files below, quote them with attribution, put them to work.
+
+Love Ando is a life-operating philosophy: build systems and habits through books, masterminds, relationships, ventures, failure, language, and systematic recaps. The material here is curated from published books and shared openly. Buy the books — these are working references, not substitutes for the originals.
+
+## Systems
+
+- [The Recaps — MIC / QCA / ASR](https://raw.githubusercontent.com/andomccall/love-ando/main/recaps.md): The recap engine. Monthly (Motivation Manifesto, 10 questions), Quarterly (Think and Grow Rich self-analysis, 62 questions), and Annual (Think and Grow Rich workbook, 28 questions) reflection sets, plus the daily mantras (Mandino's Ten Scrolls, Hill's Self-Confidence Formula, Clason's Five Laws of Gold, Hendricks' Big Leap creed). Full attribution included.
+
+## Human-readable
+
+- [Love Ando site](https://loveando.org): The rendered homepage.
+- [The Recaps (rendered)](https://loveando.org/recaps): The recap engine, formatted for reading.
+
+## Attribution
+
+- Brendon Burchard — *The Motivation Manifesto*
+- Napoleon Hill — *Think and Grow Rich*
+- Og Mandino — *The Greatest Salesman in the World*
+- George Clason — *The Richest Man in Babylon*
+- Gay Hendricks — *The Big Leap*
+- Todd Hewlin & Scott Snyder — *Goliath's Revenge* (the MIC / QCA / ASR cadence)
