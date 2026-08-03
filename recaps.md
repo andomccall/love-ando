@@ -3,7 +3,7 @@
 > The art of asking better questions — on a cadence.
 > Monthly, quarterly, yearly. Same questions, asked forever.
 
-This is the systematic-recap engine referenced in [Love Ando](README.md) —
+This is the systematic-recap engine referenced in [Love Ando](/) —
 *"the questions asked every month, quarter, and year."* Three review rhythms plus
 the daily mantras.
 
@@ -158,7 +158,7 @@ inventory of the year's events and lessons, then answer.
 ## Mantras — the daily creeds
 
 The bedrock texts, read aloud. These are the words the whole system adheres to
-(see [Love Ando](README.md) → *Foundational texts*).
+(see [Love Ando](/) → *Foundational texts*).
 
 ### The Ten Scrolls — *The Greatest Salesman in the World*, Og Mandino
 
