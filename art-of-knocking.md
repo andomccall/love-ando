@@ -81,4 +81,4 @@ company" — it sold before it shipped.
 
 ## See also
 
-- [Love Ando](/) — The root philosophy.
+- [Love, Ando](/) — The root philosophy.

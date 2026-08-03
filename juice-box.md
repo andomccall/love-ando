@@ -3,7 +3,7 @@
 > **The juice is worth the squeeze — so stay with it.**
 > Do something **100 times** to learn its essence and become proficient.
 
-A Love Ando brand. A **rebrand of Hundy** (a.k.a. OHT / "One Hundred Thousand").
+A Love, Ando brand. A **rebrand of Hundy** (a.k.a. OHT / "One Hundred Thousand").
 
 ## The three laws (proven across all five runs)
 
@@ -56,7 +56,7 @@ curve held every single time. Each run is documented as story + artifacts + less
 3. **100 Short Videos** — video;
    wordless storytelling; 60s → ~0.7s clips.
 4. **100 AI Artifacts** — image; a
-   wordless life archive; the endgame of the Love Ando book.
+   wordless life archive; the endgame of the Love, Ando book.
 5. **100 Chore Coats** — sewing; the
    STATE signature; hobbyist → manufacturer; ties into
    The Lateral.
@@ -78,4 +78,4 @@ artifact for people to apply to their own lives.
 
 - juice-box-case-studies/_synthesis.md — The
   three laws, proven five times.
-- [Love Ando](/) — The root philosophy.
+- [Love, Ando](/) — The root philosophy.

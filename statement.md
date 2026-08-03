@@ -127,4 +127,4 @@ One-Page Strategic Plan (OPSP), Verne Harnish's tool
 
 - hexpin.md — The software that instruments these numbers.
 - ../os/ventures.md — STATE MINT LLC, the agency this runs.
-- [Love Ando](/) — The root philosophy.
+- [Love, Ando](/) — The root philosophy.

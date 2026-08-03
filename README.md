@@ -1,6 +1,6 @@
-# Love Ando
+# Love, Ando
 
-> The wolf with the *logos* banner that reads **Love Ando**.
+> The wolf with the *logos* banner that reads **Love, Ando**.
 > The art of asking better questions.
 
 Open-source life systems, free to read, fetch, and use. If you're a person trying
@@ -11,7 +11,7 @@ here. Pull from it, adapt it, share it.
 
 - **[The Recaps](/recaps)** — The recap engine: the MIC / QCA / ASR question sets
   (monthly, quarterly, yearly) plus the daily mantras. The core system.
-- **[7300 · YAWRITE](/7300)** — A 20-year commitment to living with intention,
+- **[7300](/7300)** — A 20-year commitment to living with intention,
   using writing as the anchor habit.
 - **[Juice Box](/juice-box)** — Do a thing 100 times to reach its essence. The
   three laws, proven across five separate runs.
