@@ -14,12 +14,12 @@ description: Monthly Fireside Chat with Ando — building a life with intention,
 
 [RSVP →]({{ site.data.fireside.rsvp_url }}){: .fireside-rsvp-btn}
 
-You'll get the Google Meet link by email once you RSVP. Want the reminder on your calendar now? [Add to Google Calendar]({{ site.data.fireside.add_to_calendar_url }}).
+You'll get the Google Meet link the moment you RSVP — it's right there on the confirmation screen. Want the reminder on your calendar too? [Add to Google Calendar]({{ site.data.fireside.add_to_calendar_url }}).
 
 ## How it works
 
-1. **RSVP** — tap the button, send the email, you're on the list.
-2. **Get the link** — I'll send the Google Meet link to your inbox before we go live.
+1. **RSVP** — tap the button, fill the quick form, you're on the list.
+2. **Get the link** — the Google Meet link shows on the confirmation screen the second you submit.
 3. **Show up** — bring a question, or just listen.
 
 ## Hosted monthly

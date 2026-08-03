@@ -6,7 +6,6 @@ tagline: "Come sit by the fire."
 date_display: "Thursday, Aug 6 · 12:00pm EST"
 location: "Google Meet"
 blurb: "An open, monthly conversation with Ando — building a life with intention, the Love, Ando systems, and live Q&A. Come with a question, or just listen."
-# Interim RSVP = email capture (lands in your inbox, gates the Meet link).
-# Swap this for your Google Form URL when ready.
-rsvp_url: "mailto:andomccall@gmail.com?subject=Fireside%20RSVP&body=I%27d%20like%20to%20join%20the%20Aug%206%20Fireside%20Chat.%20Name%3A%20"
+# RSVP = Google Form (captures name/email; Meet link shown on the confirmation screen).
+rsvp_url: "https://forms.gle/aACZAWFnb2h3WCJ86"
 add_to_calendar_url: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Love%2C%20Ando%20%E2%80%94%20Fireside%20Chat&dates=20260806T160000Z%2F20260806T170000Z&details=Monthly%20Fireside%20Chat%20with%20Ando.%20The%20Google%20Meet%20link%20is%20emailed%20after%20you%20RSVP%20at%20https%3A%2F%2Floveando.org%2Ffireside&location=Google%20Meet"
