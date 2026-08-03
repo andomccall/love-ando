@@ -15,82 +15,127 @@
   --la-canvas: #f5ebe0;
   --la-highlighter: #fabf37;
   --la-military: #4c543c;
+  --la-sidebar: 250px;
 }
 
 body {
+  margin: 0;
   background-color: var(--la-canvas);
   color: var(--la-wealth);
   font-family: 'Zilla Slab', Georgia, 'Times New Roman', serif;
 }
 
-/* Header — Wealth to Military gradient with the Rebel Sage edge */
-.page-header {
+/* ===================== Layout ===================== */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  box-sizing: border-box;
+  width: var(--la-sidebar);
+  flex: 0 0 var(--la-sidebar);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 1.25rem;
   background-color: var(--la-wealth);
-  background-image: linear-gradient(135deg, #303030 0%, #4c543c 100%);
-  border-bottom: 4px solid var(--la-rebel);
+  background-image: linear-gradient(160deg, #303030 0%, #4c543c 100%);
+  border-right: 4px solid var(--la-rebel);
+  overflow-y: auto;
 }
 
-/* L,A bug above the title */
-.page-header::before {
-  content: "";
+.sidebar-logo {
   display: block;
-  width: 210px;
-  height: 96px;
-  margin: 0 auto 1rem;
-  background: url('/assets/img/la-bug.svg') center center / contain no-repeat;
+  margin-bottom: 0.75rem;
+}
+.sidebar-logo img {
+  display: block;
+  width: 150px;
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto;
 }
 
-.project-name {
-  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.project-tagline {
+.sidebar-tagline {
+  margin: 0 0 1.75rem;
   color: var(--la-canvas);
-  opacity: 0.95;
+  opacity: 0.8;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  text-align: center;
 }
 
-/* Topic navigation */
+/* ===================== Nav ===================== */
+
 .site-nav {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem 1.25rem;
-  margin: 0.5rem auto 1.75rem;
+  flex-direction: column;
+  gap: 0.15rem;
   font-family: 'Oswald', 'Helvetica Neue', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  font-size: 0.95rem;
 }
 .site-nav a {
   color: var(--la-canvas);
-  opacity: 0.85;
+  opacity: 0.82;
   text-decoration: none;
-  padding-bottom: 3px;
-  border-bottom: 2px solid transparent;
-  transition: opacity 0.15s, border-color 0.15s;
+  padding: 0.5rem 0.6rem;
+  border-left: 3px solid transparent;
+  border-radius: 0 4px 4px 0;
+  transition: opacity 0.15s, background-color 0.15s, border-color 0.15s;
 }
 .site-nav a:hover {
   opacity: 1;
   color: #fff;
-  border-bottom-color: var(--la-rebel);
+  background-color: rgba(255, 255, 255, 0.06);
+  border-left-color: rgba(247, 40, 25, 0.6);
 }
-
-/* Buttons */
-.btn {
-  color: var(--la-canvas);
-  border-color: rgba(245, 235, 224, 0.5);
-}
-.btn:hover {
+.site-nav a.active {
+  opacity: 1;
   color: #fff;
-  background-color: var(--la-rebel);
-  border-color: var(--la-rebel);
+  background-color: rgba(247, 40, 25, 0.16);
+  border-left-color: var(--la-rebel);
 }
 
-/* Body content */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+}
+.sidebar-footer a {
+  color: var(--la-canvas);
+  opacity: 0.7;
+  text-decoration: none;
+}
+.sidebar-footer a:hover {
+  opacity: 1;
+  color: var(--la-rebel);
+}
+
+/* ===================== Content ===================== */
+
 .main-content {
+  margin-left: var(--la-sidebar);
+  max-width: 52rem;
+  padding: 3rem 3.5rem 4rem;
+  font-size: 1.08rem;
   color: var(--la-wealth);
+  word-wrap: break-word;
+}
+.main-content :first-child {
+  margin-top: 0;
 }
 
 .main-content h1,
@@ -103,7 +148,6 @@ body {
   font-weight: 700;
   color: var(--la-wealth);
 }
-
 .main-content h2 {
   border-bottom: 2px solid rgba(247, 40, 25, 0.28);
   padding-bottom: 0.2em;
@@ -127,7 +171,6 @@ body {
   background-color: rgba(250, 191, 55, 0.22);
   color: var(--la-wealth);
 }
-
 .main-content pre {
   background-color: var(--la-wealth);
   color: var(--la-canvas);
@@ -152,4 +195,57 @@ body {
 .site-footer {
   border-top: 1px solid rgba(48, 48, 48, 0.12);
   color: var(--la-military);
+}
+
+/* ===================== Responsive: sidebar -> top strip ===================== */
+
+@media screen and (max-width: 46em) {
+  .layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    position: static;
+    width: auto;
+    flex: none;
+    bottom: auto;
+    border-right: none;
+    border-bottom: 4px solid var(--la-rebel);
+    padding: 1.25rem;
+  }
+  .sidebar-logo img {
+    width: 120px;
+  }
+  .sidebar-tagline {
+    margin-bottom: 1rem;
+  }
+  .site-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 0.75rem;
+  }
+  .site-nav a {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.3rem 0.4rem;
+  }
+  .site-nav a:hover,
+  .site-nav a.active {
+    border-left: none;
+    border-bottom-color: var(--la-rebel);
+    background: none;
+  }
+  .sidebar-footer {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  .main-content {
+    margin-left: 0;
+    max-width: none;
+    padding: 2rem 1.25rem 3rem;
+  }
 }
