@@ -43,24 +43,19 @@ body {
   display: flex;
   flex-direction: column;
   padding: 1.75rem 1.25rem;
-  background-color: var(--la-wealth);
+  background-color: var(--la-military);
   border-right: 4px solid var(--la-rebel);
   overflow-y: auto;
 }
 
 .sidebar-logo {
   display: block;
-  width: -moz-fit-content;
-  width: fit-content;
   margin: 0 auto 1.25rem;
-  padding: 16px 20px;
-  background: #ffffff;
-  border-radius: 12px;
 }
 .sidebar-logo img {
   display: block;
-  width: 140px;
-  max-width: 100%;
+  width: 150px;
+  max-width: 80%;
   height: auto;
   margin: 0 auto;
 }
@@ -73,6 +68,10 @@ body {
   line-height: 1.4;
   text-align: center;
 }
+
+/* Mobile menu toggle — hidden on desktop, shown in the top strip on mobile */
+.nav-toggle-cb { display: none; }
+.nav-toggle { display: none; }
 
 /* ===================== Nav ===================== */
 
@@ -216,36 +215,45 @@ body {
     border-bottom: 4px solid var(--la-rebel);
     padding: 1.25rem;
   }
+  .sidebar-logo {
+    margin-bottom: 0.75rem;
+  }
   .sidebar-logo img {
     width: 120px;
   }
+  /* compact top strip: logo + a tappable menu button; nav hidden until opened */
   .sidebar-tagline {
-    margin-bottom: 1rem;
+    display: none;
+  }
+  .nav-toggle {
+    display: block;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: 0 auto;
+    cursor: pointer;
+    font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.9rem;
+    color: var(--la-canvas);
+    padding: 0.4rem 1.1rem;
+    border: 1px solid rgba(245, 235, 224, 0.35);
+    border-radius: 6px;
   }
   .site-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.25rem 0.75rem;
+    display: none;
+    margin-top: 1rem;
   }
-  .site-nav a {
-    border-left: none;
-    border-bottom: 2px solid transparent;
-    border-radius: 0;
-    padding: 0.3rem 0.4rem;
-  }
-  .site-nav a:hover,
-  .site-nav a.active {
-    border-left: none;
-    border-bottom-color: var(--la-rebel);
-    background: none;
+  .nav-toggle-cb:checked ~ .site-nav {
+    display: flex;
   }
   .sidebar-footer {
-    flex-direction: row;
-    justify-content: center;
-    gap: 1.25rem;
+    display: none;
+  }
+  .nav-toggle-cb:checked ~ .sidebar-footer {
+    display: flex;
+    align-items: center;
     margin-top: 1rem;
-    padding-top: 1rem;
   }
   .main-content {
     margin-left: 0;

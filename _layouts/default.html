@@ -16,8 +16,12 @@
     <div class="layout">
       <aside class="sidebar" role="banner">
         <a class="sidebar-logo" href="{{ '/' | relative_url }}" aria-label="Love Ando — home">
-          <img src="{{ '/assets/img/la-bug-black.svg' | relative_url }}" alt="Love Ando">
+          <img src="{{ '/assets/img/la-bug.svg' | relative_url }}" alt="Love Ando">
         </a>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-cb">
+        <label for="nav-toggle" class="nav-toggle" aria-label="Toggle menu">☰ Menu</label>
+
         <p class="sidebar-tagline">{{ site.description }}</p>
 
         <nav class="site-nav" aria-label="Primary">
