@@ -2,6 +2,10 @@ title: Love Ando
 description: The art of asking better questions — open-source life systems, free to read, fetch, and use.
 theme: jekyll-theme-cayman
 url: https://loveando.org
-image: /assets/img/og-image.png
 twitter:
   card: summary_large_image
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/img/og-image.png
