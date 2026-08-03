@@ -25,6 +25,47 @@ body {
   font-family: 'Zilla Slab', Georgia, 'Times New Roman', serif;
 }
 
+/* ===================== Fireside announcement banner ===================== */
+
+.fireside-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem 1rem;
+  padding: 0.65rem 1rem;
+  text-decoration: none;
+  background-color: var(--la-highlighter);
+  color: var(--la-wealth);
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  border-bottom: 3px solid var(--la-rebel);
+}
+.fireside-banner:hover { filter: brightness(1.04); }
+.fireside-banner .fireside-tag { font-weight: 700; }
+.fireside-banner .fireside-cta { font-weight: 700; text-decoration: underline; }
+
+/* RSVP button on the /fireside page */
+.main-content a.fireside-rsvp-btn {
+  display: inline-block;
+  margin: 0.5rem 0 1.25rem;
+  padding: 0.7rem 1.7rem;
+  background-color: var(--la-rebel);
+  color: var(--la-canvas);
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.main-content a.fireside-rsvp-btn:hover {
+  background-color: #c11e12;
+  color: #fff;
+  text-decoration: none;
+}
+
 /* ===================== Layout ===================== */
 
 .layout {
