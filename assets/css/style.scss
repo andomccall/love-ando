@@ -206,58 +206,79 @@ body {
   .layout {
     flex-direction: column;
   }
+  /* the aside is now just a container; green lives only behind the logo banner */
   .sidebar {
     position: static;
     width: auto;
     flex: none;
     bottom: auto;
+    background: transparent;
     border-right: none;
-    border-bottom: 4px solid var(--la-rebel);
-    padding: 1.25rem;
+    border-bottom: none;
+    padding: 0 0 1.25rem;
+    overflow: visible;
   }
+  /* logo becomes a full-width green banner with the red edge */
   .sidebar-logo {
-    margin-bottom: 0.75rem;
+    margin: 0;
+    padding: 1.25rem 1rem;
+    background-color: var(--la-military);
+    border-bottom: 4px solid var(--la-rebel);
   }
   .sidebar-logo img {
     width: 120px;
   }
-  /* compact top strip: logo + a tappable menu button; nav hidden until opened */
   .sidebar-tagline {
     display: none;
   }
+  /* menu button + nav sit BELOW the banner, on the cream */
   .nav-toggle {
     display: block;
     width: -moz-fit-content;
     width: fit-content;
-    margin: 0 auto;
+    margin: 1.25rem auto 0;
     cursor: pointer;
     font-family: 'Oswald', 'Helvetica Neue', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-size: 0.9rem;
-    color: var(--la-canvas);
-    padding: 0.4rem 1.1rem;
-    border: 1px solid rgba(245, 235, 224, 0.35);
+    color: var(--la-wealth);
+    padding: 0.45rem 1.2rem;
+    border: 1px solid rgba(48, 48, 48, 0.3);
     border-radius: 6px;
   }
   .site-nav {
     display: none;
-    margin-top: 1rem;
+    margin: 1rem 1.25rem 0;
   }
   .nav-toggle-cb:checked ~ .site-nav {
     display: flex;
   }
+  /* dark links, since they're on the cream background now */
+  .site-nav a {
+    color: var(--la-wealth);
+    opacity: 1;
+  }
+  .site-nav a:hover,
+  .site-nav a.active {
+    color: var(--la-rebel);
+    background-color: rgba(247, 40, 25, 0.08);
+    border-left-color: var(--la-rebel);
+  }
   .sidebar-footer {
     display: none;
+    margin: 1rem 1.25rem 0;
   }
   .nav-toggle-cb:checked ~ .sidebar-footer {
     display: flex;
     align-items: center;
-    margin-top: 1rem;
+  }
+  .sidebar-footer a {
+    color: var(--la-military);
   }
   .main-content {
     margin-left: 0;
     max-width: none;
-    padding: 2rem 1.25rem 3rem;
+    padding: 1.75rem 1.25rem 3rem;
   }
 }
