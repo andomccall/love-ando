@@ -12,10 +12,8 @@ here. Pull from it, adapt it, share it.
 New systems, updates, and field notes — free, no spam, unsubscribe anytime.
 [See all the ways to follow →](/join)
 
-<div class="newsletter-card">
-  <div class="newsletter-embed">
-    {% include newsletter-form.html %}
-  </div>
+<div class="newsletter-embed">
+  {% include newsletter-form.html %}
 </div>
 
 ## What's inside

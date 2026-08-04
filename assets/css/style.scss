@@ -66,18 +66,13 @@ body {
   text-decoration: none;
 }
 
-/* ===================== Newsletter (Beehiiv) card ===================== */
+/* ===================== Newsletter (Beehiiv) embed ===================== */
 
-/* Canvas card lifted off the canvas page with a Rebel Fire top accent —
-   so the embed reads as ours, not a stock Beehiiv box. */
-.main-content .newsletter-card {
-  margin: 1.5rem 0 2rem;
-  padding: 1.5rem 1.5rem 1.6rem;
-  background-color: var(--la-canvas);
-  border: 1px solid rgba(48, 48, 48, 0.12);
-  border-top: 4px solid var(--la-rebel);
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(48, 48, 48, 0.10);
+/* The Beehiiv form is styled (transparent bg, brand button) in the Beehiiv
+   designer, so it's already a self-contained unit — no card wrapper needed,
+   just spacing from the surrounding text. */
+.main-content .newsletter-embed {
+  margin: 1.25rem 0 1.75rem;
 }
 
 /* Beehiiv's v3 loader injects an isolated <iframe>, wraps it in a

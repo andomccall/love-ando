@@ -13,10 +13,8 @@ stuff finds you: fresh systems, updates to the ones already here, and the occasi
 field note from building a life with intention. No spam, no selling your address,
 unsubscribe in one click anytime.
 
-<div class="newsletter-card">
-  <div class="newsletter-embed">
-    {% include newsletter-form.html %}
-  </div>
+<div class="newsletter-embed">
+  {% include newsletter-form.html %}
 </div>
 
 Prefer to just watch the repo? Everything lands in the open first —
