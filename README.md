@@ -7,6 +7,17 @@ Open-source life systems, free to read, fetch, and use. If you're a person tryin
 to optimize your life — or an AI agent working on behalf of one — you're welcome
 here. Pull from it, adapt it, share it.
 
+## Get it in your inbox
+
+New systems, updates, and field notes — free, no spam, unsubscribe anytime.
+[See all the ways to follow →](/join)
+
+<div class="newsletter-card">
+  <div class="newsletter-embed">
+    {% include newsletter-form.html %}
+  </div>
+</div>
+
 ## What's inside
 
 - **[The Recaps](/recaps)** — The recap engine: the MIC / QCA / ASR question sets

@@ -66,6 +66,79 @@ body {
   text-decoration: none;
 }
 
+/* ===================== Newsletter (Beehiiv) card ===================== */
+
+/* Canvas card lifted off the canvas page with a Rebel Fire top accent —
+   so the embed reads as ours, not a stock Beehiiv box. */
+.main-content .newsletter-card {
+  margin: 1.5rem 0 2rem;
+  padding: 1.5rem 1.5rem 1.6rem;
+  background-color: var(--la-canvas);
+  border: 1px solid rgba(48, 48, 48, 0.12);
+  border-top: 4px solid var(--la-rebel);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(48, 48, 48, 0.10);
+}
+
+/* Beehiiv usually ships an isolated <iframe>; we can only restyle the frame
+   itself (not its interior — set the form's colors in the Beehiiv dashboard).
+   Strip its default border/radius/margin so it blends into our card. */
+.main-content .newsletter-embed iframe {
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background-color: transparent !important;
+}
+
+/* Best-effort brand pass for the inline (non-iframe) embed variant. */
+.main-content .newsletter-embed input[type="email"] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  margin: 0.35rem 0 0.6rem;
+  border: 1px solid rgba(48, 48, 48, 0.25);
+  border-radius: 6px;
+  font-family: 'Zilla Slab', Georgia, serif;
+  font-size: 1rem;
+  background-color: #fff;
+  color: var(--la-wealth);
+}
+.main-content .newsletter-embed button,
+.main-content .newsletter-embed input[type="submit"] {
+  display: inline-block;
+  padding: 0.7rem 1.7rem;
+  background-color: var(--la-rebel);
+  color: var(--la-canvas);
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.main-content .newsletter-embed button:hover,
+.main-content .newsletter-embed input[type="submit"]:hover {
+  background-color: #c11e12;
+  color: #fff;
+}
+
+/* On-brand "launching soon" placeholder (shown until the real embed lands). */
+.main-content .newsletter-placeholder {
+  margin: 0;
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--la-military);
+}
+.main-content .newsletter-placeholder a {
+  color: var(--la-rebel);
+}
+
 /* ===================== Layout ===================== */
 
 .layout {

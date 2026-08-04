@@ -8,13 +8,15 @@ description: How Love, Ando handles your data — short version: barely any, and
 
 > The short version: we collect as little as possible, we don't sell anything, and there are no advertising trackers on this site.
 
-*Last updated: August 3, 2026.*
+*Last updated: August 4, 2026.*
 
 ## What we collect
 
 **Site analytics.** We use Cloudflare Web Analytics — a cookieless, privacy-first tool. It counts visits and referrers in aggregate. It sets **no cookies**, builds **no profile** of you, and does **not** track you across other websites.
 
 **Fireside Chat RSVPs.** If you RSVP to a Fireside Chat, we collect the name and email you enter into our Google Form. We use them only to send you the meeting link and to let you know about future chats. That's it.
+
+**Newsletter signups.** If you subscribe to the newsletter, the email address you enter is collected and stored by **Beehiiv**, our newsletter provider. We use it only to send you the newsletter. Every email includes a one-click unsubscribe, and you can opt out anytime.
 
 ## What we don't do
 
@@ -29,6 +31,7 @@ If that ever changes — for example, if we add an advertising pixel down the ro
 
 - **Cloudflare** — cookieless site analytics.
 - **Google Forms** — Fireside Chat RSVPs.
+- **Beehiiv** — newsletter signups and delivery (unsubscribe anytime).
 - **GitHub Pages** — hosts this site (standard server request logs).
 
 Each has its own privacy terms.
