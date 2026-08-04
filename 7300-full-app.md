@@ -59,7 +59,8 @@ for accounts, Claude for the companion, and Fish Audio and Gemini for voice and
 images.
 
 If you would rather have one built for you or your business, I take that on.
-[Book time](https://calendar.app.google/zjzZKdWrkvW3jZVk7).
+
+<a class="cta-button" href="https://calendar.app.google/zjzZKdWrkvW3jZVk7">Book time &rarr;</a>
 
 ## See also
 
