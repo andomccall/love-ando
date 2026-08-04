@@ -401,3 +401,79 @@ body {
     padding: 1.75rem 1.25rem 3rem;
   }
 }
+
+/* ===================== 7300 tier cards + CTA button ===================== */
+
+.main-content .tier-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0 1.75rem;
+}
+.main-content a.tier-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.25rem 1.25rem 1.15rem;
+  background-color: #fff;
+  border: 1px solid rgba(48, 48, 48, 0.14);
+  border-top: 4px solid var(--la-rebel);
+  border-radius: 8px;
+  color: var(--la-wealth);
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.main-content a.tier-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(48, 48, 48, 0.13);
+  text-decoration: none;
+  color: var(--la-wealth);
+}
+.main-content a.tier-card h3 {
+  margin: 0;
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  font-size: 1.18rem;
+  color: var(--la-wealth);
+}
+.main-content a.tier-card p {
+  margin: 0;
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--la-military);
+}
+.main-content a.tier-card .tier-card-go {
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+  color: var(--la-rebel);
+}
+
+.main-content .tier-cta {
+  margin: 0.25rem 0 0;
+  color: var(--la-military);
+}
+.main-content a.cta-button {
+  display: inline-block;
+  margin: 0.6rem 0 0.5rem;
+  padding: 0.8rem 1.9rem;
+  background-color: var(--la-rebel);
+  color: var(--la-canvas);
+  font-family: 'Oswald', 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.main-content a.cta-button:hover {
+  background-color: #c11e12;
+  color: #fff;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 46em) {
+  .main-content .tier-cards {
+    grid-template-columns: 1fr;
+  }
+}
