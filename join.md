@@ -1,12 +1,12 @@
 ---
 layout: default
 title: Join the Newsletter
-description: Get Love, Ando in your inbox — open-source life systems, new drops, and the occasional field note.
+description: Get Love, Ando in your inbox, open-source life systems, new drops, and the occasional field note.
 ---
 
 # Join the Newsletter
 
-> The art of asking better questions — delivered.
+> The art of asking better questions, delivered.
 
 Love, Ando is open-source and always free to read. The newsletter is how the new
 stuff finds you: fresh systems, updates to the ones already here, and the occasional
@@ -17,6 +17,5 @@ unsubscribe in one click anytime.
   {% include newsletter-form.html %}
 </div>
 
-Prefer to just watch the repo? Everything lands in the open first —
-[browse it on GitHub]({{ site.github.repository_url }}) or start at
+Prefer to just watch the repo? Everything lands in the open first, [browse it on GitHub]({{ site.github.repository_url }}) or start at
 [/llms.txt](/llms.txt).

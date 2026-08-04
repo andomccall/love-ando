@@ -1,30 +1,29 @@
-# Love, Ando — The Recaps (MIC · QCA · ASR)
+# Love, Ando: The Recaps (MIC · QCA · ASR)
 
-> The art of asking better questions — on a cadence.
+> The art of asking better questions, on a cadence.
 > Monthly, quarterly, yearly. Same questions, asked forever.
 
-This is the systematic-recap engine referenced in [Love, Ando](/) —
-*"the questions asked every month, quarter, and year."* Three review rhythms plus
+This is the systematic-recap engine referenced in [Love, Ando](/), *"the questions asked every month, quarter, and year."* Three review rhythms plus
 the daily mantras.
 
 The cadence *rhythm* is borrowed from *Goliath's Revenge* (**17 touchpoints a
-year**: 12 monthly + 4 quarterly + 1 annual). The *codes* are Ando's own — the
+year**: 12 monthly + 4 quarterly + 1 annual). The *codes* are Ando's own, the
 same GCCO cadence State·Mint runs on a company, here pointed inward at the self:
 **MIC** = Monthly Initiative Checkpoint, **QCA** = Quarterly Capability
 Assessment, **ASR** = Annual Strategy Review.
 
 | Code | Cadence | Count/yr | Source | What it does |
 | :--- | :--- | :--- | :--- | :--- |
-| **MIC** | Monthly | 12 | *The Motivation Manifesto* — Brendon Burchard | Re-aim. 10 questions on who you're becoming. |
-| **QCA** | Quarterly | 4 | *Think and Grow Rich* — Napoleon Hill | Self-audit. 62 questions on your state. |
-| **ASR** | Annual | 1 | *Think and Grow Rich* (workbook pg. 71–72) | Year in review. 28 questions on the year rendered. |
+| **MIC** | Monthly | 12 | *The Motivation Manifesto*, Brendon Burchard | Re-aim. 10 questions on who you're becoming. |
+| **QCA** | Quarterly | 4 | *Think and Grow Rich*, Napoleon Hill | Self-audit. 62 questions on your state. |
+| **ASR** | Annual | 1 | *Think and Grow Rich* (workbook pg. 71-72) | Year in review. 28 questions on the year rendered. |
 
 How to run it: read the questions, answer honestly in writing, compare against the
-last time you answered. The point isn't the answers — it's watching them change.
+last time you answered. The point isn't the answers, it's watching them change.
 
 ---
 
-## MIC — Monthly Initiative Checkpoint (The Motivation Manifesto)
+## MIC: Monthly Initiative Checkpoint (The Motivation Manifesto)
 
 Brendon Burchard's 10 questions for personal inventory. Ask them once a month.
 
@@ -41,7 +40,7 @@ Brendon Burchard's 10 questions for personal inventory. Ask them once a month.
 
 ---
 
-## QCA — Quarterly Capability Assessment (Think and Grow Rich self-analysis)
+## QCA: Quarterly Capability Assessment (Think and Grow Rich self-analysis)
 
 Napoleon Hill's 62-question self-analysis. Ask them at the close of each quarter.
 
@@ -55,7 +54,7 @@ Napoleon Hill's 62-question self-analysis. Ask them at the close of each quarter
 8. Do you like your occupation? If not, why?
 9. Do you often feel self-pity, and if so, why?
 10. Are you envious of those who excel you?
-11. To which do you devote most time — thinking of success, or of failure?
+11. To which do you devote most time, thinking of success, or of failure?
 12. Are you gaining, or losing, self-confidence as you grow older?
 13. Do you learn something of value from all mistakes?
 14. Are you permitting some relative or acquaintance to worry you? If so, why?
@@ -73,7 +72,7 @@ Napoleon Hill's 62-question self-analysis. Ask them at the close of each quarter
 26. Do you suffer from any of the Six Basic Fears? If so, which ones? *(Poverty / Criticism / Ill Health / Loss of Love of Someone / Old Age / Death)*
 27. Have you a method by which you can shield yourself against the negative influence of others?
 28. Do you make deliberate use of auto-suggestion to make your mind positive?
-29. Which do you value most — your material possessions, or your privilege of controlling your own thoughts?
+29. Which do you value most, your material possessions, or your privilege of controlling your own thoughts?
 30. Are you easily influenced by others, against your own judgement?
 31. Has today added anything of value to your stock of knowledge or state of mind?
 32. Do you face squarely the circumstances which make you unhappy, or sidestep the responsibility?
@@ -119,9 +118,9 @@ Napoleon Hill's 62-question self-analysis. Ask them at the close of each quarter
 
 ---
 
-## ASR — Annual Strategy Review (Think and Grow Rich, workbook pg. 71–72)
+## ASR: Annual Strategy Review (Think and Grow Rich, workbook pg. 71-72)
 
-Napoleon Hill's 28-question year-end inventory. Run it Dec 30–31: take a monthly
+Napoleon Hill's 28-question year-end inventory. Run it Dec 30-31: take a monthly
 inventory of the year's events and lessons, then answer.
 
 1. Have I attained the goal which I established as my objective for this year?
@@ -155,12 +154,12 @@ inventory of the year's events and lessons, then answer.
 
 ---
 
-## Mantras — the daily creeds
+## Mantras: the daily creeds
 
 The bedrock texts, read aloud. These are the words the whole system adheres to
 (see [Love, Ando](/) → *Foundational texts*).
 
-### The Ten Scrolls — *The Greatest Salesman in the World*, Og Mandino
+### The Ten Scrolls: *The Greatest Salesman in the World*, Og Mandino
 
 One scroll per month, in order:
 
@@ -175,7 +174,7 @@ One scroll per month, in order:
 9. I will act now. *[Sep]*
 10. I will pray for guidance. *[Oct]*
 
-### The Self-Confidence Formula — *Think and Grow Rich*, Napoleon Hill
+### The Self-Confidence Formula: *Think and Grow Rich*, Napoleon Hill
 
 1. I know that I have the ability to achieve the object of my definite chief aim in life, therefore I will demand persistent, continuous action toward its attainment, and I here and now promise to render such action.
 2. I realize the dominating thoughts of my mind will eventually reproduce themselves in outward physical action and gradually transform into physical reality, therefore I will concentrate my thoughts for 30 minutes daily upon the task of thinking of the person I intend to become, thereby creating in my mind a clear mental picture of that person.
@@ -184,7 +183,7 @@ One scroll per month, in order:
 5. I fully realize no wealth or position can long endure unless built upon truth and justice, therefore I will engage in no transaction which does not benefit all whom it affects. I will succeed by attracting to myself the forces I wish to use and the cooperation of other people. I will induce others to serve me because of my willingness to serve others. I will eliminate hatred, envy, jealousy, selfishness, and cynicism by developing love for all humanity, because I know a negative attitude toward others can never bring me success. I will cause others to believe in me, because I will believe in them and in myself.
 6. I will sign my name to this formula, commit it to memory, and repeat it out loud once a day with full faith that it will gradually influence my thoughts and actions so that I will become a self-reliant and successful person.
 
-### The Five Laws of Gold — *The Richest Man in Babylon*, George Clason
+### The Five Laws of Gold: *The Richest Man in Babylon*, George Clason
 
 1. Gold cometh gladly and in increasing quantity to any man who will put by not less than one-tenth of his earnings to create an estate for his future and that of his family.
 2. Gold laboreth diligently and contentedly for the wise owner who finds for it profitable employment, multiplying even as the flocks of the field.
@@ -192,7 +191,7 @@ One scroll per month, in order:
 4. Gold slippeth away from the man who invests it in businesses or purposes with which he is not familiar, or which are not approved by those skilled in its keep.
 5. Gold flees the man who would force it to impossible earnings, or who followeth the alluring advice of tricksters and schemers, or who trusts it to his own inexperience and romantic desires in investment.
 
-### The Big Leap creed — *The Big Leap*, Gay Hendricks
+### The Big Leap creed: *The Big Leap*, Gay Hendricks
 
 1. I expand in abundance, success, and love every day, as I inspire those around me to do the same.
 2. I commit to living in my zone of genius now and forever.
@@ -201,12 +200,12 @@ One scroll per month, in order:
 
 ## Sources
 
-- **Brendon Burchard** — *The Motivation Manifesto* (MIC)
-- **Napoleon Hill** — *Think and Grow Rich* (QCA, ASR, Self-Confidence Formula)
-- **Og Mandino** — *The Greatest Salesman in the World* (Ten Scrolls)
-- **George Clason** — *The Richest Man in Babylon* (Five Laws of Gold)
-- **Gay Hendricks** — *The Big Leap* (creed)
-- **Todd Hewlin & Scott Snyder** — *Goliath's Revenge* (the MIC / QCA / ASR cadence)
+- **Brendon Burchard**: *The Motivation Manifesto* (MIC)
+- **Napoleon Hill**: *Think and Grow Rich* (QCA, ASR, Self-Confidence Formula)
+- **Og Mandino**: *The Greatest Salesman in the World* (Ten Scrolls)
+- **George Clason**: *The Richest Man in Babylon* (Five Laws of Gold)
+- **Gay Hendricks**: *The Big Leap* (creed)
+- **Todd Hewlin & Scott Snyder**: *Goliath's Revenge* (the MIC / QCA / ASR cadence)
 
 Read them. Buy the books. This file is the working index, not a substitute for the
 originals.
