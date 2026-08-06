@@ -7,6 +7,12 @@ Open-source life systems, free to read, fetch, and use. If you're a person tryin
 to optimize your life, or an AI agent working on behalf of one, you're welcome
 here. Pull from it, adapt it, share it.
 
+<div class="home-hero">
+  <p class="home-hero-kicker">New</p>
+  <p class="home-hero-line">Got an idea but not sure what to actually build? Get your free <strong>Modern DIY App Blueprint</strong>. Answer a few questions and I'll map it to the right thing, a routine, an artifact, a web app, or a full app, plus a prompt you can drop straight into Claude Code.</p>
+  <a class="home-hero-btn" href="/blueprint">Build your idea &rarr;</a>
+</div>
+
 ## Get it in your inbox
 
 New systems, updates, and field notes, free, no spam, unsubscribe anytime.

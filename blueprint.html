@@ -1,0 +1,314 @@
+---
+layout: default
+title: The Modern DIY App Blueprint
+description: Answer a few questions about your idea and get a free, personalized build blueprint you can drop straight into Claude Code, plus the right starting point: a routine, an artifact, a web app, or a full app.
+---
+
+<div class="bp">
+  <h1 class="bp-title">The Modern DIY App Blueprint</h1>
+  <p class="bp-lede">You have the idea. Claude can build it. The only missing piece is knowing <em>which</em> thing to build. Answer a few questions and I'll map it, free, and hand you a prompt you can drop straight into Claude Code.</p>
+  <div class="bp-card" id="bp-card"></div>
+  <p class="bp-foot">No pitch, no paywall. I read every concept that comes through personally. If yours is a fit for the cohort I'll say so, and if it isn't I'll point you the right way anyway.</p>
+</div>
+
+<style>
+.bp{max-width:660px;}
+.bp-title{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.02em;line-height:1.08;margin:.2rem 0 .5rem;}
+.bp-lede{font-size:1.15rem;line-height:1.5;margin:0 0 1.6rem;}
+.bp-foot{font-size:.9rem;color:var(--la-military);margin-top:1.1rem;}
+.bp-card{background:#fff;border:1px solid rgba(48,48,48,.15);border-radius:10px;padding:1.5rem 1.4rem;box-shadow:0 2px 14px rgba(48,48,48,.06);}
+.bp-progress{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;color:var(--la-military);margin:0 0 .9rem;}
+.bp-q{font-family:'Oswald',sans-serif;font-weight:600;font-size:1.3rem;line-height:1.25;margin:0 0 1.1rem;}
+.bp-sub{font-size:.95rem;color:#555;margin:-.6rem 0 1rem;}
+.bp-opts{display:flex;flex-direction:column;gap:.6rem;}
+.bp-opt{display:block;text-align:left;width:100%;box-sizing:border-box;cursor:pointer;background:var(--la-canvas);border:1px solid rgba(48,48,48,.2);border-radius:8px;padding:.85rem 1rem;font-family:'Zilla Slab',serif;font-size:1.02rem;color:var(--la-wealth);transition:all .12s;}
+.bp-opt:hover{border-color:var(--la-rebel);background:#fff;transform:translateY(-1px);}
+.bp-input{box-sizing:border-box;width:100%;padding:.8rem .95rem;font-size:1.05rem;font-family:'Zilla Slab',serif;border:1px solid rgba(48,48,48,.25);border-radius:8px;background:#fff;color:var(--la-wealth);}
+.bp-input:focus{outline:2px solid var(--la-highlighter);border-color:var(--la-highlighter);}
+.bp-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;gap:.8rem;}
+.bp-btn{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em;font-weight:600;cursor:pointer;border:none;border-radius:7px;padding:.75rem 1.6rem;font-size:.95rem;}
+.bp-btn-primary{background:var(--la-rebel);color:var(--la-canvas);}
+.bp-btn-primary:hover{background:#c11e12;color:#fff;}
+.bp-btn-ghost{background:transparent;color:var(--la-military);padding-left:.2rem;padding-right:.2rem;}
+.bp-btn-ghost:hover{color:var(--la-wealth);text-decoration:underline;}
+.bp-badge{display:inline-block;font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;font-weight:700;font-size:.75rem;color:#fff;padding:.35rem .8rem;border-radius:20px;margin-bottom:.8rem;}
+.bp-why{font-size:1.05rem;line-height:1.5;margin:.2rem 0 1.3rem;}
+.bp-why strong{color:var(--la-rebel);}
+.bp-prompt-label{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;color:var(--la-military);margin:1.4rem 0 .5rem;display:flex;justify-content:space-between;align-items:center;}
+.bp-prompt{white-space:pre-wrap;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.82rem;line-height:1.5;background:var(--la-wealth);color:#f5ebe0;border-radius:8px;padding:1rem;max-height:240px;overflow:auto;}
+.bp-actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.3rem 0 .5rem;}
+.bp-dl{display:inline-block;text-decoration:none;font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em;font-weight:600;font-size:.9rem;padding:.75rem 1.4rem;border-radius:7px;border:none;cursor:pointer;background:var(--la-rebel);color:var(--la-canvas);}
+.bp-dl:hover{background:#c11e12;color:#fff;text-decoration:none;}
+.bp-dl.alt{background:transparent;color:var(--la-wealth);border:1px solid rgba(48,48,48,.3);}
+.bp-dl.alt:hover{background:var(--la-canvas);color:var(--la-wealth);}
+.bp-copy{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em;font-size:.7rem;cursor:pointer;background:var(--la-highlighter);color:var(--la-wealth);border:none;border-radius:5px;padding:.35rem .7rem;font-weight:600;}
+.bp-cohort{margin-top:1.6rem;padding:1.1rem 1.2rem;background:var(--la-military);color:var(--la-canvas);border-radius:9px;font-size:1rem;line-height:1.5;}
+.bp-cohort a{color:var(--la-highlighter);font-weight:700;}
+.bp-err{color:var(--la-rebel);font-size:.9rem;margin-top:.6rem;min-height:1.1em;}
+</style>
+
+{% raw %}
+<script>
+(function(){
+const SUPABASE_URL = "https://wlixleqgffyrnykymoid.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Kg8ygTEmn9UIY7hgp65nZw_I1fq7yqq";
+const REPO_RAW = "https://raw.githubusercontent.com/andomccall/love-ando/main";
+
+const steps = [
+  {key:'concept',type:'text',q:'In one sentence, what do you want to build?',
+    placeholder:'e.g. a tool that turns my client notes into a weekly summary'},
+  {key:'q2',type:'choice',q:'Who is it for?',options:[
+    {v:'me',label:'Just me'},
+    {v:'team',label:'Me and a small team'},
+    {v:'public',label:'Anyone on the public internet'},
+    {v:'company',label:'People inside one company or org'}]},
+  {key:'q3',type:'choice',q:'Does it need to remember information between visits: accounts, saved data, a database?',options:[
+    {v:'no',label:'No, it works fresh each time'},
+    {v:'yes',label:'Yes, it saves data or has logins'}]},
+  {key:'q4',type:'choice',q:'Which is closer to the truth?',options:[
+    {v:'process',label:'It’s a repeatable process or workflow I run'},
+    {v:'tool',label:'It’s a tool or product people open and use'}]},
+  {key:'q5',type:'choice',q:'Do strangers need to find or download it themselves: an app store, a search engine, a marketplace?',options:[
+    {v:'no',label:'No, I’ll share it directly with the people who need it'},
+    {v:'yes',label:'Yes, discovery matters'}]},
+  {key:'q6',type:'choice',q:'Does it need to run on its own, on a schedule, or send notifications and reminders?',options:[
+    {v:'no',label:'No'},
+    {v:'yes',label:'Yes'}]},
+  {key:'q7',type:'choice',q:'How hands-on do you want to be with upkeep?',options:[
+    {v:'zero',label:'Zero maintenance, set and forget'},
+    {v:'self',label:'I’ll maintain it myself'},
+    {v:'pro',label:'I’d rather a pro handle it'}]},
+  {key:'email',type:'email',q:'Where should I send your blueprint?',
+    sub:'I read every concept that comes through personally. No spam, unsubscribe anytime.'}
+];
+
+const tierMeta = {
+  skill:{label:'Routine / Skill',color:'var(--la-military)',file:'blueprint-skill',
+    guidance:'Build this as a reusable Claude Code skill or routine I can run on demand. No hosting, no database, no app store. Keep everything in plain files I can re-run whenever I need it.'},
+  artifact:{label:'Artifact',color:'var(--la-highlighter)',file:'blueprint-artifact',textDark:true,
+    guidance:'Build this as a single self-contained HTML artifact: one file, inline CSS and JS, no backend. It should work by opening the file or pasting it into a Claude artifact.'},
+  webapp:{label:'Web App + Desktop',color:'var(--la-rebel)',file:'blueprint-webapp',
+    guidance:'Build this as a hosted web app with a light backend and database. Recommend the simplest stack that works (for example a static frontend plus Supabase). Include a clean desktop-friendly layout.'},
+  app:{label:'Fully Deployed App',color:'var(--la-wealth)',file:'blueprint-app',
+    guidance:'Build this as a deployable app. First recommend whether to go web-first (a PWA) or native, then outline the path to the app store or internal distribution and the infrastructure it needs.'}
+};
+
+function classify(a){
+  const publicDiscovery = a.q5==='yes';
+  const savesData = a.q3==='yes';
+  const isProcess = a.q4==='process';
+  const autonomous = a.q6==='yes';
+  const aud = a.q2;
+  if(publicDiscovery) return 'app';
+  if(isProcess && aud==='me' && !savesData && !autonomous) return 'skill';
+  if(savesData || aud==='team' || aud==='company' || autonomous) return 'webapp';
+  if(!isProcess && !savesData) return 'artifact';
+  return 'webapp';
+}
+
+function labelFor(key,val){
+  const s = steps.find(function(s){return s.key===key;});
+  if(!s||!s.options) return val||'';
+  const o = s.options.find(function(o){return o.v===val;});
+  return o?o.label:val;
+}
+
+function whyText(a,tier){
+  const aud = labelFor('q2',a.q2).toLowerCase();
+  const map = {
+    skill:'Your idea is a <strong>process you repeat</strong>, for '+aud+', with nothing to save between runs. That doesn’t need an app. It needs a repeatable routine you run inside Claude. Cheapest to build, nothing to maintain.',
+    artifact:'Your idea is a <strong>self-contained tool</strong> people open and use, with no saved data and no app store. That’s a single web artifact: one file, no hosting, no backend, no bills. Share it as a link and you’re done.',
+    webapp:'Your idea needs to <strong>remember things or serve more than one person</strong>. That means a hosted web app with a small database. Not an app-store build yet, just a site you host and can open on a desktop.',
+    app:'Your idea needs <strong>strangers to find or download it themselves</strong>. That’s the one case that justifies a fully deployed app, with real infrastructure and a distribution path. The most work, so worth confirming it’s truly needed.'
+  };
+  return map[tier];
+}
+
+function buildPrompt(a,tier){
+  const m = tierMeta[tier];
+  const skill = a.q7==='zero'?'a non-technical beginner who wants the simplest possible path'
+    : a.q7==='self'?'someone comfortable following clear technical steps'
+    : 'someone who may hand this off to a developer later';
+  return 'You are my build guide. Help me build the thing below, one step at a time.\n\n'+
+    'CONCEPT: '+(a.concept||'(describe your idea here)')+'\n\n'+
+    'What I know so far:\n'+
+    '- Who it is for: '+labelFor('q2',a.q2)+'\n'+
+    '- Saves data or logins: '+labelFor('q3',a.q3)+'\n'+
+    '- Process vs interactive tool: '+labelFor('q4',a.q4)+'\n'+
+    '- Needs public discovery: '+labelFor('q5',a.q5)+'\n'+
+    '- Runs on a schedule / sends notifications: '+labelFor('q6',a.q6)+'\n\n'+
+    'The Love, Ando build blueprint says the right starting point for this is: '+m.label.toUpperCase()+'.\n'+
+    m.guidance+'\n\n'+
+    'Do this in order:\n'+
+    '1. Ask me up to 5 sharp clarifying questions, ONE at a time, to lock down the scope. Do not start building until I have answered them.\n'+
+    '2. Then give me a one-paragraph plan, the exact file and folder structure, and the very first file to create.\n'+
+    '3. Build it with me step by step. Assume I am '+skill+'.\n\n'+
+    'Keep it as simple as it can possibly be while still doing the job. Start with step 1 now.';
+}
+
+const buildPath = {
+  skill:[
+    'Write the job in plain English: what goes in, what comes out, and the steps between.',
+    'Turn the steps into numbered instructions. Be specific about format, tone, and what done looks like.',
+    'Run it once on a real input and note every place it guesses wrong.',
+    'Tighten the rules where it guessed. Two or three passes and it holds.',
+    'Save it as a file or a Claude Code skill so you paste one line next time instead of re-explaining.'
+  ],
+  artifact:[
+    'Name the one job this tool does, in a single sentence.',
+    'Sketch the screen: what they see first, what they do, what they get back.',
+    'Have Claude build it as one HTML file with inline CSS and JS. Open it and try it.',
+    'Refine live: change a thing, reload, look. There is no deploy step.',
+    'Share the file or drop it on your site. Done.'
+  ],
+  webapp:[
+    'List the nouns it stores (users, records, items). Those become your database tables.',
+    'List the verbs people do (create, view, edit, share). Those become your screens.',
+    'Get sign-in and one saved record working before anything is pretty.',
+    'Build one screen at a time, end to end, with real data.',
+    'Deploy early, while it is small, so hosting is never a scary final step.',
+    'Decide who maintains it and how often it changes, before launch.'
+  ],
+  app:[
+    'Confirm you truly need this tier: do strangers need to find it, does it need a phone, is discovery the point.',
+    'Pick distribution: web-first (a PWA, faster and cheaper) vs native (store presence, device features).',
+    'Prove the core loop as a hosted web app first: real data, real auth, one end-to-end flow.',
+    'Harden for strangers: accounts, limits, abuse handling, privacy.',
+    'Wrap and distribute (PWA install or native shell), then walk the store or internal path.',
+    'Plan upkeep before launch: updates, support, uptime, and who owns it.'
+  ]
+};
+const levelUp = {
+  skill:'The moment you need to save results between runs, hand it to people who will not read instructions, or give it a screen, move up to an Artifact or a Web App.',
+  artifact:'When it needs to save data, support logins, or serve many people at once, move up to a Web App. If strangers must find or download it, look at a Full App.',
+  webapp:'If strangers need to discover or download it themselves, you have crossed into a Full App. If nobody needs saved data, drop back to an Artifact.',
+  app:'Start one tier down with a Web App if you possibly can. Almost nobody regrets starting smaller.'
+};
+function whyPlain(a,tier){ return whyText(a,tier).replace(/<[^>]+>/g,''); }
+
+function buildBlueprintDoc(a,tier){
+  const m = tierMeta[tier];
+  const path = buildPath[tier].map(function(s,i){ return (i+1)+'. '+s; }).join('\n');
+  return '# Your Build Blueprint\n\n'+
+    '**Concept:** '+(a.concept||'')+'\n\n'+
+    '**Recommended starting point:** '+m.label+'\n\n'+
+    'Generated free at loveando.org/blueprint\n\n'+
+    '## Why this is the right starting point\n\n'+ whyPlain(a,tier)+'\n\n'+
+    '## What you told me\n\n'+
+    '- Who it is for: '+labelFor('q2',a.q2)+'\n'+
+    '- Saves data or logins: '+labelFor('q3',a.q3)+'\n'+
+    '- Process vs interactive tool: '+labelFor('q4',a.q4)+'\n'+
+    '- Needs public discovery: '+labelFor('q5',a.q5)+'\n'+
+    '- Runs on a schedule or sends notifications: '+labelFor('q6',a.q6)+'\n'+
+    '- Upkeep preference: '+labelFor('q7',a.q7)+'\n\n'+
+    '## Your build path\n\n'+ path+'\n\n'+
+    '## Drop this into Claude Code\n\n'+
+    '```\n'+ buildPrompt(a,tier)+'\n```\n\n'+
+    '## When to level up\n\n'+ levelUp[tier]+'\n\n'+
+    '---\n\n'+
+    'Built with the Love, Ando blueprint. Free to keep, share, and use.\n'+
+    'Want a human in the loop while you build? Join the cohort list at loveando.org/join\n';
+}
+
+function downloadDoc(filename,text){
+  const blob = new Blob([text],{type:'text/markdown;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); },1500);
+}
+
+let idx = 0;
+const answers = {};
+const card = document.getElementById('bp-card');
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function render(){
+  if(idx >= steps.length){ return renderResult(); }
+  const s = steps[idx];
+  let inner = '<p class="bp-progress">Step '+(idx+1)+' of '+steps.length+'</p>';
+  inner += '<p class="bp-q">'+s.q+'</p>';
+  if(s.sub) inner += '<p class="bp-sub">'+s.sub+'</p>';
+  if(s.type==='choice'){
+    inner += '<div class="bp-opts">';
+    s.options.forEach(function(o){ inner += '<button class="bp-opt" data-v="'+o.v+'">'+o.label+'</button>'; });
+    inner += '</div>';
+    inner += '<div class="bp-row"><button class="bp-btn bp-btn-ghost" data-back '+(idx===0?'style="visibility:hidden"':'')+'>&larr; Back</button><span></span></div>';
+  } else {
+    const val = answers[s.key]||'';
+    const type = s.type==='email'?'email':'text';
+    inner += '<input class="bp-input" id="bp-field" type="'+type+'" placeholder="'+(s.placeholder||'')+'" value="'+val.replace(/"/g,'&quot;')+'">';
+    inner += '<div class="bp-err" id="bp-err"></div>';
+    inner += '<div class="bp-row"><button class="bp-btn bp-btn-ghost" data-back '+(idx===0?'style="visibility:hidden"':'')+'>&larr; Back</button><button class="bp-btn bp-btn-primary" data-next>'+(idx===steps.length-1?'Get my blueprint':'Next')+'</button></div>';
+  }
+  card.innerHTML = inner;
+
+  card.querySelectorAll('.bp-opt').forEach(function(b){ b.addEventListener('click',function(){
+    answers[s.key]=b.getAttribute('data-v'); idx++; render();
+  });});
+  const back = card.querySelector('[data-back]');
+  if(back) back.addEventListener('click',function(){ idx=Math.max(0,idx-1); render(); });
+  const next = card.querySelector('[data-next]');
+  const field = card.querySelector('#bp-field');
+  if(field){ field.focus(); field.addEventListener('keydown',function(e){ if(e.key==='Enter') doNext(s); }); }
+  if(next) next.addEventListener('click',function(){ doNext(s); });
+}
+
+function doNext(s){
+  const field = card.querySelector('#bp-field');
+  const err = card.querySelector('#bp-err');
+  const val = (field.value||'').trim();
+  if(s.key==='concept' && val.length<3){ err.textContent='Give me a sentence to work with.'; return; }
+  if(s.key==='email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val)){ err.textContent='That email doesn’t look right.'; return; }
+  answers[s.key]=val; idx++; render();
+}
+
+function saveLead(tier,doc){
+  try{
+    fetch(SUPABASE_URL+'/rest/v1/blueprint_leads',{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+        'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({
+        email:answers.email||null, concept:answers.concept||null,
+        answers:{q2:answers.q2,q3:answers.q3,q4:answers.q4,q5:answers.q5,q6:answers.q6,q7:answers.q7},
+        recommended_tier:tier, blueprint_md:doc||null,
+        referrer:document.referrer||null, user_agent:navigator.userAgent||null
+      })
+    }).catch(function(){});
+  }catch(e){}
+}
+
+function renderResult(){
+  const tier = classify(answers);
+  const m = tierMeta[tier];
+  const prompt = buildPrompt(answers,tier);
+  const doc = buildBlueprintDoc(answers,tier);
+  saveLead(tier,doc);
+  const badgeStyle = 'background:'+m.color+';'+(m.textDark?'color:var(--la-wealth);':'');
+  card.innerHTML =
+    '<p class="bp-progress">Your blueprint</p>'+
+    '<span class="bp-badge" style="'+badgeStyle+'">'+m.label+'</span>'+
+    '<p class="bp-why">'+whyText(answers,tier)+'</p>'+
+    '<div class="bp-actions">'+
+      '<button class="bp-dl" id="bp-download">&darr; Download your blueprint (.md)</button>'+
+      '<a class="bp-dl alt" href="/'+m.file+'">Read the '+m.label+' playbook &rarr;</a>'+
+    '</div>'+
+    '<div class="bp-prompt-label"><span>Or drop this straight into Claude Code</span><button class="bp-copy" id="bp-copy">Copy</button></div>'+
+    '<div class="bp-prompt" id="bp-prompt">'+esc(prompt)+'</div>'+
+    '<div class="bp-cohort">I keep a copy of every blueprint and read them myself, so watch your inbox: I follow up personally on the ones I can help move. Building something real and want a human in the loop? I run a live cohort for people shipping their first thing. <a href="/join">Get on the list &rarr;</a></div>';
+  card.querySelector('#bp-download').addEventListener('click',function(){
+    downloadDoc('my-blueprint-'+tier+'.md',doc);
+  });
+  const copyBtn = card.querySelector('#bp-copy');
+  copyBtn.addEventListener('click',function(){
+    navigator.clipboard.writeText(prompt).then(function(){ copyBtn.textContent='Copied'; setTimeout(function(){copyBtn.textContent='Copy';},1600); });
+  });
+}
+
+render();
+})();
+</script>
+{% endraw %}
