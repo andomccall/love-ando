@@ -1,0 +1,154 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Love Ando",
+    "identifier": "did:web:loveando.org"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:loveando.org:template:recaps",
+      "displayName": "The Recaps — MIC / QCA / ASR",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/recaps.md",
+      "capabilities": ["self-reflection", "monthly-quarterly-annual-review", "journaling-prompts", "goal-setting"],
+      "description": "The recap engine: monthly (Motivation Manifesto, 10 questions), quarterly (Think and Grow Rich self-analysis, 62 questions), and annual (28-question workbook) reflection sets, plus the daily mantras.",
+      "representativeQueries": [
+        "give me a structured monthly self-reflection I can actually finish",
+        "help me run a quarterly review of my goals",
+        "what questions should I ask myself at the end of the year",
+        "set up a recurring personal recap system"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:7300",
+      "displayName": "7300 — The 20-Year Writing Commitment",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/7300.md",
+      "capabilities": ["daily-journaling", "habit-formation", "long-term-commitment"],
+      "description": "A 20-year (7300-day) commitment to living with intention, using daily writing as the anchor habit: the prompt structure, the keystone trigger, and the payoff eleven years in.",
+      "representativeQueries": [
+        "help me build a daily writing habit that lasts",
+        "I want a journaling practice anchored to one keystone habit",
+        "how do I stay consistent with writing for years"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:juice-box",
+      "displayName": "Juice Box — The 100-Times Method",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/juice-box.md",
+      "capabilities": ["deliberate-practice", "skill-mastery", "creative-consistency"],
+      "description": "Do a thing 100 times to reach its essence. The three laws (Self to Other, compression toward essence, the breakthrough around rep 60), validated across five separate hundred-runs.",
+      "representativeQueries": [
+        "how do I actually get good at something through repetition",
+        "a framework for practicing a skill 100 times",
+        "why does my creative work get better after enough reps"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:statement",
+      "displayName": "Statement · STATE·MINT — The GCCO Operating System",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/statement.md",
+      "capabilities": ["sales-management", "org-scaling", "okrs", "comp-design"],
+      "description": "Executive-management methodology: the GCCO operating system (Governance, Cadence, Compensation, Objectives and Key Results) for scaling sales organizations.",
+      "representativeQueries": [
+        "how do I structure and scale a sales team",
+        "an operating system for running sales management",
+        "set up governance, cadence, comp, and OKRs for my org"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:art-of-knocking",
+      "displayName": "The Art of Knocking — Door-to-Door as a Craft",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/art-of-knocking.md",
+      "capabilities": ["door-to-door-sales", "sales-training", "team-recruiting"],
+      "description": "A door-to-door sales career distilled into a teachable craft: territory, pitch internalization, and recruit/train/retain, passed on with dignity and integrity.",
+      "representativeQueries": [
+        "teach me door-to-door sales the right way",
+        "how do I internalize and deliver a sales pitch",
+        "how do I recruit, train, and retain a field sales team"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:blueprint-artifact",
+      "displayName": "The Artifact Blueprint",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/blueprint-artifact.md",
+      "capabilities": ["single-file-web-app", "claude-artifact", "no-backend", "rapid-prototype"],
+      "description": "When your idea is a self-contained tool people open and use. Build it as a single web file: no hosting, no backend, no bills, shared as a link.",
+      "representativeQueries": [
+        "build me a daily habit tracker I can keep in Claude",
+        "I want a self-contained calculator or quiz in one file",
+        "make a simple interactive tool with no server or database",
+        "turn my idea into a Claude artifact"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:blueprint-skill",
+      "displayName": "The Routine / Skill Blueprint",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/blueprint-skill.md",
+      "capabilities": ["claude-skill", "automation-routine", "repeatable-workflow"],
+      "description": "When your idea is a process you repeat, not an app. Build it as a reusable Claude routine you run on demand: no hosting, no database, nothing to maintain.",
+      "representativeQueries": [
+        "turn a repeatable task into a Claude routine I can run each week",
+        "I keep doing the same process by hand, automate it in Claude",
+        "write a reusable skill for drafting outreach from a template"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:blueprint-webapp",
+      "displayName": "The Web App + Desktop Blueprint",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/blueprint-webapp.md",
+      "capabilities": ["hosted-web-app", "database", "multi-user", "auth"],
+      "description": "When your idea needs to remember things or serve more than one person. Build it as a hosted web app with a small database: the lightest stack that works.",
+      "representativeQueries": [
+        "build a web app that saves data and has logins",
+        "I need a small tool a team can use with a database behind it",
+        "what is the lightest stack for a hosted app that remembers things"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:blueprint-app",
+      "displayName": "The Fully Deployed App Blueprint",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/blueprint-app.md",
+      "capabilities": ["mobile-app", "app-store-distribution", "full-deployment", "scale"],
+      "description": "When strangers need to find or download your idea themselves: app store, search, mobile, notifications. The most work, and the tier to confirm you truly need first.",
+      "representativeQueries": [
+        "I want to build a mobile app strangers can download",
+        "do I actually need a full app store product for my idea",
+        "help me plan a public app with sign-ups and notifications"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:7300-artifact-kit",
+      "displayName": "7300 Artifact Kit",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/7300-artifact-kit.md",
+      "capabilities": ["journaling-app", "claude-artifact", "local-storage", "streak-tracking"],
+      "description": "Build your own private 7300 journal as a single-message Claude artifact: a one-screen journal with day-count, streaks, and local browser storage, where nothing leaves your device.",
+      "representativeQueries": [
+        "build me a private daily journal artifact in Claude",
+        "I want a one-screen journaling app that stores entries locally",
+        "make a streak-based journal I can keep on my own device"
+      ]
+    },
+    {
+      "identifier": "urn:air:loveando.org:template:7300-full-app",
+      "displayName": "7300 — The Full App",
+      "type": "application/ai-skill+md",
+      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/7300-full-app.md",
+      "capabilities": ["hosted-app", "sync", "voice-ai", "ai-companion"],
+      "description": "The hosted tier of 7300: real accounts, cross-device sync, a companion that remembers, voice in and out, and generative memory artifacts. A build guide for the full stack.",
+      "representativeQueries": [
+        "how would I build a journaling app with accounts and sync",
+        "add a voice companion that remembers my journal entries",
+        "architecture for a full journaling app with AI memory"
+      ]
+    }
+  ]
+}
