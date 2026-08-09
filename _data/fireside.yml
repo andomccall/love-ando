@@ -1,11 +1,10 @@
-# Monthly Fireside Chat announcement. To update next month: edit these values.
-# Set active: false to hide the banner + park the page between events.
+# Monthly Fireside Chat. RSVP is the Luma event: registration adds it to their
+# calendar and sends reminders plus the Zoom link. To change the event, edit rsvp_url.
+# date_display auto-rolls weekly via .tools/roll-fireside.sh. active: false hides it.
 active: true
 title: "Fireside Chat"
 tagline: "Come sit by the fire."
 date_display: "Thursday, Sep 3 · 12:00pm ET"
-location: "Google Meet"
+location: "Zoom"
 blurb: "An open, monthly conversation with Ando, building a life with intention, the Love, Ando systems, and live Q&A. Come with a question, or just listen."
-# RSVP = Google Form (captures name/email; Meet link shown on the confirmation screen).
-rsvp_url: "https://forms.gle/aACZAWFnb2h3WCJ86"
-add_to_calendar_url: "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Love%2C%20Ando%20%E2%80%94%20Fireside%20Chat&dates=20260903T160000Z%2F20260903T170000Z&details=Monthly%20Fireside%20Chat%20with%20Ando.%20The%20Google%20Meet%20link%20is%20emailed%20after%20you%20RSVP%20at%20https%3A%2F%2Floveando.org%2Ffireside&location=Google%20Meet"
+rsvp_url: "https://luma.com/qycpje1p"

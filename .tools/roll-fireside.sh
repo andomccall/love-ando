@@ -31,9 +31,6 @@ if [ "$ft" -lt "$now" ]; then          # this month's already passed -> next mon
 fi
 
 date_display=$(date -r "$ft" "+Thursday, %b %e · 12:00pm ET" | tr -s ' ')
-start_utc=$(date -u -r "$ft" "+%Y%m%dT%H%M%SZ")
-end_utc=$(date -u -r "$((ft + 3600))" "+%Y%m%dT%H%M%SZ")
-cal_url="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Love%2C%20Ando%20%E2%80%94%20Fireside%20Chat&dates=${start_utc}%2F${end_utc}&details=Monthly%20Fireside%20Chat%20with%20Ando.%20RSVP%20at%20https%3A%2F%2Floveando.org%2Ffireside&location=Fireside"
 
 current=$(grep -E '^date_display:' "$YML" | sed -E 's/^date_display: *"(.*)"/\1/')
 if [ "$current" = "$date_display" ]; then
@@ -41,11 +38,10 @@ if [ "$current" = "$date_display" ]; then
   exit 0
 fi
 
-# Update only these two lines; preserve rsvp_url and everything else.
-D="$date_display" C="$cal_url" perl -i -pe '
-  BEGIN{ $d=$ENV{D}; $c=$ENV{C} }
+# Update only the display date; preserve rsvp_url (the Luma event) and everything else.
+D="$date_display" perl -i -pe '
+  BEGIN{ $d=$ENV{D} }
   s{^date_display: .*}{date_display: "$d"};
-  s{^add_to_calendar_url: .*}{add_to_calendar_url: "$c"};
 ' "$YML"
 
 git add "$YML"
