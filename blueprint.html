@@ -6,7 +6,7 @@ description: Answer a few questions about your idea and get a free, personalized
 
 <div class="bp">
   <h1 class="bp-title">The Modern DIY App Blueprint</h1>
-  <p class="bp-lede">You have the idea. Claude can build it. The only missing piece is knowing <em>which</em> thing to build. Answer a few questions and I'll map it, free, and hand you a prompt you can drop straight into Claude Code.</p>
+  <p class="bp-lede">Claude can build it. The only missing piece is knowing <em>which</em> thing to build. Bring your own idea and I'll map it, or fork one of my proven systems and rebuild it as your own. Either way you leave with a prompt you can drop straight into Claude Code, free.</p>
   <div class="bp-card" id="bp-card"></div>
   <p class="bp-foot">No pitch, no paywall. I read every concept that comes through personally. If yours is a fit for the cohort I'll say so, and if it isn't I'll point you the right way anyway.</p>
 </div>
@@ -45,6 +45,13 @@ description: Answer a few questions about your idea and get a free, personalized
 .bp-cohort{margin-top:1.6rem;padding:1.1rem 1.2rem;background:var(--la-military);color:var(--la-canvas);border-radius:9px;font-size:1rem;line-height:1.5;}
 .bp-cohort a{color:var(--la-highlighter);font-weight:700;}
 .bp-err{color:var(--la-rebel);font-size:.9rem;margin-top:.6rem;min-height:1.1em;}
+.bp-opt strong{display:block;font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.02em;font-size:.98rem;line-height:1.2;}
+.bp-opt-sub,.bp-opt-desc{display:block;font-family:'Zilla Slab',serif;font-weight:400;font-size:.9rem;line-height:1.35;color:#555;margin-top:.28rem;}
+.bp-blabel{display:block;font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.72rem;color:var(--la-military);margin:1rem 0 .35rem;}
+.bp-optional{font-family:'Zilla Slab',serif;text-transform:none;letter-spacing:0;color:#888;font-weight:400;}
+.bp-link-row{margin-top:.4rem;}
+.bp-link-row a{color:var(--la-rebel);font-weight:600;text-decoration:none;font-size:.92rem;}
+.bp-link-row a:hover{text-decoration:underline;}
 </style>
 
 {% raw %}
@@ -80,6 +87,43 @@ const steps = [
     {v:'pro',label:'I’d rather a pro handle it'}]},
   {key:'email',type:'email',q:'Where should I send your blueprint?',
     sub:'I read every concept that comes through personally. No spam, unsubscribe anytime.'}
+];
+
+const systems = {
+  '7300':{name:'7300',file:'7300',rec:'artifact',
+    what:'a daily writing habit built on a long-count streak, where each entry captures the day as evidence',
+    desc:'A twenty-year daily writing habit. Writing as the anchor. Capture the day as it was, not as you wish it felt.'},
+  recaps:{name:'The Recaps',file:'recaps',rec:'skill',
+    what:'a cadence of review questions run monthly, quarterly, and yearly, the same questions asked forever',
+    desc:'Monthly, quarterly, and yearly review questions. Ask the same ones forever and watch your answers change.'},
+  juicebox:{name:'Juice Box',file:'juice-box',rec:'artifact',
+    what:'a hundred-rep mastery challenge that tracks progress through a known emotional curve',
+    desc:'Do something 100 times to learn its essence. A reps-based challenge with a curve you can feel coming.'},
+  statement:{name:'Statement',file:'statement',rec:'webapp',
+    what:'a lead-gen, sales, and growth engine that runs people and pipeline through a repeatable cycle',
+    desc:'The executive-management engine: lead gen, sales, and a repeatable cycle of growth.'},
+  knocking:{name:'The Art of Knocking',file:'art-of-knocking',rec:'webapp',
+    what:'a direct-sales craft: working territories, managing callbacks, and running the qual card door to door',
+    desc:'Direct-sales craft, from mindset to doorstep: territories, callbacks, and the qual card.'}
+};
+
+const remixSteps = [
+  {key:'system',type:'choice',q:'Which of Ando’s systems do you want to make your own?',
+    sub:'Pick the one closest to what you want to build. You’ll rebrand it as yours in the next steps.',
+    options:Object.keys(systems).map(function(k){
+      return {v:k,label:systems[k].name,desc:systems[k].desc};
+    })},
+  {key:'brand',type:'brand',q:'Make it yours. What’s your brand?',
+    sub:'This is YOUR brand, not Ando’s. All optional: skip any field and Claude will help you choose as you build.'},
+  {key:'rtier',type:'choice',q:'How far do you want to take it?',
+    sub:function(a){ var s=systems[a.system]; return s?'Ando runs '+s.name+' closest to the '+tierMeta[s.rec].label+' tier. Pick how far you want to take yours.':''; },
+    options:[
+      {v:'skill',label:'Routine / Skill',desc:'A repeatable process you run inside Claude. No hosting, no database.'},
+      {v:'artifact',label:'Artifact',desc:'A single self-contained web page. One file, no backend, share it as a link.'},
+      {v:'webapp',label:'Web App + Desktop',desc:'A hosted site that saves data and can serve more than just you.'},
+      {v:'app',label:'Fully Deployed App',desc:'A distributable app strangers can find or download. The most work.'}]},
+  {key:'email',type:'email',q:'Where should I send your blueprint?',
+    sub:'I read every one personally. No spam, unsubscribe anytime.'}
 ];
 
 const tierMeta = {
@@ -210,6 +254,61 @@ function buildBlueprintDoc(a,tier){
     'Want a human in the loop while you build? Join the cohort list at loveando.org/join\n';
 }
 
+function brandLines(a){
+  return '- Brand name: '+(a.brandName||'(I’ll choose one with you)')+'\n'+
+    '- Colors: '+(a.brandColors||'(help me pick)')+'\n'+
+    '- Vibe / tone: '+(a.brandVibe||'(help me pick)');
+}
+
+function buildRemixPrompt(a){
+  const sys = systems[a.system];
+  const tier = a.rtier;
+  const m = tierMeta[tier];
+  const rawUrl = REPO_RAW+'/'+sys.file+'.md';
+  return 'You are my build guide. I want to fork a proven system and rebuild it as my own branded '+m.label+'.\n\n'+
+    'THE SYSTEM TO FORK: '+sys.name+', by Ando McCall (Love, Ando).\n'+
+    'Read the full source here and treat it as the blueprint for how the system works:\n'+
+    rawUrl+'\n\n'+
+    'WHAT IT IS: '+sys.what+'.\n\n'+
+    'MAKE IT MINE. Rebrand it completely in my style, not Ando’s:\n'+
+    brandLines(a)+'\n'+
+    'Keep the mechanics that make the system work. Change the name, look, voice, and framing so it is unmistakably mine. Do not reuse Ando’s branding, colors, or wording.\n\n'+
+    'BUILD IT AS: '+m.label.toUpperCase()+'.\n'+
+    m.guidance+'\n\n'+
+    'Do this in order:\n'+
+    '1. Read the source at the link above, then summarize the core mechanics back to me in 3 to 5 bullets so I know you understand what makes it work.\n'+
+    '2. Ask me up to 5 sharp questions, ONE at a time, about my brand and how I want to adapt it. Do not start building until I have answered.\n'+
+    '3. Then give me a one-paragraph plan, the exact file and folder structure, and the first file to create.\n'+
+    '4. Build it with me step by step, fully re-skinned in my brand.\n\n'+
+    'Keep it as simple as it can be while still capturing what makes the original work. Start with step 1 now.';
+}
+
+function buildRemixDoc(a){
+  const sys = systems[a.system];
+  const tier = a.rtier;
+  const m = tierMeta[tier];
+  const path = buildPath[tier].map(function(s,i){ return (i+1)+'. '+s; }).join('\n');
+  return '# Your Remix Blueprint\n\n'+
+    '**System to fork:** '+sys.name+' (Love, Ando)\n\n'+
+    '**Building it as:** '+m.label+'\n\n'+
+    'Generated free at loveando.org/blueprint\n\n'+
+    '## What you’re doing\n\n'+
+    'Taking '+sys.name+', one of Ando’s proven systems, and rebuilding it as your own branded '+m.label.toLowerCase()+'. '+
+    'You keep the mechanics that make it work and re-skin everything else in your name, colors, and voice. Fork the system, make it yours.\n\n'+
+    '## Your brand\n\n'+
+    brandLines(a)+'\n\n'+
+    '## Your build path\n\n'+ path+'\n\n'+
+    '## Drop this into Claude Code\n\n'+
+    '```\n'+ buildRemixPrompt(a)+'\n```\n\n'+
+    '## The original system\n\n'+
+    'Read Ando’s original: loveando.org/'+sys.file+'\n'+
+    'Raw source Claude will read: '+REPO_RAW+'/'+sys.file+'.md\n\n'+
+    '## When to level up\n\n'+ levelUp[tier]+'\n\n'+
+    '---\n\n'+
+    'Built with the Love, Ando blueprint. Free to keep, share, and use.\n'+
+    'Want a human in the loop while you build? Join the cohort list at loveando.org/join\n';
+}
+
 function downloadDoc(filename,text){
   const blob = new Blob([text],{type:'text/markdown;charset=utf-8'});
   const url = URL.createObjectURL(blob);
@@ -219,29 +318,62 @@ function downloadDoc(filename,text){
   setTimeout(function(){ URL.revokeObjectURL(url); },1500);
 }
 
+let mode = null;
 let idx = 0;
 const answers = {};
 const card = document.getElementById('bp-card');
 
+function activeSteps(){ return mode==='remix' ? remixSteps : steps; }
+
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
+function renderMode(){
+  card.innerHTML =
+    '<p class="bp-progress">Start here</p>'+
+    '<p class="bp-q">How do you want to start?</p>'+
+    '<div class="bp-opts">'+
+      '<button class="bp-opt" data-mode="own"><strong>Build my own idea</strong>'+
+        '<span class="bp-opt-sub">You have something in mind. I’ll map it to the right build type and hand you a prompt.</span></button>'+
+      '<button class="bp-opt" data-mode="remix"><strong>Remix one of Ando’s systems</strong>'+
+        '<span class="bp-opt-sub">No idea yet? Take a proven Love, Ando system and rebuild it as your own branded app.</span></button>'+
+    '</div>';
+  card.querySelectorAll('[data-mode]').forEach(function(b){ b.addEventListener('click',function(){
+    mode=b.getAttribute('data-mode'); idx=0; render();
+  });});
+}
+
 function render(){
-  if(idx >= steps.length){ return renderResult(); }
-  const s = steps[idx];
-  let inner = '<p class="bp-progress">Step '+(idx+1)+' of '+steps.length+'</p>';
+  if(!mode){ return renderMode(); }
+  const flow = activeSteps();
+  if(idx >= flow.length){ return renderResult(); }
+  const s = flow[idx];
+  const sub = typeof s.sub==='function' ? s.sub(answers) : s.sub;
+  let inner = '<p class="bp-progress">Step '+(idx+1)+' of '+flow.length+'</p>';
   inner += '<p class="bp-q">'+s.q+'</p>';
-  if(s.sub) inner += '<p class="bp-sub">'+s.sub+'</p>';
+  if(sub) inner += '<p class="bp-sub">'+sub+'</p>';
   if(s.type==='choice'){
     inner += '<div class="bp-opts">';
-    s.options.forEach(function(o){ inner += '<button class="bp-opt" data-v="'+o.v+'">'+o.label+'</button>'; });
+    s.options.forEach(function(o){
+      inner += o.desc
+        ? '<button class="bp-opt" data-v="'+o.v+'"><strong>'+o.label+'</strong><span class="bp-opt-desc">'+o.desc+'</span></button>'
+        : '<button class="bp-opt" data-v="'+o.v+'">'+o.label+'</button>';
+    });
     inner += '</div>';
-    inner += '<div class="bp-row"><button class="bp-btn bp-btn-ghost" data-back '+(idx===0?'style="visibility:hidden"':'')+'>&larr; Back</button><span></span></div>';
+    inner += '<div class="bp-row"><button class="bp-btn bp-btn-ghost" data-back>&larr; Back</button><span></span></div>';
+  } else if(s.type==='brand'){
+    inner += '<label class="bp-blabel">Brand name <span class="bp-optional">optional</span></label>'+
+      '<input class="bp-input" id="bp-name" type="text" placeholder="e.g. Daybook, Reps, Northbound" value="'+esc(answers.brandName||'').replace(/"/g,'&quot;')+'">';
+    inner += '<label class="bp-blabel">Colors <span class="bp-optional">optional</span></label>'+
+      '<input class="bp-input" id="bp-colors" type="text" placeholder="e.g. deep green and cream, or hex codes" value="'+esc(answers.brandColors||'').replace(/"/g,'&quot;')+'">';
+    inner += '<label class="bp-blabel">Vibe / tone <span class="bp-optional">optional</span></label>'+
+      '<input class="bp-input" id="bp-vibe" type="text" placeholder="e.g. calm and minimal, or loud and playful" value="'+esc(answers.brandVibe||'').replace(/"/g,'&quot;')+'">';
+    inner += '<div class="bp-row"><button class="bp-btn bp-btn-ghost" data-back>&larr; Back</button><button class="bp-btn bp-btn-primary" data-next>Next</button></div>';
   } else {
     const val = answers[s.key]||'';
     const type = s.type==='email'?'email':'text';
     inner += '<input class="bp-input" id="bp-field" type="'+type+'" placeholder="'+(s.placeholder||'')+'" value="'+val.replace(/"/g,'&quot;')+'">';
     inner += '<div class="bp-err" id="bp-err"></div>';
-    inner += '<div class="bp-row"><button class="bp-btn bp-btn-ghost" data-back '+(idx===0?'style="visibility:hidden"':'')+'>&larr; Back</button><button class="bp-btn bp-btn-primary" data-next>'+(idx===steps.length-1?'Get my blueprint':'Next')+'</button></div>';
+    inner += '<div class="bp-row"><button class="bp-btn bp-btn-ghost" data-back>&larr; Back</button><button class="bp-btn bp-btn-primary" data-next>'+(idx===flow.length-1?'Get my blueprint':'Next')+'</button></div>';
   }
   card.innerHTML = inner;
 
@@ -249,14 +381,23 @@ function render(){
     answers[s.key]=b.getAttribute('data-v'); idx++; render();
   });});
   const back = card.querySelector('[data-back]');
-  if(back) back.addEventListener('click',function(){ idx=Math.max(0,idx-1); render(); });
+  if(back) back.addEventListener('click',function(){
+    if(idx===0){ mode=null; render(); } else { idx--; render(); }
+  });
   const next = card.querySelector('[data-next]');
-  const field = card.querySelector('#bp-field');
-  if(field){ field.focus(); field.addEventListener('keydown',function(e){ if(e.key==='Enter') doNext(s); }); }
+  const first = card.querySelector('#bp-field, #bp-name');
+  if(first) first.focus();
+  card.querySelectorAll('.bp-input').forEach(function(f){ f.addEventListener('keydown',function(e){ if(e.key==='Enter') doNext(s); }); });
   if(next) next.addEventListener('click',function(){ doNext(s); });
 }
 
 function doNext(s){
+  if(s.type==='brand'){
+    answers.brandName=(card.querySelector('#bp-name').value||'').trim();
+    answers.brandColors=(card.querySelector('#bp-colors').value||'').trim();
+    answers.brandVibe=(card.querySelector('#bp-vibe').value||'').trim();
+    idx++; render(); return;
+  }
   const field = card.querySelector('#bp-field');
   const err = card.querySelector('#bp-err');
   const val = (field.value||'').trim();
@@ -281,7 +422,56 @@ function saveLead(tier,doc){
   }catch(e){}
 }
 
+function saveRemixLead(tier,doc){
+  const sys = systems[answers.system];
+  try{
+    fetch(SUPABASE_URL+'/rest/v1/blueprint_leads',{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+        'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({
+        email:answers.email||null,
+        concept:'Remix of '+(sys?sys.name:answers.system)+', built as '+(tierMeta[tier]?tierMeta[tier].label:tier),
+        answers:{mode:'remix',system:answers.system,rtier:tier,
+          brand_name:answers.brandName||null,brand_colors:answers.brandColors||null,brand_vibe:answers.brandVibe||null},
+        recommended_tier:tier, blueprint_md:doc||null,
+        referrer:document.referrer||null, user_agent:navigator.userAgent||null
+      })
+    }).catch(function(){});
+  }catch(e){}
+}
+
+function renderRemixResult(){
+  const sys = systems[answers.system];
+  const tier = answers.rtier;
+  const m = tierMeta[tier];
+  const prompt = buildRemixPrompt(answers);
+  const doc = buildRemixDoc(answers);
+  saveRemixLead(tier,doc);
+  const badgeStyle = 'background:'+m.color+';'+(m.textDark?'color:var(--la-wealth);':'');
+  card.innerHTML =
+    '<p class="bp-progress">Your remix blueprint</p>'+
+    '<span class="bp-badge" style="'+badgeStyle+'">Remix: '+sys.name+' &rarr; '+m.label+'</span>'+
+    '<p class="bp-why">You’re forking <strong>'+sys.name+'</strong>, one of Ando’s proven systems, and rebuilding it as your own branded '+m.label.toLowerCase()+'. The prompt below points Claude Code at the original, then re-skins it in your name, colors, and voice. Fork the system, make it yours.</p>'+
+    '<div class="bp-actions">'+
+      '<button class="bp-dl" id="bp-download">&darr; Download your blueprint (.md)</button>'+
+      '<a class="bp-dl alt" href="/'+m.file+'">Read the '+m.label+' playbook &rarr;</a>'+
+    '</div>'+
+    '<p class="bp-link-row"><a href="/'+sys.file+'">Read Ando’s original '+sys.name+' &rarr;</a></p>'+
+    '<div class="bp-prompt-label"><span>Drop this straight into Claude Code</span><button class="bp-copy" id="bp-copy">Copy</button></div>'+
+    '<div class="bp-prompt" id="bp-prompt">'+esc(prompt)+'</div>'+
+    '<div class="bp-cohort">I keep a copy of every blueprint and read them myself, so watch your inbox: I follow up personally on the ones I can help move. Rebuilding one of my systems and want a human in the loop? I run a live cohort for people shipping their first thing. <a href="/join">Get on the list &rarr;</a></div>';
+  card.querySelector('#bp-download').addEventListener('click',function(){
+    downloadDoc('my-remix-'+sys.file+'-'+tier+'.md',doc);
+  });
+  const copyBtn = card.querySelector('#bp-copy');
+  copyBtn.addEventListener('click',function(){
+    navigator.clipboard.writeText(prompt).then(function(){ copyBtn.textContent='Copied'; setTimeout(function(){copyBtn.textContent='Copy';},1600); });
+  });
+}
+
 function renderResult(){
+  if(mode==='remix'){ return renderRemixResult(); }
   const tier = classify(answers);
   const m = tierMeta[tier];
   const prompt = buildPrompt(answers,tier);
