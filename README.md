@@ -11,17 +11,25 @@
 
 <p class="section-label">Start with the keystone</p>
 
-<div class="system-feature-wrap">
-  <a class="system-feature" href="/7300">
-    <span class="feature-num" aria-hidden="true">7300</span>
-    <span class="feature-body">
-      <span class="feature-kicker">The system everything hinges on</span>
-      <h3>A 20-year commitment to who I'm becoming</h3>
-      <p>Anchored to daily writing, this is the trunk the rest grows from. The long horizon is what earns
-      the clarity: room to find the right answer through action and contemplation, instead of jumping in
-      and shipping on instinct. Commit to who you're becoming first, and the rest follows.</p>
-      <span class="feature-go">Start here &rarr;</span>
+<div class="keystone">
+  <div class="keystone-copy">
+    <span class="feature-kicker">7300 · The system everything hinges on</span>
+    <h3>A 20-year commitment to who I'm becoming</h3>
+    <p>Anchored to daily writing, this is the trunk the rest grows from. The long horizon is what earns
+    the clarity: room to find the right answer through action and contemplation, instead of jumping in
+    and shipping on instinct. Commit to who you're becoming first, and the rest follows.</p>
+    <div class="keystone-actions">
+      <a class="btn" href="https://7300.io" target="_blank" rel="noopener">Use the 7300 app &rarr;</a>
+      <a class="btn btn-ghost" href="/blueprint">Or build your own &rarr;</a>
+    </div>
+  </div>
+  <a class="keystone-orb" href="https://7300.io" target="_blank" rel="noopener" aria-label="Open the 7300 app">
+    <span class="orb-stage">
+      <span class="orb-ring"></span>
+      <span class="orb-ring r2"></span>
+      <span class="orb-core"></span>
     </span>
+    <span class="orb-label">7300.io</span>
   </a>
 </div>
 
