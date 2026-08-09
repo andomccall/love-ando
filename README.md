@@ -23,13 +23,29 @@
       <a class="btn btn-ghost" href="/blueprint">Or build your own &rarr;</a>
     </div>
   </div>
-  <a class="keystone-orb" href="https://7300.io" target="_blank" rel="noopener" aria-label="Open the 7300 app">
-    <span class="orb-stage">
-      <span class="orb-ring"></span>
-      <span class="orb-ring r2"></span>
-      <span class="orb-core"></span>
+  <a class="keystone-phone" href="https://7300.io" target="_blank" rel="noopener" aria-label="Open the 7300 app at 7300.io">
+    <span class="phone">
+      <span class="phone-screen">
+        <span class="ps-status">
+          <span class="ps-time">10:44</span>
+          <span class="ps-stat">
+            <span class="b b1"></span><span class="b b2"></span><span class="b b3"></span><span class="b b4"></span>
+            <span class="ps-batt"></span>
+          </span>
+        </span>
+        <span class="ps-topnav">Log&nbsp;&nbsp;&nbsp;Settings&nbsp;&nbsp;&nbsp;Sign out</span>
+        <span class="ps-id">sq8jc0</span>
+        <span class="ps-count">4105</span>
+        <span class="ps-of">of 7300</span>
+        <span class="ps-bar"><i></i></span>
+        <span class="ps-years"><i>Yr 0</i><i>Yr 5</i><i>Yr 10</i><i>Yr 15</i><i>Yr 20</i></span>
+        <span class="ps-entry"><b>Day 4105</b><span>Yo yesterday was mostly a rest day but I was doing some Claude code obviously working...</span></span>
+        <span class="ps-glow"></span>
+        <span class="ps-mic"></span>
+        <span class="ps-mic-label">Add to Entry</span>
+        <span class="ps-tabs"><i class="on">Today</i><i>Artifacts</i><i>Capsule</i><i>People</i></span>
+      </span>
     </span>
-    <span class="orb-label">7300.io</span>
   </a>
 </div>
 

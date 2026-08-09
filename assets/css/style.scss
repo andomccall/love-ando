@@ -454,78 +454,138 @@ a.btn:hover {
   gap: 0.6rem;
 }
 
-/* the live expanding orb (self-contained, links to 7300.io) */
-.main-content a.keystone-orb {
+/* the live 7300.io app, shown in a vertical iPhone frame (links to the app) */
+.main-content a.keystone-phone {
   flex: 0 0 auto;
-  width: 208px;
-  height: 208px;
-  position: relative;
-  overflow: hidden;
   display: block;
+  width: 204px;
   border: 0;
-  border-radius: 16px;
   text-decoration: none;
-  background: radial-gradient(circle at 50% 42%, #1f1f1f 0%, #0b0b0b 72%);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 12px 30px -14px rgba(0, 0, 0, 0.55);
+  position: relative;
 }
-.main-content a.keystone-orb .orb-stage {
-  position: absolute;
-  top: 46%;
-  left: 50%;
-  width: 72px;
-  height: 72px;
-  transform: translate(-50%, -50%);
+.main-content a.keystone-phone .phone {
+  position: relative;
+  display: block;
+  width: 204px;
+  height: 440px;
+  background: #0a0a0c;
+  border-radius: 34px;
+  padding: 8px;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 0 2px #2b2b30, 0 22px 46px -14px rgba(0, 0, 0, 0.6), 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: transform 0.16s, box-shadow 0.16s;
 }
-.main-content a.keystone-orb .orb-core,
-.main-content a.keystone-orb .orb-ring {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
+.main-content a.keystone-phone:hover .phone {
+  transform: translateY(-3px);
+  box-shadow: inset 0 0 0 2px #34343a, 0 26px 52px -14px rgba(0, 0, 0, 0.62), 0 6px 16px rgba(0, 0, 0, 0.42);
 }
-.main-content a.keystone-orb .orb-core {
-  background: radial-gradient(circle at 38% 34%, #ffb08a 0%, #ff7a5a 26%, #f72819 58%, #7a0f08 100%);
-  box-shadow: 0 0 34px 8px rgba(247, 40, 25, 0.45), inset 0 0 16px rgba(0, 0, 0, 0.32);
-  animation: orb-breathe 4.2s ease-in-out infinite;
-}
-.main-content a.keystone-orb .orb-ring {
-  border: 1px solid rgba(247, 40, 25, 0.55);
-  opacity: 0;
-  animation: orb-expand 4.2s ease-out infinite;
-}
-.main-content a.keystone-orb .orb-ring.r2 { animation-delay: 2.1s; }
-.main-content a.keystone-orb .orb-label {
-  position: absolute;
-  bottom: 14px;
-  left: 0;
-  right: 0;
-  text-align: center;
+.main-content a.keystone-phone .phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 27px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 13px 0;
+  box-sizing: border-box;
   font-family: 'Oswald', 'Helvetica Neue', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.62rem;
-  color: rgba(255, 255, 255, 0.5);
-  transition: color 0.2s;
 }
-.main-content a.keystone-orb:hover .orb-core {
-  box-shadow: 0 0 44px 12px rgba(247, 40, 25, 0.6), inset 0 0 16px rgba(0, 0, 0, 0.32);
-}
-.main-content a.keystone-orb:hover .orb-label { color: #fff; }
+.main-content a.keystone-phone .phone-screen * { box-sizing: border-box; }
 
-@keyframes orb-breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.14); }
+/* iOS status bar */
+.main-content a.keystone-phone .ps-status {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px;
 }
-@keyframes orb-expand {
-  0% { transform: scale(1); opacity: 0.55; }
-  80% { opacity: 0; }
-  100% { transform: scale(2.6); opacity: 0; }
+.main-content a.keystone-phone .ps-time { color: #fff; font-size: 9px; font-weight: 600; }
+.main-content a.keystone-phone .ps-stat { display: flex; align-items: flex-end; gap: 3px; height: 10px; }
+.main-content a.keystone-phone .ps-stat .b { width: 2px; background: #fff; border-radius: 1px; align-self: flex-end; }
+.main-content a.keystone-phone .ps-stat .b1 { height: 3px; }
+.main-content a.keystone-phone .ps-stat .b2 { height: 5px; }
+.main-content a.keystone-phone .ps-stat .b3 { height: 7px; }
+.main-content a.keystone-phone .ps-stat .b4 { height: 9px; }
+.main-content a.keystone-phone .ps-batt {
+  position: relative; width: 15px; height: 8px; margin-left: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 2px;
+}
+.main-content a.keystone-phone .ps-batt::before {
+  content: ''; position: absolute; top: 1.5px; bottom: 1.5px; left: 1px; width: 9px; background: #fff; border-radius: 1px;
+}
+.main-content a.keystone-phone .ps-batt::after {
+  content: ''; position: absolute; right: -2.5px; top: 2px; height: 4px; width: 1.5px; background: rgba(255, 255, 255, 0.7); border-radius: 0 1px 1px 0;
+}
+
+/* app content */
+.main-content a.keystone-phone .ps-topnav {
+  text-align: right; color: rgba(255, 255, 255, 0.55); font-size: 8.5px; letter-spacing: 0.02em; margin-bottom: 9px;
+}
+.main-content a.keystone-phone .ps-id {
+  color: rgba(255, 255, 255, 0.42); font-size: 9px; letter-spacing: 0.14em;
+}
+.main-content a.keystone-phone .ps-count {
+  color: #fff; font-weight: 700; font-size: 54px; line-height: 0.86; letter-spacing: -0.02em; margin: 3px 0 0;
+}
+.main-content a.keystone-phone .ps-of {
+  color: rgba(255, 255, 255, 0.45); font-size: 12px; margin: 3px 0 12px;
+}
+.main-content a.keystone-phone .ps-bar {
+  position: relative; height: 3px; background: rgba(255, 255, 255, 0.15); border-radius: 2px;
+}
+.main-content a.keystone-phone .ps-bar > i {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 56%; background: #fff; border-radius: 2px;
+}
+.main-content a.keystone-phone .ps-years {
+  display: flex; justify-content: space-between; margin: 5px 0 13px;
+}
+.main-content a.keystone-phone .ps-years > i {
+  color: rgba(255, 255, 255, 0.3); font-size: 7px; font-style: normal;
+}
+.main-content a.keystone-phone .ps-entry {
+  border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 9px; padding: 8px 9px;
+}
+.main-content a.keystone-phone .ps-entry b {
+  display: block; color: rgba(255, 255, 255, 0.5); font-size: 7.5px; letter-spacing: 0.09em; font-weight: 600; margin-bottom: 3px;
+}
+.main-content a.keystone-phone .ps-entry span {
+  display: block; color: rgba(255, 255, 255, 0.82); font-family: 'Zilla Slab', Georgia, serif; font-style: italic; font-size: 9.5px; line-height: 1.32;
+}
+
+/* the aura glow (the signature element) */
+.main-content a.keystone-phone .ps-glow {
+  position: absolute; left: 50%; bottom: -46px; transform: translateX(-50%);
+  width: 168%; height: 55%; z-index: 0; filter: blur(1.5px);
+  background: radial-gradient(circle at 50% 100%,
+    #7fd0ff 0%, #5aa4ff 13%, #7b6cff 29%, #b25cf0 45%, #e158a6 57%, rgba(225, 88, 166, 0) 72%);
+  animation: ps-breathe 5s ease-in-out infinite;
+}
+.main-content a.keystone-phone .ps-mic {
+  position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%);
+  width: 46px; height: 46px; border-radius: 50%; background: #fff; z-index: 2; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+.main-content a.keystone-phone .ps-mic::before {
+  content: ''; position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: 8px; height: 13px; background: #111; border-radius: 4px;
+}
+.main-content a.keystone-phone .ps-mic::after {
+  content: ''; position: absolute; left: 50%; bottom: 11px; transform: translateX(-50%); width: 13px; height: 6px; border: 1.5px solid #111; border-top: 0; border-radius: 0 0 8px 8px;
+}
+.main-content a.keystone-phone .ps-mic-label {
+  position: absolute; left: 0; right: 0; bottom: 46px; text-align: center; color: #fff; font-size: 9.5px; letter-spacing: 0.02em; z-index: 2;
+}
+.main-content a.keystone-phone .ps-tabs {
+  position: absolute; left: 0; right: 0; bottom: 13px; display: flex; justify-content: space-around; z-index: 2;
+}
+.main-content a.keystone-phone .ps-tabs > i {
+  font-style: normal; font-size: 8px; color: rgba(255, 255, 255, 0.42);
+}
+.main-content a.keystone-phone .ps-tabs > i.on { color: #fff; }
+
+@keyframes ps-breathe {
+  0%, 100% { opacity: 0.85; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .main-content a.keystone-orb .orb-core { animation: none; }
-  .main-content a.keystone-orb .orb-ring { animation: none; opacity: 0.35; transform: scale(1.6); }
+  .main-content a.keystone-phone .ps-glow { animation: none; }
 }
 
 /* system / tier cards grid */
@@ -709,10 +769,11 @@ a.btn:hover {
 
   .main-content .keystone {
     flex-direction: column;
-    align-items: stretch;
-    gap: 1.1rem;
+    align-items: center;
+    gap: 1.3rem;
   }
-  .main-content a.keystone-orb { width: 100%; height: 180px; order: -1; }
+  .main-content .keystone-copy { width: 100%; }
+  .main-content a.keystone-phone { order: -1; }
 
   .main-content table { display: block; overflow-x: auto; }
 }
