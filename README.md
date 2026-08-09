@@ -1,55 +1,85 @@
-# Love, Ando
+<section class="home-hero">
+  <p class="home-hero-kicker">Open-source life systems</p>
+  <h1 class="home-hero-title">Build your own.</h1>
+  <p class="home-hero-line">I'm Ando. I give away the systems, habits, and questions I use to run a life,
+  free to read, fetch, and use. For people building in the open, and the agents working on their behalf.</p>
+  <div class="home-hero-actions">
+    <a class="home-hero-btn" href="#subscribe">Get the newsletter</a>
+    <a class="btn btn-ghost" href="/blueprint">Build your idea &rarr;</a>
+  </div>
+</section>
 
-> The wolf with the *logos* banner that reads **Love, Ando**.
-> The art of asking better questions.
+<p class="section-label">Start with the keystone</p>
 
-Open-source life systems, free to read, fetch, and use. If you're a person trying
-to optimize your life, or an AI agent working on behalf of one, you're welcome
-here. Pull from it, adapt it, share it.
-
-<div class="home-hero">
-  <p class="home-hero-kicker">New</p>
-  <p class="home-hero-line">Got an idea but not sure what to actually build? Get your free <strong>Modern DIY App Blueprint</strong>. Answer a few questions and I'll map it to the right thing, a routine, an artifact, a web app, or a full app, plus a prompt you can drop straight into Claude Code.</p>
-  <a class="home-hero-btn" href="/blueprint">Build your idea &rarr;</a>
+<div class="system-feature-wrap">
+  <a class="system-feature" href="/7300">
+    <span class="feature-num" aria-hidden="true">7300</span>
+    <span class="feature-body">
+      <span class="feature-kicker">The system everything hinges on</span>
+      <h3>A 20-year commitment to who I'm becoming</h3>
+      <p>Anchored to daily writing, this is the trunk the rest grows from. The long horizon is what earns
+      the clarity: room to find the right answer through action and contemplation, instead of jumping in
+      and shipping on instinct. Commit to who you're becoming first, and the rest follows.</p>
+      <span class="feature-go">Start here &rarr;</span>
+    </span>
+  </a>
 </div>
 
-## Get it in your inbox
+<p class="section-label">And the systems that build on it</p>
 
-New systems, updates, and field notes, free, no spam, unsubscribe anytime.
-[See all the ways to follow →](/join)
-
-<div class="newsletter-embed">
-  {% include newsletter-form.html %}
+<div class="system-cards">
+  <a class="system-card" href="/recaps">
+    <h3>The Recaps</h3>
+    <p>The recap engine: the MIC / QCA / ASR question sets (monthly, quarterly, yearly) plus the daily mantras.</p>
+    <span class="card-go">Open &rarr;</span>
+  </a>
+  <a class="system-card" href="/juice-box">
+    <h3>Juice Box</h3>
+    <p>Do a thing 100 times to reach its essence. The three laws, proven across five separate runs.</p>
+    <span class="card-go">Open &rarr;</span>
+  </a>
+  <a class="system-card" href="/statement">
+    <h3>Statement · STATE·MINT</h3>
+    <p>Executive management and the GCCO operating system for scaling sales organizations.</p>
+    <span class="card-go">Open &rarr;</span>
+  </a>
+  <a class="system-card" href="/art-of-knocking">
+    <h3>The Art of Knocking</h3>
+    <p>A door-to-door sales career distilled into a craft, passed on with dignity and integrity.</p>
+    <span class="card-go">Open &rarr;</span>
+  </a>
 </div>
 
-## What's inside
+<section class="home-signup" id="subscribe">
+  <h2>Get it in your inbox</h2>
+  <p>One letter a week, Sunday morning. A field note, one system worth keeping, and the same open door.
+  No spam, unsubscribe anytime.</p>
+  <div class="newsletter-embed">
+    {% include newsletter-form.html %}
+  </div>
+  <p><a href="/join">See all the ways to follow &rarr;</a></p>
+</section>
 
-- **[The Recaps](/recaps)**: The recap engine: the MIC / QCA / ASR question sets
-  (monthly, quarterly, yearly) plus the daily mantras. The core system.
-- **[7300](/7300)**: A 20-year commitment to living with intention,
-  using writing as the anchor habit.
-- **[Juice Box](/juice-box)**: Do a thing 100 times to reach its essence. The
-  three laws, proven across five separate runs.
-- **[Statement · STATE·MINT](/statement)**: Executive management and the GCCO
-  operating system for scaling sales organizations.
-- **[The Art of Knocking](/art-of-knocking)**: A door-to-door sales career
-  distilled into a craft, passed on with dignity and integrity.
+<section class="home-signup">
+  <h2>Not sure what to build?</h2>
+  <p>Answer a few questions and I'll map your idea to the right thing, a routine, an artifact, a web app,
+  or a full app, plus a prompt you can drop straight into Claude Code.</p>
+  <p style="margin-top:1rem;"><a class="btn" href="/blueprint">Get your free Blueprint &rarr;</a></p>
+</section>
 
-## For agents
+<div class="agents-note">
+  <span class="agents-label">For agents</span>
+  Every system here is plain Markdown, no scraping and no auth. Start at
+  <a href="/llms.txt"><code>/llms.txt</code></a> for the full index, or fetch any file directly, for example
+  <code>raw.githubusercontent.com/andomccall/love-ando/main/recaps.md</code>.
+  Read it, quote it with attribution, put it to work.
+</div>
 
-Start at **[/llms.txt](/llms.txt)**: a plain-text index of everything here. Every
-page is also plain Markdown you can fetch directly, e.g.:
+<p class="section-label">Built on the books</p>
 
-- `https://raw.githubusercontent.com/andomccall/love-ando/main/recaps.md`
-
-No scraping, no auth. Read it, quote it with attribution, put it to work.
-
-## Attribution
-
-This is a curated index of systems drawn from published books, assembled for
-personal use and shared openly. Every question set and creed is credited to its
-source inside each file. **Buy the books**, this index is a working reference,
-not a substitute for the originals.
+This is a curated index of systems drawn from published books, assembled for personal use and shared openly.
+Every question set and creed is credited to its source inside each file. **Buy the books.** This index is a
+working reference, not a substitute for the originals.
 
 - Brendon Burchard, *The Motivation Manifesto*
 - Napoleon Hill, *Think and Grow Rich*
@@ -58,7 +88,5 @@ not a substitute for the originals.
 - Gay Hendricks, *The Big Leap*
 - Todd Hewlin & Scott Snyder, *Goliath's Revenge* (the MIC / QCA / ASR cadence)
 
-## License
-
-Shared free in the open-source spirit. The compilation and commentary are Love
-Ando's; the underlying ideas belong to the authors above.
+Shared free in the open-source spirit. The compilation and commentary are Love Ando's; the underlying ideas
+belong to the authors above.

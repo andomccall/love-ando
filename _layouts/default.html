@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8">
 {% seo %}
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#303030">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     {% include head-custom.html %}
   </head>
@@ -20,42 +20,47 @@
       <span class="fireside-cta">RSVP →</span>
     </a>
     {% endif %}
-    <div class="layout">
-      <aside class="sidebar" role="banner">
-        <a class="sidebar-logo" href="{{ '/' | relative_url }}" aria-label="Love, Ando home">
-          <img src="{{ '/assets/img/la-bug.svg' | relative_url }}" alt="Love, Ando">
-        </a>
 
-        <input type="checkbox" id="nav-toggle" class="nav-toggle-cb">
-        <label for="nav-toggle" class="nav-toggle" aria-label="Toggle menu">☰ Menu</label>
+    <header class="site-head" role="banner">
+      <a class="site-logo" href="{{ '/' | relative_url }}" aria-label="Love, Ando home">
+        <img src="{{ '/assets/img/la-bug-black.svg' | relative_url }}" alt="Love, Ando" width="132">
+      </a>
+      <p class="site-kicker">The art of asking better questions</p>
+      <hr class="site-rule">
 
-        <p class="sidebar-tagline">{{ site.description }}</p>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle-cb">
+      <label for="nav-toggle" class="nav-toggle" aria-label="Toggle menu">☰ Menu</label>
 
-        <nav class="site-nav" aria-label="Primary">
-          <a href="{{ '/' | relative_url }}"{% if cur == '/' %} class="active" aria-current="page"{% endif %}>Home</a>
-          <a href="{{ '/blueprint' | relative_url }}"{% if cur == '/blueprint' %} class="active" aria-current="page"{% endif %}>Blueprint</a>
-          <a href="{{ '/join' | relative_url }}"{% if cur == '/join' %} class="active" aria-current="page"{% endif %}>Join</a>
-          {% if site.data.fireside.active %}<a href="{{ '/fireside' | relative_url }}"{% if cur == '/fireside' %} class="active" aria-current="page"{% endif %}>Fireside</a>{% endif %}
-          <a href="{{ '/recaps' | relative_url }}"{% if cur == '/recaps' %} class="active" aria-current="page"{% endif %}>Recaps</a>
-          <a href="{{ '/7300' | relative_url }}"{% if cur == '/7300' %} class="active" aria-current="page"{% endif %}>7300</a>
-          <a href="{{ '/juice-box' | relative_url }}"{% if cur == '/juice-box' %} class="active" aria-current="page"{% endif %}>Juice Box</a>
-          <a href="{{ '/statement' | relative_url }}"{% if cur == '/statement' %} class="active" aria-current="page"{% endif %}>Statement</a>
-          <a href="{{ '/art-of-knocking' | relative_url }}"{% if cur == '/art-of-knocking' %} class="active" aria-current="page"{% endif %}>Art of Knocking</a>
-        </nav>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="{{ '/' | relative_url }}"{% if cur == '/' %} class="active" aria-current="page"{% endif %}>Home</a>
+        <a href="{{ '/blueprint' | relative_url }}"{% if cur == '/blueprint' %} class="active" aria-current="page"{% endif %}>Blueprint</a>
+        <a href="{{ '/join' | relative_url }}"{% if cur == '/join' %} class="active" aria-current="page"{% endif %}>Join</a>
+        {% if site.data.fireside.active %}<a href="{{ '/fireside' | relative_url }}"{% if cur == '/fireside' %} class="active" aria-current="page"{% endif %}>Fireside</a>{% endif %}
+        <a href="{{ '/7300' | relative_url }}"{% if cur == '/7300' %} class="active" aria-current="page"{% endif %}>7300</a>
+        <a href="{{ '/recaps' | relative_url }}"{% if cur == '/recaps' %} class="active" aria-current="page"{% endif %}>Recaps</a>
+        <a href="{{ '/juice-box' | relative_url }}"{% if cur == '/juice-box' %} class="active" aria-current="page"{% endif %}>Juice Box</a>
+        <a href="{{ '/statement' | relative_url }}"{% if cur == '/statement' %} class="active" aria-current="page"{% endif %}>Statement</a>
+        <a href="{{ '/art-of-knocking' | relative_url }}"{% if cur == '/art-of-knocking' %} class="active" aria-current="page"{% endif %}>Art of Knocking</a>
+        <a class="nav-agents" href="{{ '/llms.txt' | relative_url }}">For agents →</a>
+      </nav>
+    </header>
 
-        <div class="sidebar-footer">
-          <a href="{{ site.github.repository_url }}">View on GitHub</a>
-          <a href="{{ site.github.repository_url }}/archive/refs/heads/main.zip">Download all (.zip)</a>
-        </div>
-      </aside>
+    <hr class="head-divider">
 
-      <main id="content" class="main-content" role="main">
-        {{ content }}
+    <main id="content" class="main-content" role="main">
+      {{ content }}
+    </main>
 
-        <footer class="site-footer">
-          <span class="site-footer-credits">Love, Ando: open-source life systems. <a href="{{ '/privacy' | relative_url }}">Privacy</a> · Built with <a href="https://pages.github.com">GitHub Pages</a>.</span>
-        </footer>
-      </main>
-    </div>
+    <footer class="site-footer">
+      <span>Love, Ando: open-source life systems.</span>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/join' | relative_url }}">Join</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/privacy' | relative_url }}">Privacy</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/llms.txt' | relative_url }}">For agents</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ site.github.repository_url }}">GitHub</a>
+    </footer>
   </body>
 </html>
