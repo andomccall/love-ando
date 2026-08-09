@@ -18,7 +18,7 @@ Registering on Luma drops the chat straight onto your calendar and sends the rem
 
 ## How it works
 
-1. **RSVP**: tap the button and register on Luma. It's a private room for newsletter readers, so registrations get a quick approval.
+1. **RSVP**: tap the button, pick the next date on Luma, and register. It's a private room for newsletter readers, so registrations get a quick approval.
 2. **Get the link**: Luma adds the event to your calendar and emails you the Zoom link plus reminders.
 3. **Show up**: bring a question, or just listen.
 

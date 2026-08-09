@@ -1,5 +1,6 @@
-# Monthly Fireside Chat. RSVP is the Luma event: registration adds it to their
-# calendar and sends reminders plus the Zoom link. To change the event, edit rsvp_url.
+# Monthly Fireside Chat. RSVP is the Luma "Love, Ando" calendar: a stable link
+# that always lists the next chat. Registering adds it to their calendar and sends
+# reminders plus the Zoom link. Events are cloned monthly (first Thursday) on Luma.
 # date_display auto-rolls weekly via .tools/roll-fireside.sh. active: false hides it.
 active: true
 title: "Fireside Chat"
@@ -7,4 +8,4 @@ tagline: "Come sit by the fire."
 date_display: "Thursday, Sep 3 · 12:00pm ET"
 location: "Zoom"
 blurb: "An open, monthly conversation with Ando, building a life with intention, the Love, Ando systems, and live Q&A. Come with a question, or just listen."
-rsvp_url: "https://luma.com/qycpje1p"
+rsvp_url: "https://luma.com/calendar/cal-8gtnNToCfFhCZGP"
