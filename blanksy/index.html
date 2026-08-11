@@ -202,6 +202,12 @@
           <button data-p="tpose">T-POSE</button>
         </div>
       </div>
+      <div class="sec">
+        <span class="lbl">EMOTES</span>
+        <div class="chips" id="emote"></div>
+        <button class="btn" id="jam" aria-pressed="false" style="margin-top:8px">JAM MODE: OFF</button>
+        <span class="lbl dim" style="margin-top:8px">JAM shuffles every move on a loop</span>
+      </div>
       <div class="pair">
         <button class="btn ghost" id="anim" aria-pressed="true">ANIMATE: ON</button>
         <button class="btn" id="rand">RANDOM KIT</button>
@@ -227,8 +233,11 @@
     const { TEXTURES, applyTexture, PRINTS_LIST, applyPrint } = await import('./blanksy-textures.js');
     const { createEnvironments } = await import('./blanksy-env.js');
     const envs = createEnvironments(THREE, stage);
+    const { createEmotes } = await import('./blanksy-emotes.js');
+    const emotes = createEmotes(blanksy);
 
     let pose = 'idle', animate = true, t0 = performance.now(), last = performance.now();
+    let emote = null, jam = false, et0 = performance.now(), curMove = null;
     let walkMode = false, moving = false;
     const keys = {};
     const RADIUS = 0.36, SPEED = 1.5;
@@ -301,8 +310,15 @@
       const now = performance.now(), dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       if (walkMode) stepWalk(dt);
-      const p = walkMode ? (moving ? 'walk' : 'idle') : pose;
-      setPose(p, animate || walkMode ? (now - t0) / 1000 : 0);
+      if (!walkMode && (jam || emote)) {
+        const et = (now - et0) / 1000;
+        const id = jam ? emotes.jamMoveAt(et) : emote;
+        if (jam && id !== curMove) { curMove = id; highlightMove(id); }
+        emotes.apply(id, et);
+      } else {
+        const p = walkMode ? (moving ? 'walk' : 'idle') : pose;
+        setPose(p, animate || walkMode ? (now - t0) / 1000 : 0);
+      }
     })();
 
     document.querySelector('#walk').onclick = e => {
@@ -312,6 +328,7 @@
       stage._controls.enableDamping = !walkMode;
       if (walkMode) {
         camWantLen = camAppliedLen = stage._camera.position.distanceTo(stage._controls.target);
+        clearMoves();
       }
       e.currentTarget.setAttribute('aria-pressed', String(walkMode));
       e.currentTarget.textContent = 'WALK: ' + (walkMode ? 'ON' : 'OFF');
@@ -429,8 +446,46 @@
       finish = b.dataset.f; applyFinish(finish);
       [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     };
+    // emotes + JAM MODE
+    const emoteHost = $('#emote');
+    function highlightMove(id) {
+      [...emoteHost.children].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.e === id)));
+    }
+    function clearMoves() {
+      emote = null; jam = false; curMove = null;
+      highlightMove(null);
+      $('#jam').setAttribute('aria-pressed', 'false');
+      $('#jam').textContent = 'JAM MODE: OFF';
+    }
+    emotes.LIST.forEach(m => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.type = 'button'; b.textContent = m.label; b.dataset.e = m.id;
+      b.setAttribute('aria-pressed', 'false');
+      b.onclick = () => {
+        if (walkMode) $('#walk').click();
+        if (emote === m.id && !jam) { clearMoves(); pose = 'idle'; }   // toggle back to idle
+        else {
+          emote = m.id; jam = false; curMove = m.id; et0 = performance.now();
+          highlightMove(m.id);
+          $('#jam').setAttribute('aria-pressed', 'false'); $('#jam').textContent = 'JAM MODE: OFF';
+        }
+        [...$('#pose').children].forEach(x => x.setAttribute('aria-pressed', 'false'));
+      };
+      emoteHost.appendChild(b);
+    });
+    $('#jam').onclick = () => {
+      if (walkMode) $('#walk').click();
+      jam = !jam; emote = null;
+      if (jam) { et0 = performance.now(); curMove = emotes.jamMoveAt(0); highlightMove(curMove); }
+      else { curMove = null; highlightMove(null); }
+      $('#jam').setAttribute('aria-pressed', String(jam));
+      $('#jam').textContent = 'JAM MODE: ' + (jam ? 'ON' : 'OFF');
+      [...$('#pose').children].forEach(x => x.setAttribute('aria-pressed', 'false'));
+    };
+
     $('#pose').onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
+      clearMoves();
       pose = b.dataset.p; t0 = performance.now();
       [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     };
