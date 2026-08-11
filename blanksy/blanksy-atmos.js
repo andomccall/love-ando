@@ -147,6 +147,31 @@ export function createAtmos(THREE, stage, envs) {
   const rainG = new THREE.Group(); rainG.add(rain.seg); rainG.visible = false; scene.add(rainG);
   const snowG = new THREE.Group(); snowG.add(snow.pts); snowG.visible = false; scene.add(snowG);
 
+  // snow settling on the ground: a broad soft-speckled sheet that fades in the
+  // longer it snows and melts back when it stops. Takes the scene lights (so it
+  // reads white by day, blue by night) and catches Blanksy's shadow.
+  function snowGroundTex() {
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const g = c.getContext('2d');
+    g.fillStyle = '#f4f7fb'; g.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 1400; i++) {
+      g.fillStyle = Math.random() < 0.5 ? '#ffffff' : '#dfe6ef';
+      g.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
+    }
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(10, 10);
+    return t;
+  }
+  const groundSnow = new THREE.Mesh(
+    new THREE.PlaneGeometry(60, 60),
+    new THREE.MeshStandardMaterial({ map: snowGroundTex(), roughness: 0.95, metalness: 0, transparent: true, opacity: 0 })
+  );
+  groundSnow.rotation.x = -Math.PI / 2;
+  groundSnow.receiveShadow = true;
+  groundSnow.visible = false;
+  scene.add(groundSnow);
+  let snowGroundAmt = 0;                 // 0..1 accumulation
+
   const WEATHERS = [
     { id: null, label: 'CLEAR' },
     { id: 'rain', label: 'RAIN' },
@@ -178,6 +203,15 @@ export function createAtmos(THREE, stage, envs) {
     const wantRain = weather === 'rain' && !indoors;
     const wantSnow = weather === 'snow' && !indoors;
     rainG.visible = wantRain; snowG.visible = wantSnow;
+
+    // ground snow accumulates slowly while it snows, melts when it stops
+    const target = wantSnow ? 1 : 0;
+    snowGroundAmt += (target - snowGroundAmt) * Math.min(1, dt * (wantSnow ? 0.25 : 0.6));
+    groundSnow.visible = snowGroundAmt > 0.01;
+    if (groundSnow.visible) {
+      groundSnow.position.set(controls.target.x, gy + 0.01, controls.target.z);
+      groundSnow.material.opacity = snowGroundAmt * 0.9;
+    }
 
     if (wantRain) {
       const a = rain.pos;
