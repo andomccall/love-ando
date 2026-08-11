@@ -453,6 +453,7 @@
     }
     function clearMoves() {
       emote = null; jam = false; curMove = null;
+      blanksy.group.rotation.y = 0;            // undo any SPIN so poses face front
       highlightMove(null);
       $('#jam').setAttribute('aria-pressed', 'false');
       $('#jam').textContent = 'JAM MODE: OFF';
