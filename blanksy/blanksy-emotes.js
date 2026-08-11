@@ -114,15 +114,16 @@ export function createEmotes(blanksy) {
       rig.position.y = 0.006;
     },
 
-    // the dab: a held pose (both arms angled up to his left, head tucked into
-    // the near elbow) with a subtle breathe so it reads as the classic dab.
+    // the dab: both arms angle UP and FORWARD to his left so they clear the ball
+    // body (a low guide arm just sinks into the sphere). Stab arm high, guide arm
+    // a touch lower but still up + out + forward, head tucks toward the guide.
     dab: (t) => {
       const breathe = 0.5 + 0.5 * Math.sin(t * 2.2);
-      aim('rightforearm', 'righthand', 0.7, 0.85, 0.28);      // stab up to his left
-      aim('leftforearm', 'lefthand', 0.95, 0.2, 0.34);        // horizontal across, same way
+      aim('rightforearm', 'righthand', 0.82, 0.95, 0.4);      // stab arm: up, his-left, forward
+      aim('leftforearm', 'lefthand', 0.58, 0.6, 0.62);        // guide arm: lower, still up+out+forward
       handRoll('right', 0.2); handRoll('left', 0.2);
-      set('head', 0.16, 0.2, 0);                              // tuck toward the left elbow
-      set('spine1', 0, 0.07, 0.03);
+      set('head', 0.13, 0.24, 0);                             // tuck toward the guide arm
+      set('spine1', 0, 0.08, 0.04);
       rig.position.y = breathe * 0.006;
     },
 
