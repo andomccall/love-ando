@@ -186,6 +186,29 @@
       </div>
       <hr>
       <div class="sec">
+        <h2>ATMOSPHERE</h2>
+        <span class="lbl dim">TIME OF DAY</span>
+        <div class="seg" id="time">
+          <button data-t="day" aria-pressed="true">DAY</button>
+          <button data-t="golden">GOLDEN</button>
+          <button data-t="night">NIGHT</button>
+        </div>
+        <span class="lbl dim" style="margin-top:12px">WEATHER</span>
+        <div class="seg" id="weather">
+          <button data-w="" aria-pressed="true">CLEAR</button>
+          <button data-w="rain">RAIN</button>
+          <button data-w="snow">SNOW</button>
+        </div>
+        <span class="lbl dim" style="margin-top:12px">WIND</span>
+        <div class="seg" id="wind">
+          <button data-v="0" aria-pressed="true">CALM</button>
+          <button data-v="1">BREEZE</button>
+          <button data-v="2.4">GUSTY</button>
+        </div>
+        <span class="lbl dim" style="margin-top:8px">Weather clears indoors</span>
+      </div>
+      <hr>
+      <div class="sec">
         <span class="lbl">FINISH</span>
         <div class="seg" id="finish">
           <button data-f="matte">MATTE</button>
@@ -235,6 +258,8 @@
     const envs = createEnvironments(THREE, stage);
     const { createEmotes } = await import('./blanksy-emotes.js');
     const emotes = createEmotes(blanksy);
+    const { createAtmos } = await import('./blanksy-atmos.js');
+    const atmos = createAtmos(THREE, stage, envs);
 
     let pose = 'idle', animate = true, t0 = performance.now(), last = performance.now();
     let emote = null, jam = false, et0 = performance.now(), curMove = null;
@@ -319,6 +344,7 @@
         const p = walkMode ? (moving ? 'walk' : 'idle') : pose;
         setPose(p, animate || walkMode ? (now - t0) / 1000 : 0);
       }
+      atmos.update(dt);
     })();
 
     document.querySelector('#walk').onclick = e => {
@@ -423,10 +449,28 @@
       b.setAttribute('aria-pressed', String(e.id === null));
       b.onclick = () => {
         envs.set(e.id);
+        atmos.reassert();               // keep the current time-of-day sky after a set change
         [...envHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
       };
       envHost.appendChild(b);
     });
+
+    // atmosphere: time of day / weather / wind
+    $('#time').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      atmos.setTime(b.dataset.t);
+      [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    };
+    $('#weather').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      atmos.setWeather(b.dataset.w || null);
+      [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    };
+    $('#wind').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      atmos.setWind(parseFloat(b.dataset.v));
+      [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    };
 
     $('#kit').onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
