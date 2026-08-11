@@ -71,7 +71,8 @@
   body{background:#fff;color:#000;font-family:'Space Mono',ui-monospace,monospace;display:flex;flex-direction:column}
   a{color:#000}a:hover{color:var(--gray-600,#5b6169)}
   .bar{background:#000;color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px;height:56px;flex:0 0 auto}
-  .mark{height:24px;width:auto;display:block}
+  .mark{font-family:'Bebas Neue',Impact,sans-serif;font-size:26px;letter-spacing:.02em;line-height:1}
+  .bug{height:30px;width:auto;display:block}
   .ol{font-size:11px;letter-spacing:.18em;text-transform:uppercase}
   .dim{color:var(--gray-400,#9aa1a9)}
   main{flex:1 1 auto;display:flex;min-height:0}
@@ -113,7 +114,7 @@
 </head>
 <body>
   <div class="bar">
-    <img class="mark" src="la-bug-white.svg" alt="Love, Ando" />
+    <img class="bug" src="blanksy-bug-white.svg" alt="Blanksy">
     <span class="ol">BLANKSY · 3D REP AVATAR</span>
     <span class="ol dim" style="margin-left:auto">HEXPIN · MAP CHARACTER</span>
   </div>
@@ -177,6 +178,11 @@
         <h2>SCENE</h2>
         <span class="lbl dim">WHERE HE STANDS</span>
         <div class="grid3" id="env"></div>
+        <div class="pair" style="margin-top:10px">
+          <button class="btn ghost" id="walk" aria-pressed="false">WALK: OFF</button>
+          <button class="btn ghost" id="reset">RE-CENTER</button>
+        </div>
+        <span class="lbl dim" style="margin-top:8px">W A S D · ARROWS · DRAG TO LOOK</span>
       </div>
       <hr>
       <div class="sec">
@@ -222,11 +228,98 @@
     const { createEnvironments } = await import('./blanksy-env.js');
     const envs = createEnvironments(THREE, stage);
 
-    let pose = 'idle', animate = true, t0 = performance.now();
+    let pose = 'idle', animate = true, t0 = performance.now(), last = performance.now();
+    let walkMode = false, moving = false;
+    const keys = {};
+    const RADIUS = 0.36, SPEED = 1.5;
+    const UP = new THREE.Vector3(0, 1, 0);
+    let camWantLen = 0, camAppliedLen = 0;
+
+    addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (walkMode && /^(Arrow|Key[WASD])/.test(e.code)) e.preventDefault();
+    });
+    addEventListener('keyup', e => { keys[e.code] = false; });
+
+    function blocked(x, z, cols) {
+      for (const c of cols)
+        if (x > c.x0 - RADIUS && x < c.x1 + RADIUS && z > c.z0 - RADIUS && z < c.z1 + RADIUS) return true;
+      return false;
+    }
+
+    function stepWalk(dt) {
+      const g = blanksy.group, cam = stage._camera, controls = stage._controls;
+      const f = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
+      const s = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0);
+      moving = !!(f || s);
+      if (moving) {
+        const fw = new THREE.Vector3();
+        cam.getWorldDirection(fw); fw.y = 0; fw.normalize();
+        const rt = new THREE.Vector3().crossVectors(UP, fw).normalize().negate();
+        const dir = fw.multiplyScalar(f).add(rt.multiplyScalar(s));
+        if (dir.lengthSq() > 0) {
+          dir.normalize();
+          const cols = envs.colliders();
+          const nx = g.position.x + dir.x * SPEED * dt;
+          if (!blocked(nx, g.position.z, cols)) g.position.x = nx;
+          const nz = g.position.z + dir.z * SPEED * dt;
+          if (!blocked(g.position.x, nz, cols)) g.position.z = nz;
+          let d = Math.atan2(dir.x, dir.z) - g.rotation.y;
+          d = Math.atan2(Math.sin(d), Math.cos(d));
+          g.rotation.y += d * Math.min(1, dt * 12);
+        }
+      }
+      // camera rides along, keeping whatever orbit the user set — pulled in when
+      // a wall would otherwise end up between it and Blanksy, then let back out
+      const off = cam.position.clone().sub(controls.target);
+      const actualLen = off.length();
+      if (Math.abs(actualLen - camAppliedLen) > 0.02) camWantLen = actualLen;  // user zoomed
+      controls.target.set(g.position.x, envs.floorY + 0.85, g.position.z);
+      const cols = envs.colliders();
+      let len = camWantLen;
+      if (actualLen > 0.001) {
+        const dir = off.divideScalar(actualLen);
+        for (let i = 0; i <= 8; i++) {
+          const l = camWantLen * (1 - i / 10);
+          const px = controls.target.x + dir.x * l, pz = controls.target.z + dir.z * l;
+          const py = controls.target.y + dir.y * l;
+          const inside = py < envs.floorY + 2.6 && cols.some(c =>
+            px > c.x0 - 0.25 && px < c.x1 + 0.25 && pz > c.z0 - 0.25 && pz < c.z1 + 0.25);
+          len = Math.max(0.9, l);
+          if (!inside) break;
+        }
+        cam.position.copy(controls.target).addScaledVector(dir, len);
+        const ceil = envs.ceilingY();
+        cam.position.y = Math.max(envs.floorY + 0.4, ceil ? Math.min(cam.position.y, ceil - 0.35) : cam.position.y);
+      }
+      camAppliedLen = len;
+      controls.update();
+    }
+
     (function tick() {
       requestAnimationFrame(tick);
-      setPose(pose, animate ? (performance.now() - t0) / 1000 : 0);
+      const now = performance.now(), dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (walkMode) stepWalk(dt);
+      const p = walkMode ? (moving ? 'walk' : 'idle') : pose;
+      setPose(p, animate || walkMode ? (now - t0) / 1000 : 0);
     })();
+
+    document.querySelector('#walk').onclick = e => {
+      walkMode = !walkMode;
+      stage._autorotate = false;              // turntable + damping fight direct camera writes
+      stage._controls.autoRotate = false;
+      stage._controls.enableDamping = !walkMode;
+      if (walkMode) {
+        camWantLen = camAppliedLen = stage._camera.position.distanceTo(stage._controls.target);
+      }
+      e.currentTarget.setAttribute('aria-pressed', String(walkMode));
+      e.currentTarget.textContent = 'WALK: ' + (walkMode ? 'ON' : 'OFF');
+    };
+    document.querySelector('#reset').onclick = () => {
+      blanksy.group.position.set(0, 0, 0);
+      blanksy.group.rotation.y = 0;
+    };
 
     // ---------- controls ----------
     const SKINS = ['#141414','#f4f4f2','#3b4a63','#7a2d2d','#2f5d4a','#8a6a2f'];

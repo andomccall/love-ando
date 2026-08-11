@@ -222,7 +222,7 @@ export function createEnvironments(THREE, stage) {
       g.add(boxm(3, 0.12, 0.6, M('#8a5a3b'), -6.5, Y + 0.5, -4.2));
       [-1.3, 1.3].forEach(x => g.add(boxm(0.14, 0.5, 0.55, M('#2f6b4f'), -6.5 + x, Y + 0.25, -4.2)));
       interiorLight(g, 0.6, 4.3, [[-6, 0], [0, 0], [6, 0]], 0xfff2d8, 0x6b6250, 0xffedc4);
-      return { group: g, bg: '#2f4450' };
+      return { group: g, bg: '#2f4450', ceil: Y + 4.6 };
     },
 
     bakery: () => {
@@ -350,7 +350,7 @@ export function createEnvironments(THREE, stage) {
       for (const x of [-5, 0, 5]) for (const z of [-3.5, 1])
         g.add(boxm(3.4, 0.07, 0.4, M('#f4faff', { emissive: '#dff0ff', emissiveIntensity: .7 }), x, Y + 4.22, z));
       interiorLight(g, 0.62, 4.1, [[-5, -3.5], [0, 1], [5, -3.5]], 0xeaf6ff, 0x4a5a66, 0xf0f8ff);
-      return { group: g, bg: '#243038' };
+      return { group: g, bg: '#243038', ceil: Y + 4.1 };
     }
   };
 
@@ -392,5 +392,25 @@ export function createEnvironments(THREE, stage) {
     frame(2.1, 0.9);
   }
 
-  return { LIST, set };
+  // Solid things Blanksy has to walk around: each mesh's world-space footprint,
+  // minus floors/road paint (too low to block) and ceilings/signs (overhead).
+  function colliders() {
+    if (!current || !built[current]) return [];
+    const e = built[current];
+    if (!e.cols) {
+      const cols = [];
+      const b = new THREE.Box3();
+      e.group.traverse(o => {
+        if (!o.isMesh) return;
+        b.setFromObject(o);
+        if (b.max.y < feetY + 0.12) return;
+        if (b.min.y > feetY + 1.5) return;
+        cols.push({ x0: b.min.x, x1: b.max.x, z0: b.min.z, z1: b.max.z });
+      });
+      e.cols = cols;
+    }
+    return e.cols;
+  }
+
+  return { LIST, set, colliders, floorY: feetY, ceilingY: () => (current && built[current] ? built[current].ceil : null) };
 }
