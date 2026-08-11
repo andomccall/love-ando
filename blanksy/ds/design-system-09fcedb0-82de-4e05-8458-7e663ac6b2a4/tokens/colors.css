@@ -1,0 +1,51 @@
+/* Quantum Group — colors. Strict industrial black & white + a neutral steel ramp. */
+:root {
+  /* Base */
+  --black: #000000;
+  --white: #ffffff;
+
+  /* Neutral steel ramp (cool, near-neutral grays) */
+  --gray-950: #0a0a0a;
+  --gray-900: #141414;
+  --gray-800: #1f1f1f;
+  --gray-700: #2e2e2e;
+  --gray-600: #4a4a4a;
+  --gray-500: #6b6b6b;
+  --gray-400: #909090;
+  --gray-300: #bcbcbc;
+  --gray-200: #d9d9d9;
+  --gray-150: #e6e6e6;
+  --gray-100: #efefef;
+  --gray-50:  #f6f6f6;
+
+  /* Functional (used sparingly — brand is monochrome; reserve for system states) */
+  --signal-live:   #16c264;  /* on-call / active */
+  --signal-warn:   #e0a800;  /* attention */
+  --signal-down:   #e23b3b;  /* error / missed */
+
+  /* ---- Semantic surfaces ---- */
+  --surface-base:    var(--white);
+  --surface-muted:   var(--gray-50);
+  --surface-sunken:  var(--gray-100);
+  --surface-card:    var(--white);
+  --surface-inverse: var(--black);
+  --surface-inverse-muted: var(--gray-900);
+
+  /* ---- Semantic text ---- */
+  --text-primary:   var(--black);
+  --text-secondary: var(--gray-600);
+  --text-muted:     var(--gray-400);
+  --text-inverse:   var(--white);
+  --text-inverse-muted: var(--gray-400);
+
+  /* ---- Borders ---- */
+  --border-subtle:  var(--gray-150);
+  --border-default: var(--gray-300);
+  --border-strong:  var(--black);
+  --border-inverse: var(--gray-700);
+
+  /* ---- Accent (monochrome — black is the brand accent) ---- */
+  --accent:        var(--black);
+  --accent-text:   var(--white);
+  --accent-hover:  var(--gray-800);
+}

@@ -1,0 +1,38 @@
+/* Quantum Group — typography. Bebas Neue display, Space Mono everything else. */
+:root {
+  /* Families */
+  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
+  --font-mono: "Space Mono", "Courier New", monospace;
+  --font-body: var(--font-mono); /* body IS the mono — there is no third family */
+
+  /* Display sizes (Bebas — very condensed, ALWAYS uppercase, needs tracking) */
+  --display-2xl: clamp(64px, 9vw, 132px); /* @kind font */
+  --display-xl:  clamp(48px, 6vw, 88px); /* @kind font */
+  --display-lg:  56px;
+  --display-md:  42px;
+  --display-sm:  30px;
+
+  /* Mono text sizes */
+  --text-2xl: 24px;
+  --text-xl:  20px;
+  --text-lg:  18px;
+  --text-md:  15px;  /* default body */
+  --text-sm:  13px;
+  --text-xs:  11px;
+
+  /* Weights */
+  --weight-regular: 400;
+  --weight-bold: 700;
+
+  /* Line heights */
+  --leading-display: 0.92;
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-body: 1.6;
+
+  /* Letter spacing */
+  --tracking-display: 0.02em;  /* Bebas headers */
+  --tracking-label: 0.18em;    /* mono micro-labels, ALL CAPS */
+  --tracking-mono: 0;
+  --tracking-tight: -0.01em;
+}

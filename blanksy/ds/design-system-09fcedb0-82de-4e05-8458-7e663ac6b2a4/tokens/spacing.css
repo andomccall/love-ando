@@ -1,0 +1,35 @@
+/* Quantum Group — spacing, radii, borders, shadows. Industrial = sharp, hard, flat. */
+:root {
+  /* Spacing scale (4px base) */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Radii — industrial hardware is square. Almost everything is 0. */
+  --radius-none: 0;
+  --radius-sm: 2px;   /* the maximum softening allowed */
+  --radius-pill: 999px; /* only for status dots / avatars */
+
+  /* Border widths */
+  --border-hairline: 1px;
+  --border-thick: 2px;
+  --border-heavy: 3px;
+
+  /* Shadows — hard offset, no blur. Flat industrial stamp. Use sparingly. */
+  --shadow-stamp: 4px 4px 0 0 var(--black);
+  --shadow-stamp-sm: 2px 2px 0 0 var(--black);
+  --shadow-raised: 0 2px 0 0 rgba(0,0,0,0.12);
+  --shadow-none: none;
+
+  /* Layout */
+  --container-max: 1280px;
+  --gutter: var(--space-5);
+}

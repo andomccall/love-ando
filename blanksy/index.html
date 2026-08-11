@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BLANKSY — 3D AVATAR</title>
+<meta name="ext-resource-dependency" content="blanksy.json" data-resource-id="blanksy-meta" />
+<meta name="ext-resource-dependency" content="blanksy.bin" data-resource-id="blanksy-bin" />
+<template id="__bundler_thumbnail" data-bg-color="#ffffff">
+  <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <rect width="400" height="400" fill="#ffffff"/>
+    <circle cx="200" cy="185" r="95" fill="#141414"/>
+    <path d="M112 150 A95 95 0 0 1 288 150 L288 172 A95 95 0 0 0 112 172 Z" fill="#e0452f"/>
+    <rect x="168" y="278" width="20" height="52" rx="10" fill="#141414"/>
+    <rect x="212" y="278" width="20" height="52" rx="10" fill="#141414"/>
+  </svg>
+</template>
+<meta name="ext-resource-dependency" content="https://unpkg.com/three@0.184.0/build/three.module.js" data-resource-id="three-module" />
+<meta name="ext-resource-dependency" content="https://unpkg.com/three@0.184.0/build/three.core.js" data-resource-id="three-core" />
+<meta name="ext-resource-dependency" content="https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js" data-resource-id="three-orbit" />
+<meta name="ext-resource-dependency" content="https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js" data-resource-id="three-objexp" />
+<meta name="ext-resource-dependency" content="https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js" data-resource-id="three-gltfexp" />
+<script>
+// three.js is pinned to unpkg for authoring, but a published/bundled copy has no
+// network: the metas above hand us inlined blobs in window.__resources, so build
+// the import map from those when present (patching three.module.js's relative
+// './three.core.js' import, which a blob URL can't resolve). Sync XHR on a blob
+// is instant and keeps this ahead of the first module load.
+(function () {
+  var CDN = {"three-module":"https://unpkg.com/three@0.184.0/build/three.module.js","three-core":"https://unpkg.com/three@0.184.0/build/three.core.js","three-orbit":"https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js","three-objexp":"https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js","three-gltfexp":"https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"};
+  var R = (window.__resources || {});
+  var map = {
+    imports: {
+      'three': CDN['three-module'],
+      'three/addons/controls/OrbitControls.js': CDN['three-orbit'],
+      'three/addons/exporters/OBJExporter.js': CDN['three-objexp'],
+      'three/addons/exporters/GLTFExporter.js': CDN['three-gltfexp']
+    },
+    integrity: {
+      'https://unpkg.com/three@0.184.0/build/three.module.js': 'sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J',
+      'https://unpkg.com/three@0.184.0/build/three.core.js': 'sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT',
+      'https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js': 'sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9',
+      'https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js': 'sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3',
+      'https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js': 'sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ'
+    }
+  };
+  if (R['three-module'] && R['three-core']) {
+    try {
+      var x = new XMLHttpRequest();
+      x.open('GET', R['three-module'], false);
+      x.send();
+      var src = x.responseText.split("'./three.core.js'").join(JSON.stringify(R['three-core']))
+                              .split('"./three.core.js"').join(JSON.stringify(R['three-core']));
+      map.imports['three'] = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
+      delete map.integrity;
+      if (R['three-orbit']) map.imports['three/addons/controls/OrbitControls.js'] = R['three-orbit'];
+      if (R['three-objexp']) map.imports['three/addons/exporters/OBJExporter.js'] = R['three-objexp'];
+      if (R['three-gltfexp']) map.imports['three/addons/exporters/GLTFExporter.js'] = R['three-gltfexp'];
+    } catch (e) { console.warn('three inline map failed, falling back to CDN', e); }
+  }
+  var s = document.createElement('script');
+  s.type = 'importmap';
+  s.textContent = JSON.stringify(map);
+  document.head.appendChild(s);
+})();
+</script>
+<link rel="stylesheet" href="ds/design-system-09fcedb0-82de-4e05-8458-7e663ac6b2a4/styles.css">
+<style>
+  three-d-stage:not(:defined){visibility:hidden}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:#fff;color:#000;font-family:'Space Mono',ui-monospace,monospace;display:flex;flex-direction:column}
+  a{color:#000}a:hover{color:var(--gray-600,#5b6169)}
+  .bar{background:#000;color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px;height:56px;flex:0 0 auto}
+  .mark{font-family:'Bebas Neue',Impact,sans-serif;font-size:26px;letter-spacing:.02em;line-height:1}
+  .ol{font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+  .dim{color:var(--gray-400,#9aa1a9)}
+  main{flex:1 1 auto;display:flex;min-height:0}
+  .stagewrap{flex:1 1 auto;min-width:0;border-right:2px solid #000}
+  three-d-stage{display:block;width:100%;height:100%}
+  aside{flex:0 0 320px;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:24px;background:#fff}
+  h2{font-family:'Bebas Neue',Impact,sans-serif;font-size:30px;margin:0;letter-spacing:.02em;line-height:.92}
+  .lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px;display:block}
+  .sec{display:flex;flex-direction:column}
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .sw{aspect-ratio:1;border:1px solid var(--gray-300,#c9ced4);cursor:pointer;padding:0}
+  .sw[aria-pressed="true"]{border:2px solid #000;box-shadow:3px 3px 0 #000}
+  .row{display:flex;align-items:center;gap:10px}
+  input[type=color]{appearance:none;-webkit-appearance:none;width:56px;height:40px;padding:0;border:2px solid #000;background:#fff;cursor:pointer}
+  input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+  input[type=color]::-webkit-color-swatch{border:none}
+  .hex{font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+  .seg{display:flex;border:2px solid #000}
+  .seg button{flex:1;background:#fff;border:0;border-left:1px solid var(--gray-300,#c9ced4);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:10px 4px;cursor:pointer;transition:background 90ms}
+  .seg button:first-child{border-left:0}
+  .seg button:hover{background:var(--gray-100,#f0f2f4)}
+  .seg button[aria-pressed="true"]{background:#000;color:#fff}
+  .btn{background:#000;color:#fff;border:2px solid #000;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:12px 14px;cursor:pointer;transition:background 90ms,transform 60ms}
+  .btn:hover{background:var(--gray-800,#25292e)}
+  .btn:active{transform:translate(1px,1px)}
+  .btn.ghost{background:#fff;color:#000}
+  .btn.ghost:hover{background:var(--gray-100,#f0f2f4)}
+  .note{font-size:12px;line-height:1.5;color:var(--gray-600,#5b6169);border-top:1px solid var(--gray-300,#c9ced4);padding-top:12px}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .chip{background:#fff;border:1px solid var(--gray-300,#c9ced4);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:11px 6px;cursor:pointer;transition:background 90ms,transform 60ms}
+  .chip:hover{background:var(--gray-100,#f0f2f4)}
+  .chip:active{transform:translate(1px,1px)}
+  .chip[aria-pressed="true"]{background:#000;color:#fff;border-color:#000}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  hr{border:0;border-top:1px solid var(--gray-300,#c9ced4);margin:0}
+  @media (max-width:860px){main{flex-direction:column}.stagewrap{border-right:0;border-bottom:2px solid #000;flex:1 1 60%}aside{flex:1 1 auto}}
+</style>
+</head>
+<body>
+  <div class="bar">
+    <span class="mark">Q.</span>
+    <span class="ol">BLANKSY · 3D REP AVATAR</span>
+    <span class="ol dim" style="margin-left:auto">HEXPIN · MAP CHARACTER</span>
+  </div>
+  <main>
+    <div class="stagewrap"><three-d-stage name="blanksy" background="#eceef0" autorotate></three-d-stage></div>
+    <aside>
+      <div class="sec">
+        <h2>SKIN</h2>
+        <span class="lbl dim">BODY · ARMS · LEGS · BOOTS</span>
+        <div class="swatches" id="skinSw"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="color" id="skinPick" value="#141414">
+          <span class="hex" id="skinHex">#141414</span>
+        </div>
+      </div>
+      <div class="sec">
+        <h2>BAND + GLOVES</h2>
+        <span class="lbl dim">ALWAYS MATCHED</span>
+        <div class="swatches" id="accSw"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="color" id="accPick" value="#f7f7f5">
+          <span class="hex" id="accHex">#F7F7F5</span>
+        </div>
+      </div>
+      <div class="sec">
+        <span class="lbl">BAND + GLOVE PRINT</span>
+        <div class="grid3" id="print"></div>
+      </div>
+      <div class="sec">
+        <h2>TEXTURE</h2>
+        <span class="lbl dim">BODY · ARMS · LEGS · BOOTS</span>
+        <div class="grid3" id="tex"></div>
+      </div>
+      <hr>
+      <div class="sec">
+        <h2>KIT</h2>
+        <span class="lbl dim">TAP TO WEAR</span>
+        <div class="chips" id="kit">
+          <button class="chip" data-k="hat">BALL CAP</button>
+          <button class="chip" data-k="shades">SHADES</button>
+          <button class="chip" data-k="tee">T-SHIRT</button>
+          <button class="chip" data-k="hoodie">HOODIE</button>
+          <button class="chip" data-k="jeans">JEANS</button>
+          <button class="chip" data-k="sneakers">SNEAKERS</button>
+        </div>
+      </div>
+      <div class="sec">
+        <span class="lbl">GARMENT COLOR</span>
+        <div class="swatches" id="fitSw"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="color" id="fitPick" value="#e7e9ec">
+          <span class="hex" id="fitHex">#E7E9EC</span>
+        </div>
+      </div>
+      <div class="sec">
+        <span class="lbl">DENIM</span>
+        <div class="swatches" id="denimSw"></div>
+      </div>
+      <hr>
+      <div class="sec">
+        <span class="lbl">FINISH</span>
+        <div class="seg" id="finish">
+          <button data-f="matte">MATTE</button>
+          <button data-f="satin" aria-pressed="true">SATIN</button>
+          <button data-f="gloss">GLOSS</button>
+        </div>
+      </div>
+      <div class="sec">
+        <span class="lbl">POSE</span>
+        <div class="seg" id="pose">
+          <button data-p="wave">WAVE</button>
+          <button data-p="idle" aria-pressed="true">IDLE</button>
+          <button data-p="walk">WALK</button>
+          <button data-p="tpose">T-POSE</button>
+        </div>
+      </div>
+      <div class="pair">
+        <button class="btn ghost" id="anim" aria-pressed="true">ANIMATE: ON</button>
+        <button class="btn" id="rand">RANDOM KIT</button>
+      </div>
+      <p class="note">Band + glove prints carry their own colors — the band color tints them. Cap brim, sneaker soles and drawstrings follow the band + gloves color. Export from the stage toolbar — GLB carries colors and textures, OBJ + MTL carries colors only.</p>
+    </aside>
+  </main>
+  <script src="three-d-stage.js"></script>
+  <script type="module">
+    import * as THREE from 'three';
+
+    const stage = document.querySelector('three-d-stage');
+    await stage.ready;
+
+    const { createBlanksy } = await import('./blanksy-model.js');
+    const blanksy = await createBlanksy(THREE, { height: 1.6 });
+    const { mat, setPose } = blanksy;
+    stage.setObject(blanksy.group);
+
+    setPose('tpose', 0);                       // props are fitted against the bind pose
+    const { createProps } = await import('./blanksy-props.js');
+    const props = createProps(THREE, blanksy);
+    const { TEXTURES, applyTexture, PRINTS_LIST, applyPrint } = await import('./blanksy-textures.js');
+
+    let pose = 'idle', animate = true, t0 = performance.now();
+    (function tick() {
+      requestAnimationFrame(tick);
+      setPose(pose, animate ? (performance.now() - t0) / 1000 : 0);
+    })();
+
+    // ---------- controls ----------
+    const SKINS = ['#141414','#f4f4f2','#3b4a63','#7a2d2d','#2f5d4a','#8a6a2f'];
+    const ACCENTS = ['#f7f7f5','#141414','#e0452f','#2f6fe0','#39c07a','#f2b731'];
+    const FITS = ['#e7e9ec','#141414','#7a2d2d','#2f5d4a','#c9ced4','#f2b731'];
+    const DENIMS = ['#3c4a63','#22283a','#6b7c96','#171717','#8a8f99','#4a3b2f'];
+    const $ = s => document.querySelector(s);
+    function buildSwatches(host, colors, apply, current) {
+      colors.forEach(c => {
+        const b = document.createElement('button');
+        b.className = 'sw'; b.style.background = c; b.type = 'button'; b.title = c.toUpperCase();
+        b.setAttribute('aria-pressed', String(c.toLowerCase() === current.toLowerCase()));
+        b.onclick = () => apply(c);
+        host.appendChild(b);
+      });
+    }
+    function markSwatches(host, c) {
+      host.querySelectorAll('.sw').forEach(b =>
+        b.setAttribute('aria-pressed', String(b.title.toLowerCase() === c.toLowerCase())));
+    }
+    function setSkin(c) {
+      mat.skin.color.set(c);
+      $('#skinPick').value = c; $('#skinHex').textContent = c.toUpperCase();
+      markSwatches($('#skinSw'), c);
+    }
+    function setAccent(c) {
+      mat.accent.color.set(c);
+      $('#accPick').value = c; $('#accHex').textContent = c.toUpperCase();
+      markSwatches($('#accSw'), c);
+    }
+    buildSwatches($('#skinSw'), SKINS, setSkin, '#141414');
+    buildSwatches($('#accSw'), ACCENTS, setAccent, '#f7f7f5');
+    $('#skinPick').oninput = e => setSkin(e.target.value);
+    $('#accPick').oninput = e => setAccent(e.target.value);
+
+    let texture = null, finish = 'satin';
+    function setFit(c) {
+      props.setColors({ outfit: c });
+      $('#fitPick').value = c; $('#fitHex').textContent = c.toUpperCase();
+      markSwatches($('#fitSw'), c);
+    }
+    function setDenim(c) { props.setColors({ denim: c }); markSwatches($('#denimSw'), c); }
+    buildSwatches($('#fitSw'), FITS, setFit, '#e7e9ec');
+    buildSwatches($('#denimSw'), DENIMS, setDenim, '#3c4a63');
+    $('#fitPick').oninput = e => setFit(e.target.value);
+
+    // texture buttons
+    const texHost = $('#tex');
+    [{ id: null, label: 'NONE' }, ...TEXTURES].forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.type = 'button'; b.textContent = t.label;
+      b.setAttribute('aria-pressed', String(t.id === null));
+      b.onclick = () => {
+        texture = t.id;
+        applyTexture(THREE, mat.skin, t.id);
+        if (!t.id) applyFinish(finish);
+        [...texHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      };
+      texHost.appendChild(b);
+    });
+
+    // band + glove prints
+    const printHost = $('#print');
+    let print = null;
+    [{ id: null, label: 'PLAIN' }, ...PRINTS_LIST].forEach(p => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.type = 'button'; b.textContent = p.label;
+      b.setAttribute('aria-pressed', String(p.id === null));
+      b.onclick = () => {
+        print = p.id;
+        applyPrint(THREE, mat.accent, p.id);
+        // a print carries its own color: keep the accent color as a tint, white by default
+        if (p.id && $('#accPick').value.toLowerCase() !== '#ffffff') setAccent('#ffffff');
+        if (!p.id) applyFinish(finish);
+        [...printHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      };
+      printHost.appendChild(b);
+    });
+
+    $('#kit').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      props.set(b.dataset.k, !props.state[b.dataset.k]);
+      [...e.currentTarget.children].forEach(x =>
+        x.setAttribute('aria-pressed', String(!!props.state[x.dataset.k])));
+    };
+
+    const FINISH = { matte:[0.72,0.0], satin:[0.34,0.15], gloss:[0.09,0.28] };
+    function applyFinish(f) {
+      const [r, m] = FINISH[f];
+      if (!texture) { mat.skin.roughness = r; mat.skin.metalness = m; }
+      if (!print) { mat.accent.roughness = Math.min(1, r + 0.12); mat.accent.metalness = m * 0.4; }
+    }
+    $('#finish').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      finish = b.dataset.f; applyFinish(finish);
+      [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    };
+    $('#pose').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      pose = b.dataset.p; t0 = performance.now();
+      [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    };
+    $('#anim').onclick = e => {
+      animate = !animate;
+      e.currentTarget.setAttribute('aria-pressed', String(animate));
+      e.currentTarget.textContent = 'ANIMATE: ' + (animate ? 'ON' : 'OFF');
+    };
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    $('#rand').onclick = () => {
+      setSkin(pick(SKINS)); setAccent(pick(ACCENTS)); setFit(pick(FITS)); setDenim(pick(DENIMS));
+      const top = pick(['tee', 'hoodie', null]);
+      ['hat','shades','tee','hoodie','jeans','sneakers'].forEach(k => props.set(k, false));
+      if (top) props.set(top, true);
+      if (Math.random() < 0.6) props.set('hat', true);
+      if (Math.random() < 0.4) props.set('shades', true);
+      if (Math.random() < 0.6) props.set('jeans', true);
+      if (Math.random() < 0.6) props.set('sneakers', true);
+      [...$('#kit').children].forEach(x => x.setAttribute('aria-pressed', String(!!props.state[x.dataset.k])));
+    };
+  </script>
+</body>
+</html>
