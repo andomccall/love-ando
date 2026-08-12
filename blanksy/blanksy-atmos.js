@@ -42,8 +42,13 @@ export function createAtmos(THREE, stage, envs) {
     return (envCache[kkey] = rt.texture);
   }
 
-  // distance fog so sets fade into their sky instead of ending on a hard edge
-  scene.fog = new THREE.Fog(0xeceef0, 14, 60);
+  // distance fog so sets fade into their sky instead of ending on a hard edge.
+  // kept as our own object so an HDRI world can detach it and we can re-attach.
+  const atmosFog = new THREE.Fog(0xeceef0, 14, 60);
+  scene.fog = atmosFog;
+  // when an HDRI world owns the sky/reflections/fog, we only retint the lights
+  let worldMode = false;
+  function setWorldMode(on) { worldMode = on; if (!on) applyTime(); }
 
   // --- time of day ---
   // day restores the stage's boot look and leaves each set's own sky alone;
@@ -86,7 +91,9 @@ export function createAtmos(THREE, stage, envs) {
     key.color.set(p.key); key.intensity = p.keyI; key.position.set(p.keyPos[0], p.keyPos[1], p.keyPos[2]);
     if (hemi) { hemi.color.set(p.hemiSky); hemi.groundColor.set(p.hemiGround); hemi.intensity = p.hemiI; }
     if (fill) { fill.color.set(p.fill); fill.intensity = p.fillI; }
-    scene.fog.color.set(p.fog); scene.fog.near = p.fogNear; scene.fog.far = p.fogFar;
+    if (worldMode) return;                       // an HDRI world owns sky/reflections/fog
+    scene.fog = atmosFog;
+    atmosFog.color.set(p.fog); atmosFog.near = p.fogNear; atmosFog.far = p.fogFar;
     scene.environment = envMap(p.env[0], p.env[1]);
     scene.environmentIntensity = p.envI;
     if (p.bg) stage.style.setProperty('--stage-bg', p.bg);
@@ -95,8 +102,10 @@ export function createAtmos(THREE, stage, envs) {
   // sets overwrite --stage-bg when chosen; call this after an env change so the
   // current mood re-asserts its sky.
   function reassert() {
+    if (worldMode) return;
     const p = PRESETS[time];
-    scene.fog.color.set(p.fog); scene.fog.near = p.fogNear; scene.fog.far = p.fogFar;
+    scene.fog = atmosFog;
+    atmosFog.color.set(p.fog); atmosFog.near = p.fogNear; atmosFog.far = p.fogFar;
     if (p.bg) stage.style.setProperty('--stage-bg', p.bg);
   }
 
@@ -244,5 +253,5 @@ export function createAtmos(THREE, stage, envs) {
   }
 
   applyTime();
-  return { TIMES, WEATHERS, WINDS, setTime, setWeather, setWind, reassert, update };
+  return { TIMES, WEATHERS, WINDS, setTime, setWeather, setWind, setWorldMode, reassert, update };
 }

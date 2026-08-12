@@ -26,14 +26,15 @@
 // './three.core.js' import, which a blob URL can't resolve). Sync XHR on a blob
 // is instant and keeps this ahead of the first module load.
 (function () {
-  var CDN = {"three-module":"https://unpkg.com/three@0.184.0/build/three.module.js","three-core":"https://unpkg.com/three@0.184.0/build/three.core.js","three-orbit":"https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js","three-objexp":"https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js","three-gltfexp":"https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"};
+  var CDN = {"three-module":"https://unpkg.com/three@0.184.0/build/three.module.js","three-core":"https://unpkg.com/three@0.184.0/build/three.core.js","three-orbit":"https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js","three-objexp":"https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js","three-gltfexp":"https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js","three-rgbe":"https://unpkg.com/three@0.184.0/examples/jsm/loaders/RGBELoader.js"};
   var R = (window.__resources || {});
   var map = {
     imports: {
       'three': CDN['three-module'],
       'three/addons/controls/OrbitControls.js': CDN['three-orbit'],
       'three/addons/exporters/OBJExporter.js': CDN['three-objexp'],
-      'three/addons/exporters/GLTFExporter.js': CDN['three-gltfexp']
+      'three/addons/exporters/GLTFExporter.js': CDN['three-gltfexp'],
+      'three/addons/loaders/RGBELoader.js': CDN['three-rgbe']
     },
     integrity: {
       'https://unpkg.com/three@0.184.0/build/three.module.js': 'sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J',
@@ -186,6 +187,13 @@
       </div>
       <hr>
       <div class="sec">
+        <h2>REAL WORLD</h2>
+        <span class="lbl dim">DROP HIM INTO A PLACE</span>
+        <div class="chips" id="world"></div>
+        <span class="lbl dim" style="margin-top:8px">Photoreal HDRI, lights and reflects him</span>
+      </div>
+      <hr>
+      <div class="sec">
         <h2>ATMOSPHERE</h2>
         <span class="lbl dim">TIME OF DAY</span>
         <div class="seg" id="time">
@@ -260,6 +268,8 @@
     const emotes = createEmotes(blanksy);
     const { createAtmos } = await import('./blanksy-atmos.js');
     const atmos = createAtmos(THREE, stage, envs);
+    const { createWorlds } = await import('./blanksy-worlds.js');
+    const worlds = createWorlds(THREE, stage, envs, atmos);
 
     let pose = 'idle', animate = true, t0 = performance.now(), last = performance.now();
     let emote = null, jam = false, et0 = performance.now(), curMove = null;
@@ -448,11 +458,29 @@
       b.className = 'chip'; b.type = 'button'; b.textContent = e.label;
       b.setAttribute('aria-pressed', String(e.id === null));
       b.onclick = () => {
+        if (worlds.isActive()) {        // leaving a real world back to a built set
+          worlds.set(null);
+          [...document.querySelectorAll('#world button')].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.wid === '')));
+        }
         envs.set(e.id);
         atmos.reassert();               // keep the current time-of-day sky after a set change
         [...envHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
       };
       envHost.appendChild(b);
+    });
+
+    // real worlds (HDRI). Picking one clears the built set; NONE returns to it.
+    const worldHost = $('#world');
+    worlds.LIST.forEach(w => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.type = 'button'; b.textContent = w.label; b.dataset.wid = w.id || '';
+      b.setAttribute('aria-pressed', String(w.id === null));
+      b.onclick = async () => {
+        [...worldHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+        if (w.id) [...envHost.children].forEach(x => x.setAttribute('aria-pressed', 'false'));
+        await worlds.set(w.id || null);
+      };
+      worldHost.appendChild(b);
     });
 
     // atmosphere: time of day / weather / wind
