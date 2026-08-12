@@ -187,6 +187,16 @@
       </div>
       <hr>
       <div class="sec">
+        <h2>EXPLORE</h2>
+        <span class="lbl dim">A PLACE TO ROAM, FREELY</span>
+        <div class="chips" id="explore">
+          <button data-x="block">THE BLOCK</button>
+          <button data-x="" aria-pressed="true">OFF</button>
+        </div>
+        <span class="lbl dim" style="margin-top:8px">Turns on WALK, W A S D or arrows to roam</span>
+      </div>
+      <hr>
+      <div class="sec">
         <h2>REAL WORLD</h2>
         <span class="lbl dim">DROP HIM INTO A PLACE</span>
         <div class="chips" id="world"></div>
@@ -270,6 +280,12 @@
     const atmos = createAtmos(THREE, stage, envs);
     const { createWorlds } = await import('./blanksy-worlds.js');
     const worlds = createWorlds(THREE, stage, envs, atmos);
+    const { createWorldmap } = await import('./blanksy-worldmap.js');
+    const worldmap = createWorldmap(THREE, stage, envs);
+    // collision + ground source: the explorable world when active, else the built set
+    const activeCols = () => worldmap.isActive() ? worldmap.colliders() : envs.colliders();
+    const activeFloorY = () => worldmap.isActive() ? worldmap.floorY : envs.floorY;
+    const activeCeil = () => worldmap.isActive() ? null : envs.ceilingY();
 
     let pose = 'idle', animate = true, t0 = performance.now(), last = performance.now();
     let emote = null, jam = false, et0 = performance.now(), curMove = null;
@@ -303,7 +319,7 @@
         const dir = fw.multiplyScalar(f).add(rt.multiplyScalar(s));
         if (dir.lengthSq() > 0) {
           dir.normalize();
-          const cols = envs.colliders();
+          const cols = activeCols();
           const nx = g.position.x + dir.x * SPEED * dt;
           if (!blocked(nx, g.position.z, cols)) g.position.x = nx;
           const nz = g.position.z + dir.z * SPEED * dt;
@@ -318,8 +334,8 @@
       const off = cam.position.clone().sub(controls.target);
       const actualLen = off.length();
       if (Math.abs(actualLen - camAppliedLen) > 0.02) camWantLen = actualLen;  // user zoomed
-      controls.target.set(g.position.x, envs.floorY + 0.85, g.position.z);
-      const cols = envs.colliders();
+      controls.target.set(g.position.x, activeFloorY() + 0.85, g.position.z);
+      const cols = activeCols();
       let len = camWantLen;
       if (actualLen > 0.001) {
         const dir = off.divideScalar(actualLen);
@@ -327,14 +343,14 @@
           const l = camWantLen * (1 - i / 10);
           const px = controls.target.x + dir.x * l, pz = controls.target.z + dir.z * l;
           const py = controls.target.y + dir.y * l;
-          const inside = py < envs.floorY + 2.6 && cols.some(c =>
+          const inside = py < activeFloorY() + 2.6 && cols.some(c =>
             px > c.x0 - 0.25 && px < c.x1 + 0.25 && pz > c.z0 - 0.25 && pz < c.z1 + 0.25);
           len = Math.max(0.9, l);
           if (!inside) break;
         }
         cam.position.copy(controls.target).addScaledVector(dir, len);
-        const ceil = envs.ceilingY();
-        cam.position.y = Math.max(envs.floorY + 0.4, ceil ? Math.min(cam.position.y, ceil - 0.35) : cam.position.y);
+        const ceil = activeCeil();
+        cam.position.y = Math.max(activeFloorY() + 0.4, ceil ? Math.min(cam.position.y, ceil - 0.35) : cam.position.y);
       }
       camAppliedLen = len;
       controls.update();
@@ -458,6 +474,7 @@
       b.className = 'chip'; b.type = 'button'; b.textContent = e.label;
       b.setAttribute('aria-pressed', String(e.id === null));
       b.onclick = () => {
+        clearExplore();                 // leaving the roamable block back to a built set
         if (worlds.isActive()) {        // leaving a real world back to a built set
           worlds.set(null);
           [...document.querySelectorAll('#world button')].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.wid === '')));
@@ -476,12 +493,48 @@
       b.className = 'chip'; b.type = 'button'; b.textContent = w.label; b.dataset.wid = w.id || '';
       b.setAttribute('aria-pressed', String(w.id === null));
       b.onclick = async () => {
+        if (w.id) clearExplore();       // entering a real world leaves the block
         [...worldHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
         if (w.id) [...envHost.children].forEach(x => x.setAttribute('aria-pressed', 'false'));
         await worlds.set(w.id || null);
       };
       worldHost.appendChild(b);
     });
+
+    // EXPLORE: THE BLOCK — a roamable neighborhood. Drops him in and turns on WALK.
+    const exploreHost = $('#explore');
+    function clearExplore() {
+      if (worldmap.isActive()) {
+        worldmap.show(false);
+        if (walkMode) $('#walk').click();
+        blanksy.group.position.set(0, 0, 0); blanksy.group.rotation.y = 0;
+      }
+      [...exploreHost.children].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.x === '')));
+    }
+    exploreHost.onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const on = b.dataset.x === 'block';
+      if (on) {
+        if (worlds.isActive()) {
+          worlds.set(null);
+          [...document.querySelectorAll('#world button')].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.wid === '')));
+        }
+        envs.set(null);
+        [...envHost.children].forEach(x => x.setAttribute('aria-pressed', 'false'));
+        worldmap.show(true);
+        stage._ground.position.y = worldmap.floorY;
+        stage.style.setProperty('--stage-bg', worldmap.bg);
+        atmos.reassert();
+        blanksy.group.position.set(0, 0, 10); blanksy.group.rotation.y = Math.PI;   // by the street, facing the plaza
+        if (!walkMode) $('#walk').click();
+      } else {
+        worldmap.show(false);
+        if (walkMode) $('#walk').click();
+        blanksy.group.position.set(0, 0, 0); blanksy.group.rotation.y = 0;
+        envs.set(null);
+      }
+      [...exploreHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    };
 
     // atmosphere: time of day / weather / wind
     $('#time').onclick = e => {
