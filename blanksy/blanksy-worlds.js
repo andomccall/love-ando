@@ -41,6 +41,7 @@ export function createWorlds(THREE, stage, envs, atmos) {
     if (!w || !w.id) {
       active = null;
       scene.background = null;
+      stage._ground.material.opacity = 0.18;      // restore the subtle set shadow
       renderer.toneMapping = THREE.NoToneMapping; renderer.toneMappingExposure = 1;
       atmos.setWorldMode(false);                  // hands sky/reflections/fog back to atmosphere
       return;
@@ -56,6 +57,23 @@ export function createWorlds(THREE, stage, envs, atmos) {
     scene.fog = null;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = w.exposure ?? 1;
+    ground();
+  }
+
+  // Plant him. An HDRI has no real floor, so a character at the origin looks like
+  // he floats above the photo's ground. Two things fix it: a stronger contact
+  // shadow directly under his feet, and a near-horizon camera framing so his feet
+  // sit on the scene's ground line instead of hanging in the sky.
+  function ground() {
+    const feetY = envs.floorY ?? 0;
+    stage._ground.position.y = feetY;
+    stage._ground.material.opacity = 0.42;               // firmer contact shadow in a real place
+    const g = stage._object, cam = stage._camera, ctr = stage._controls;
+    ctr.autoRotate = false;
+    ctr.target.set(g.position.x, feetY + 0.72, g.position.z);
+    const dir = new THREE.Vector3(0.55, 0.14, 1).normalize();   // low 3/4 angle, horizon near his feet
+    cam.position.copy(ctr.target).add(dir.multiplyScalar(4.6));
+    ctr.update();
   }
 
   return { LIST, set, isActive: () => active != null };
