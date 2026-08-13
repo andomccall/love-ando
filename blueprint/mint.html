@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mint, a Love Ando build in the open</title>
+<meta name="description" content="Walk a full app built in the open: the screens, the user flow, the backend, and a build kit to rebuild it yourself. A Love, Ando sample.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --canvas: #f2eeea;
+    --paper: #ffffff;
+    --ink: #1a1815;
+    --muted: #6f665b;
+    --faint: #9a9086;
+    --line: #e5ddd2;
+    --line-strong: #d8cec1;
+    --rust: #bd6240;
+    --rust-ink: #8f4526;
+    --rust-wash: #f6e7de;
+    --ok: #3f7d54;
+    --ok-wash: #e4efe6;
+    --warn: #b07d2a;
+    --warn-wash: #f4ead2;
+    --la-red: #f72819;
+    --shadow: 0 1px 2px rgba(26,24,21,.04), 0 8px 24px rgba(26,24,21,.06);
+    --shadow-lift: 0 2px 4px rgba(26,24,21,.05), 0 18px 40px rgba(26,24,21,.10);
+    --font-display: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --col: 74ch;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+
+  /* ---- rhythm ---- */
+  .wrap { width: min(100% - 2.5rem, 1080px); margin-inline: auto; }
+  .col { width: min(100% - 2.5rem, var(--col)); margin-inline: auto; }
+  section { padding-block: clamp(3rem, 7vw, 5.5rem); }
+  section + section { border-top: 1px solid var(--line); }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+  h2 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); line-height: 1.08; }
+  h3 { font-size: 1.18rem; letter-spacing: -0.01em; }
+  p { margin: 0 0 1rem; }
+  a { color: var(--rust-ink); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--rust); outline-offset: 3px; border-radius: 3px; }
+
+  .eyebrow {
+    font-family: var(--font-mono); font-size: .72rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--rust-ink);
+    margin: 0 0 1.1rem;
+  }
+  .lede { font-size: clamp(1.05rem, 2vw, 1.22rem); color: var(--muted); }
+  .section-head { margin-bottom: 2.6rem; }
+  .section-head p { max-width: 60ch; }
+
+  /* ---- top nav ---- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--canvas) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .row { display: flex; align-items: center; gap: 1.5rem; height: 56px; }
+  .brand { display: flex; align-items: center; gap: .55rem; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; }
+  .brand .mark {
+    width: 26px; height: 26px; border-radius: 7px; background: var(--ink); color: var(--canvas);
+    display: grid; place-items: center; font-size: 15px; font-weight: 800;
+  }
+  .navlinks { margin-left: auto; display: flex; gap: 1.4rem; font-size: .9rem; }
+  .navlinks a { color: var(--muted); text-decoration: none; }
+  .navlinks a:hover { color: var(--ink); }
+  @media (max-width: 720px) { .navlinks { display: none; } }
+
+  /* ---- hero ---- */
+  .hero { padding-top: clamp(3rem, 7vw, 5rem); }
+  .hero h1 { font-size: clamp(2.4rem, 6.4vw, 4.1rem); line-height: 1.02; margin-bottom: 1.3rem; }
+  .hero .lede { max-width: 58ch; }
+  .metastrip { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 2rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: .45rem;
+    font-family: var(--font-mono); font-size: .76rem; letter-spacing: .02em;
+    padding: .34rem .7rem; border-radius: 999px; border: 1px solid var(--line-strong);
+    background: var(--paper); color: var(--muted);
+  }
+  .chip.live { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 35%, var(--line)); }
+  .chip .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .chip.live .dot { animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+  .open-callout {
+    margin-top: 2.4rem; padding: 1.1rem 1.3rem; border-radius: 12px;
+    background: var(--rust-wash); border: 1px solid color-mix(in srgb, var(--rust) 25%, var(--line));
+    display: flex; gap: .9rem; align-items: flex-start; max-width: 62ch;
+  }
+  .open-callout .k { font-size: 1.3rem; line-height: 1; }
+  .open-callout p { margin: 0; font-size: .96rem; color: var(--rust-ink); }
+  .open-callout strong { color: var(--ink); }
+
+  /* ---- stat tiles ---- */
+  .tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .tile { background: var(--paper); padding: 1.3rem 1.2rem; }
+  .tile .n { font-family: var(--font-display); font-weight: 800; font-size: 2rem; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .tile .l { font-size: .82rem; color: var(--muted); margin-top: .2rem; }
+  @media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---- browser frame (mockups) ---- */
+  .tour { display: grid; gap: 2.6rem; }
+  .shot { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.8rem; align-items: center; }
+  .shot:nth-child(even) { grid-template-columns: 1fr 1.15fr; }
+  .shot:nth-child(even) .caption { order: -1; }
+  @media (max-width: 860px) { .shot, .shot:nth-child(even) { grid-template-columns: 1fr; } .shot:nth-child(even) .caption { order: 0; } }
+  .caption .kick { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--rust-ink); margin-bottom: .5rem; }
+  .caption h3 { margin-bottom: .5rem; }
+  .caption p { font-size: .96rem; color: var(--muted); margin-bottom: .5rem; }
+  .caption .route { font-family: var(--font-mono); font-size: .8rem; color: var(--faint); }
+
+  .browser { border-radius: 12px; background: var(--paper); border: 1px solid var(--line-strong); box-shadow: var(--shadow-lift); overflow: hidden; }
+  .browser .bar { display: flex; align-items: center; gap: .4rem; padding: .55rem .8rem; background: #ece5dc; border-bottom: 1px solid var(--line); }
+  .browser .bar i { width: 10px; height: 10px; border-radius: 50%; background: #cbbfae; display: inline-block; }
+  .browser .url { margin-left: .6rem; font-family: var(--font-mono); font-size: .72rem; color: var(--muted); background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: .18rem .55rem; flex: 1; }
+  .screen { padding: .9rem; background: var(--canvas); }
+
+  /* app-nav strip inside mockups */
+  .appnav { display: flex; align-items: center; gap: .8rem; background: var(--ink); color: #d8d2ca; border-radius: 8px; padding: .5rem .75rem; font-size: .74rem; margin-bottom: .8rem; }
+  .appnav .logo { width: 18px; height: 18px; border-radius: 5px; background: var(--canvas); color: var(--ink); display: grid; place-items: center; font-weight: 800; font-size: 11px; }
+  .appnav .sp { margin-left: auto; }
+  .appnav b { color: #fff; font-weight: 600; }
+
+  /* generic mini-card */
+  .lead-card, .mini { background: var(--paper); border: 1px solid var(--line); border-radius: 9px; padding: .7rem .8rem; }
+  .leadgrid { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
+  @media (max-width: 520px) { .leadgrid { grid-template-columns: 1fr; } }
+  .lead-card .top { display: flex; align-items: center; gap: .5rem; }
+  .lead-card .name { font-weight: 650; font-size: .84rem; }
+  .lead-card .meta { font-size: .74rem; color: var(--muted); margin-top: .15rem; }
+  .tag { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .04em; text-transform: uppercase; padding: .12rem .4rem; border-radius: 5px; }
+  .tag.cook { background: var(--rust-wash); color: var(--rust-ink); }
+  .tag.deck { background: var(--warn-wash); color: var(--warn); }
+  .tag.claimed { background: var(--ok-wash); color: var(--ok); }
+  .btn-mini { margin-left: auto; font-size: .72rem; font-weight: 650; color: #fff; background: var(--rust); border: none; border-radius: 6px; padding: .28rem .6rem; }
+
+  /* avatars */
+  .av { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: .66rem; font-weight: 700; flex: none; }
+  .av.sm { width: 20px; height: 20px; font-size: .58rem; }
+
+  /* dock mockup */
+  .dock { display: grid; gap: .6rem; }
+  .dockbox { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: var(--paper); }
+  .dockbox .hd { background: var(--ink); color: #fff; font-size: .68rem; font-family: var(--font-mono); letter-spacing: .06em; text-transform: uppercase; padding: .4rem .6rem; display: flex; align-items: center; gap: .4rem; }
+  .dockbox .hd .live { margin-left: auto; font-size: .62rem; color: #f0b8a6; }
+  .dockbox .bd { padding: .55rem .6rem; display: grid; gap: .45rem; }
+  .floor-row { display: flex; align-items: center; gap: .5rem; font-size: .78rem; }
+  .floor-row .fi { margin-left: auto; font-family: var(--font-mono); font-size: .58rem; background: #fbe3da; color: var(--rust-ink); padding: .1rem .35rem; border-radius: 4px; text-transform: uppercase; }
+  .msg { display: flex; gap: .45rem; align-items: flex-start; font-size: .78rem; }
+  .msg .body { background: var(--canvas); border-radius: 8px; padding: .35rem .5rem; }
+  .msg .who { font-weight: 650; font-size: .7rem; }
+
+  /* numbers table */
+  .ntable { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  .ntable th { text-align: left; font-family: var(--font-mono); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: .4rem .5rem; border-bottom: 1px solid var(--line); }
+  .ntable td { padding: .45rem .5rem; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .ntable td.name { display: flex; align-items: center; gap: .45rem; font-weight: 600; }
+  .ntable tr:last-child td { border-bottom: none; }
+  .strong-num { font-weight: 700; }
+
+  /* inventory table */
+  .invwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  table.inv { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 560px; }
+  table.inv th { text-align: left; background: var(--paper); font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: .7rem .9rem; border-bottom: 1px solid var(--line-strong); }
+  table.inv td { padding: .6rem .9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.inv tr:last-child td { border-bottom: none; }
+  table.inv td.grp { font-weight: 700; }
+  table.inv code { font-family: var(--font-mono); font-size: .82em; color: var(--rust-ink); background: var(--rust-wash); padding: .06rem .3rem; border-radius: 4px; }
+  .rowgroup td { background: #efe8df; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); font-weight: 700; }
+
+  /* architecture cards */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  @media (max-width: 820px) { .grid2 { grid-template-columns: 1fr; } }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 1.3rem 1.4rem; box-shadow: var(--shadow); }
+  .card h3 { display: flex; align-items: center; gap: .5rem; margin-bottom: .6rem; }
+  .card ul { margin: .3rem 0 0; padding-left: 1.1rem; }
+  .card li { font-size: .92rem; color: var(--muted); margin-bottom: .35rem; }
+  .card li b { color: var(--ink); font-weight: 650; }
+  .card code, p code, li code { font-family: var(--font-mono); font-size: .84em; background: #efe8df; padding: .05rem .3rem; border-radius: 4px; color: var(--ink); }
+
+  /* user-flow (HTML, readable, on-brand) */
+  .flow { display: flex; flex-direction: column; gap: 22px; max-width: 640px; margin-inline: auto; }
+  .fstage { position: relative; background: var(--paper); border: 1px solid var(--line-strong); border-radius: 10px; padding: .8rem 1.05rem; box-shadow: var(--shadow); text-align: left; }
+  .fstage b { display: block; font-size: .96rem; font-weight: 650; letter-spacing: -0.01em; }
+  .fstage em { display: block; font-style: normal; font-size: .82rem; color: var(--muted); margin-top: .1rem; }
+  .fstage .role { position: absolute; top: -8px; left: .95rem; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .08em; text-transform: uppercase; padding: .1rem .42rem; border-radius: 5px; background: var(--ink); color: var(--canvas); }
+  .fstage.setter .role { background: #3b5b8c; }
+  .fstage.closer .role { background: var(--rust); }
+  .fstage.money { background: var(--rust-wash); border-color: color-mix(in srgb, var(--rust) 35%, var(--line)); }
+  .fstage .meter { color: var(--rust-ink); font-weight: 600; }
+  .fstage:not(:first-child)::before { content: ""; position: absolute; top: -22px; left: 50%; transform: translateX(-50%); width: 2px; height: 16px; background: var(--line-strong); }
+  .fstage:not(:first-child)::after { content: ""; position: absolute; top: -7px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--line-strong); }
+
+  /* architecture (HTML) */
+  .arch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: start; }
+  @media (max-width: 760px) { .arch { grid-template-columns: 1fr; } }
+  .layer { background: var(--canvas); border: 1px solid var(--line-strong); border-radius: 12px; padding: 1rem; }
+  .layer .lh { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .09em; text-transform: uppercase; color: var(--rust-ink); margin-bottom: .6rem; }
+  .layer .node { background: var(--ink); color: #efe8df; border-radius: 8px; padding: .55rem .7rem; font-size: .85rem; font-weight: 600; margin-bottom: .45rem; }
+  .layer .node:last-child { margin-bottom: 0; }
+  .layer .node em { display: block; font-style: normal; font-weight: 400; font-size: .73rem; color: #b3a99c; margin-top: .1rem; }
+  .arch-int { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+  .arch-int .lbl { font-family: var(--font-mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-right: .2rem; }
+  .ichip { display: inline-flex; align-items: center; gap: .4rem; background: var(--paper); border: 1px solid var(--line-strong); border-radius: 999px; padding: .34rem .75rem; font-size: .82rem; font-weight: 600; }
+  .ichip.live { border-color: color-mix(in srgb, var(--ok) 40%, var(--line)); color: var(--ok); }
+  .ichip .d { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  .note { border-left: 3px solid var(--rust); background: var(--rust-wash); padding: 1rem 1.2rem; border-radius: 0 10px 10px 0; font-size: .92rem; color: var(--rust-ink); }
+  .note b { color: var(--ink); }
+
+  /* rebuild steps */
+  .steps { counter-reset: s; display: grid; gap: .9rem; text-align: left; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: .9rem; align-items: start; text-align: left; }
+  .step::before { counter-increment: s; content: counter(s); font-family: var(--font-display); font-weight: 800; width: 34px; height: 34px; border-radius: 9px; background: var(--ink); color: var(--canvas); display: grid; place-items: center; font-size: .95rem; flex: none; }
+  .step .st { padding-top: .1rem; text-align: left; }
+  .step h3 { font-size: 1rem; margin-bottom: .15rem; text-align: left; }
+  .step p { font-size: .9rem; color: var(--muted); margin: 0; text-align: left; }
+
+  /* contents / TOC */
+  .contents { padding-block: clamp(2rem, 4.5vw, 3.2rem); }
+  .contents .eyebrow { margin-bottom: 1rem; }
+  ol.toc { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  ol.toc li { margin: 0; }
+  ol.toc a { display: flex; align-items: baseline; gap: .75rem; background: var(--paper); padding: 1rem 1.25rem; text-decoration: none; color: var(--ink); transition: background .15s ease; text-align: left; }
+  ol.toc a:hover { background: var(--rust-wash); }
+  ol.toc .tn { font-family: var(--font-mono); font-size: .74rem; font-weight: 700; color: var(--rust-ink); }
+  ol.toc .tx { display: flex; flex-direction: column; }
+  ol.toc .tt { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; }
+  ol.toc .td { font-size: .82rem; color: var(--muted); margin-top: .12rem; }
+  @media (max-width: 720px) { ol.toc { grid-template-columns: 1fr; } }
+  pre.code { font-family: var(--font-mono); font-size: .82rem; background: var(--ink); color: #ece4d8; padding: 1rem 1.2rem; border-radius: 10px; overflow-x: auto; line-height: 1.7; }
+  pre.code .c { color: #b6a892; }
+  pre.code .g { color: #9ac6a6; }
+
+  .repo-line { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; background: var(--paper); border: 1px solid var(--line-strong); border-radius: 10px; padding: .8rem 1rem; font-family: var(--font-mono); font-size: .86rem; }
+  .repo-line .lock { color: var(--muted); }
+
+  /* built-in-the-open band */
+  .open-band { background: var(--ink); color: #efe8df; border-top: none; }
+  .open-band h2 { color: #fff; }
+  .open-band .eyebrow { color: #f0a58e; }
+  .open-band .lede { color: #c9c0b4; }
+  .open-band a.cta { display: inline-flex; align-items: center; gap: .5rem; background: var(--la-red); color: #fff; text-decoration: none; font-weight: 650; padding: .7rem 1.2rem; border-radius: 9px; font-size: .95rem; }
+  .open-band a.cta.ghost { background: transparent; border: 1px solid #4a453d; color: #efe8df; }
+  .open-band .ctas { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.6rem; }
+  .open-band .kicker { font-family: var(--font-mono); font-size: .78rem; color: #8f877b; }
+
+  footer { padding: 2.4rem 0 3rem; font-size: .8rem; color: var(--faint); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; align-items: center; }
+  footer .sep { flex: 1; }
+
+  .anchor { scroll-margin-top: 72px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap row">
+    <span class="brand"><span class="mark">M</span> Mint</span>
+    <nav class="navlinks">
+      <a href="#app">The app</a>
+      <a href="#flow">User flow</a>
+      <a href="#screens">Screens</a>
+      <a href="#backend">Backend</a>
+      <a href="#rebuild">Rebuild it</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="col">
+    <p class="eyebrow">A Love, Ando build &middot; in the open</p>
+    <h1>The system of record for insurance sales agencies.</h1>
+    <p class="lede">Mint is a training platform, a lead marketplace, and the book of record for the setter/closer sales model, live in production at mintleads.bid. This dossier walks the app screen by screen, maps the flow a lead takes from set to close, documents the backend, and hands you the repo.</p>
+    <div class="metastrip">
+      <span class="chip live"><span class="dot"></span> Live at mintleads.bid</span>
+      <span class="chip">Next.js 16 &middot; React 19 &middot; TypeScript</span>
+      <span class="chip">Supabase &middot; Stripe &middot; LiveKit</span>
+      <span class="chip">37 screens &middot; 105 migrations</span>
+    </div>
+    <div class="open-callout">
+      <span class="k">&#9995;</span>
+      <p><strong>Built in the open.</strong> You are welcome to take this blueprint and rebuild it yourself. It is shared in the spirit of pushing real things into the world, the same ethos behind loveando.org.</p>
+    </div>
+  </div>
+</header>
+
+<section class="contents anchor" id="contents">
+  <div class="col">
+    <p class="eyebrow">Contents</p>
+    <ol class="toc">
+      <li><a href="#app"><span class="tn">01</span><span class="tx"><span class="tt">The app</span><span class="td">The screens that carry the product</span></span></a></li>
+      <li><a href="#flow"><span class="tn">02</span><span class="tx"><span class="tt">User flow</span><span class="td">From set to close, and the money rail</span></span></a></li>
+      <li><a href="#screens"><span class="tn">03</span><span class="tx"><span class="tt">Screen inventory</span><span class="td">Every screen, by who uses it</span></span></a></li>
+      <li><a href="#backend"><span class="tn">04</span><span class="tx"><span class="tt">Backend &amp; architecture</span><span class="td">What runs under the screens</span></span></a></li>
+      <li><a href="#rebuild"><span class="tn">05</span><span class="tx"><span class="tt">Rebuild it yourself</span><span class="td">The repo and the path to running it</span></span></a></li>
+    </ol>
+  </div>
+</section>
+
+<section id="glance" class="anchor">
+  <div class="wrap">
+    <div class="tiles">
+      <div class="tile"><div class="n">37</div><div class="l">App screens</div></div>
+      <div class="tile"><div class="n">105</div><div class="l">DB migrations</div></div>
+      <div class="tile"><div class="n">5</div><div class="l">Live integrations</div></div>
+      <div class="tile"><div class="n">$0.85</div><div class="l">Per-FI billing rail</div></div>
+      <div class="tile"><div class="n">Multi</div><div class="l">Tenant, white-label</div></div>
+      <div class="tile"><div class="n">Live</div><div class="l">Real-time voice floor</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="app" class="anchor">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">The app</p>
+      <h2>A working sales floor, not a form.</h2>
+      <p>Four of the screens that carry the product. Reps and customers below are fictional; the layouts, states, and flows are the real app.</p>
+    </div>
+
+    <div class="tour">
+
+      <!-- 1: Marketplace -->
+      <div class="shot">
+        <div class="browser">
+          <div class="bar"><i></i><i></i><i></i><span class="url">mintleads.bid/market</span></div>
+          <div class="screen">
+            <div class="appnav"><span class="logo">M</span> <b>Marketplace</b> <span>Numbers</span> <span>Calendar</span> <span class="sp"></span> <span>+ New Lead</span></div>
+            <div class="leadgrid">
+              <div class="lead-card">
+                <div class="top"><span class="av" style="background:#b25640">KN</span><div><div class="name">K. Nguyen</div><div class="meta">Term life &middot; age 52 &middot; NJ</div></div><span class="tag cook">Cooking</span></div>
+                <div class="top" style="margin-top:.5rem"><span class="meta" style="color:var(--faint)">Set by Dre C. &middot; 2m ago</span><button class="btn-mini">Claim</button></div>
+              </div>
+              <div class="lead-card">
+                <div class="top"><span class="av" style="background:#3b5b8c">RA</span><div><div class="name">R. Alvarez</div><div class="meta">IUL &middot; age 41 &middot; PA</div></div><span class="tag deck">On deck</span></div>
+                <div class="top" style="margin-top:.5rem"><span class="meta" style="color:var(--faint)">Next: Priya S.</span><button class="btn-mini" style="background:var(--warn)">Pass</button></div>
+              </div>
+              <div class="lead-card">
+                <div class="top"><span class="av" style="background:#2f5233">MT</span><div><div class="name">M. Tran</div><div class="meta">Final expense &middot; age 68</div></div><span class="tag claimed">Claimed</span></div>
+                <div class="top" style="margin-top:.5rem"><span class="meta" style="color:var(--ok)">&#10003; Marcus B.</span></div>
+              </div>
+              <div class="lead-card">
+                <div class="top"><span class="av" style="background:#6b3fa0">DP</span><div><div class="name">D. Powell</div><div class="meta">Whole life &middot; age 34</div></div><span class="tag cook">Cooking</span></div>
+                <div class="top" style="margin-top:.5rem"><span class="meta" style="color:var(--faint)">Set by Mara W. &middot; 5m ago</span><button class="btn-mini">Claim</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="kick">Setter &rarr; Closer</div>
+          <h3>The lead marketplace</h3>
+          <p>Setters generate leads; the AI scores and posts them as they "cook." A batting order puts the next closer on deck, and claims are atomic, one closer per lead, live for the whole floor.</p>
+          <div class="route">/market &middot; /closer/market</div>
+        </div>
+      </div>
+
+      <!-- 2: The dock -->
+      <div class="shot">
+        <div class="browser">
+          <div class="bar"><i></i><i></i><i></i><span class="url">mintleads.bid/numbers</span></div>
+          <div class="screen">
+            <div class="dock">
+              <div class="dockbox">
+                <div class="hd"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--rust);display:inline-block"></span> New leads <span class="live">2 cooking</span></div>
+                <div class="bd">
+                  <div class="floor-row"><span class="av sm" style="background:#b25640">KN</span> K. Nguyen &middot; Term life <button class="btn-mini">Claim</button></div>
+                  <div class="floor-row"><span class="av sm" style="background:#6b3fa0">DP</span> D. Powell &middot; Whole life <button class="btn-mini">Claim</button></div>
+                </div>
+              </div>
+              <div class="dockbox">
+                <div class="hd">&#127908; Voice Board <span class="live">3 on floor &middot; 1 on FI</span></div>
+                <div class="bd">
+                  <div class="floor-row"><span class="av sm" style="background:#a13b5c">PS</span> Priya S. <span class="fi">On FI</span></div>
+                  <div class="floor-row"><span class="av sm" style="background:#1f7a70">MB</span> Marcus B. (you)</div>
+                  <div class="floor-row"><span class="av sm" style="background:#8c5a2b">JO</span> Janelle O.</div>
+                </div>
+              </div>
+              <div class="dockbox">
+                <div class="hd">Chat</div>
+                <div class="bd">
+                  <div class="msg"><span class="av sm" style="background:#3b5b8c">MW</span><div><div class="who">Mara W.</div><div class="body">warm transfer coming your way &#128293;</div></div></div>
+                  <div class="msg"><span class="av sm" style="background:#2f5233">B</span><div><div class="who">Blanksy &middot; bot</div><div class="body">New lead cooking: D. Powell</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="kick">Real-time</div>
+          <h3>The floor dock, on every page</h3>
+          <p>A persistent right-side dock: cooking leads, a LiveKit voice board where closers go live on a warm transfer (rep audio recorded for coaching), and team chat with an AI teammate. It stays connected as reps move around the app.</p>
+          <div class="route">components/chat &middot; components/voice &middot; LiveKit</div>
+        </div>
+      </div>
+
+      <!-- 3: Numbers -->
+      <div class="shot">
+        <div class="browser">
+          <div class="bar"><i></i><i></i><i></i><span class="url">mintleads.bid/numbers</span></div>
+          <div class="screen">
+            <div class="appnav"><span class="logo">M</span> Marketplace <b>Numbers</b> <span>Calendar</span></div>
+            <div class="mini" style="padding:0;overflow:hidden">
+              <table class="ntable">
+                <thead><tr><th>Rep</th><th>Contacts</th><th>FI</th><th>WT</th><th>Close</th></tr></thead>
+                <tbody>
+                  <tr><td class="name"><span class="av sm" style="background:#b25640">DC</span>Dre Callahan</td><td>41</td><td class="strong-num">6</td><td>3</td><td>2</td></tr>
+                  <tr><td class="name"><span class="av sm" style="background:#3b5b8c">MW</span>Mara Whitfield</td><td>38</td><td class="strong-num">5</td><td>4</td><td>3</td></tr>
+                  <tr><td class="name"><span class="av sm" style="background:#8c5a2b">TR</span>Tobias Reyes</td><td>29</td><td class="strong-num">3</td><td>1</td><td>1</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap">
+              <span class="chip" style="font-size:.68rem"><span class="dot" style="background:var(--ok)"></span> 3 checked in today</span>
+              <span class="chip" style="font-size:.68rem">FI = field intake &middot; WT = warm transfer</span>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="kick">System of record</div>
+          <h3>The numbers tracker</h3>
+          <p>Every rep's day, contacts, field intakes, completed warm transfers, closes, rolled into leaderboards, a daily check-in board, and commissions. A warm transfer counts on completion, not on a closer merely reserving the lead.</p>
+          <div class="route">/numbers &middot; /closer/numbers</div>
+        </div>
+      </div>
+
+      <!-- 4: Admin -->
+      <div class="shot">
+        <div class="browser">
+          <div class="bar"><i></i><i></i><i></i><span class="url">mintleads.bid/admin/lead-pool</span></div>
+          <div class="screen">
+            <div class="appnav"><span class="logo">M</span> <b>Admin</b> <span>Agents</span> <span>Lead pool</span> <span>Commissions</span> <span>Carriers</span></div>
+            <div class="grid2" style="gap:.55rem">
+              <div class="mini"><div class="meta" style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Open pool cycle</div><div style="font-weight:700;font-size:1.1rem;margin-top:.2rem">Aug &middot; Week 2</div><div class="meta">14 setters bought in &middot; $2,100</div></div>
+              <div class="mini"><div class="meta" style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Token wallet</div><div style="font-weight:700;font-size:1.1rem;margin-top:.2rem">$0.85 / FI</div><div class="meta">Prepaid, auto-reload</div></div>
+              <div class="mini"><div class="meta" style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Agents</div><div style="font-weight:700;font-size:1.1rem;margin-top:.2rem">28 active</div><div class="meta">Reps &middot; closers &middot; managers</div></div>
+              <div class="mini"><div class="meta" style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Commission ceiling</div><div style="font-weight:700;font-size:1.1rem;margin-top:.2rem">Per agency</div><div class="meta">Override rules applied</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="kick">Operate &amp; monetize</div>
+          <h3>The admin control room</h3>
+          <p>Agencies, agent levels, carrier appointments and products, comp schedules, override rules, lead-pool buy-ins, and the token wallet that bills per field intake. Every table is tenant-scoped for white-label.</p>
+          <div class="route">/admin/* &middot; 22 admin screens</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="flow" class="anchor">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">User flow</p>
+      <h2>From set to close, and the money rail underneath.</h2>
+      <p>One lead's journey. Setters work the top of the funnel, closers take the warm transfer, and the billing rail meters the one event that matters, the completed field intake.</p>
+    </div>
+    <div class="flow">
+      <div class="fstage setter"><span class="role">Setter</span><b>Setter creates the lead</b></div>
+      <div class="fstage"><b>AI scans and scores it</b><em>Blanksy posts it to the marketplace</em></div>
+      <div class="fstage"><b>The lead cooks in the marketplace</b></div>
+      <div class="fstage"><b>Batting order puts a closer on deck</b></div>
+      <div class="fstage closer"><span class="role">Closer</span><b>Closer claims it, one owner, atomic</b></div>
+      <div class="fstage"><b>Warm transfer on the voice board</b></div>
+      <div class="fstage money"><b>Warm transfer completes (WT)</b><em class="meter">Metered to the token wallet</em></div>
+      <div class="fstage money"><b>Field intake captured (FI)</b><em class="meter">$0.85 per FI, billed via Stripe</em></div>
+      <div class="fstage"><b>Close-out and policy write</b></div>
+      <div class="fstage"><b>Commission, with clawback logic</b></div>
+    </div>
+    <p style="margin-top:1.2rem;font-size:.9rem;color:var(--muted);max-width:60ch">Sandbox leads run the same flow in full isolation, so new hires train without ever touching the real marketplace, numbers, or money.</p>
+  </div>
+</section>
+
+<section id="screens" class="anchor">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Screen inventory</p>
+      <h2>Every screen, by who uses it.</h2>
+      <p>37 application screens across the setter, closer, manager, and admin roles, plus the public and auth surfaces.</p>
+    </div>
+    <div class="invwrap">
+      <table class="inv">
+        <thead><tr><th style="width:30%">Screen</th><th style="width:34%">Route</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr class="rowgroup"><td colspan="3">Setter (rep + manager)</td></tr>
+          <tr><td class="grp">New lead intake</td><td><code>/rep/opportunities/new</code></td><td>Create a lead; AI scan kicks off the market post</td></tr>
+          <tr><td class="grp">My leads &amp; opportunity</td><td><code>/rep/opportunities/[id]</code></td><td>Work a lead, disposition, downstream visibility</td></tr>
+          <tr><td class="grp">Champions club</td><td><code>/rep/champions-club</code></td><td>Recognition and gamified milestones</td></tr>
+          <tr><td class="grp">Manager home</td><td><code>/manager</code></td><td>Downline oversight for team managers</td></tr>
+
+          <tr class="rowgroup"><td colspan="3">Closer (AE)</td></tr>
+          <tr><td class="grp">Closer dashboard</td><td><code>/closer</code></td><td>The claim-and-close workspace</td></tr>
+          <tr><td class="grp">Closer market</td><td><code>/closer/market</code></td><td>Claimable cooking leads + batting order</td></tr>
+          <tr><td class="grp">Close-out</td><td><code>/closer/opportunities/[id]</code></td><td>Field intake, warm-transfer completion, policy write</td></tr>
+          <tr><td class="grp">AE numbers</td><td><code>/closer/numbers</code></td><td>Closer production and leaderboards</td></tr>
+
+          <tr class="rowgroup"><td colspan="3">Shared workspace</td></tr>
+          <tr><td class="grp">Marketplace</td><td><code>/market</code></td><td>The live lead floor</td></tr>
+          <tr><td class="grp">Numbers</td><td><code>/numbers</code></td><td>Daily tracker + check-in board</td></tr>
+          <tr><td class="grp">Calendar</td><td><code>/calendar</code></td><td>Appointments and follow-ups</td></tr>
+          <tr><td class="grp">Sandbox</td><td><code>/sandbox</code></td><td>Isolated practice leads for new hires</td></tr>
+          <tr><td class="grp">Profile</td><td><code>/profile</code></td><td>Agent profile, photo, purchase history</td></tr>
+
+          <tr class="rowgroup"><td colspan="3">Admin (22 screens)</td></tr>
+          <tr><td class="grp">Agents &amp; levels</td><td><code>/admin/agents</code> &middot; <code>/admin/agent-levels</code></td><td>Roster, roles, downline, agent tiers</td></tr>
+          <tr><td class="grp">Lead pool &amp; availability</td><td><code>/admin/lead-pool</code></td><td>Buy-in cycles, pool settings, availability</td></tr>
+          <tr><td class="grp">Commissions &amp; comp</td><td><code>/admin/agency-commission</code> &middot; <code>/admin/comp-schedules</code></td><td>Commission ceilings, comp schedules, override rules</td></tr>
+          <tr><td class="grp">Carriers &amp; products</td><td><code>/admin/carriers</code> &middot; <code>/admin/carrier-appointments</code></td><td>Carrier catalog, products, appointments</td></tr>
+          <tr><td class="grp">Batting order &amp; FI tracking</td><td><code>/admin/batting-order</code> &middot; <code>/admin/fi-tracking</code></td><td>Rotation control, field-intake compliance</td></tr>
+          <tr><td class="grp">CRM mapping</td><td><code>/admin/ghl-mapping</code></td><td>Map GoHighLevel locations to reps</td></tr>
+
+          <tr class="rowgroup"><td colspan="3">Public &amp; auth</td></tr>
+          <tr><td class="grp">Marketing site</td><td><code>/welcome</code> &middot; <code>/docs</code> &middot; <code>/terms</code> &middot; <code>/privacy</code></td><td>Public front door + agent-readable .md counterparts</td></tr>
+          <tr><td class="grp">Auth</td><td><code>/login</code> &middot; <code>/accept-invite</code> &middot; <code>/forgot-password</code></td><td>Email/password, invite acceptance</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="backend" class="anchor">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Backend &amp; architecture</p>
+      <h2>What runs under the screens.</h2>
+      <p>A Next.js App Router front end over Supabase Postgres, with real money and real-time audio wired through managed services. Everything is tenant-scoped for white-label.</p>
+    </div>
+
+    <div class="arch" style="margin-bottom:.2rem">
+      <div class="layer">
+        <div class="lh">Browser</div>
+        <div class="node">Next.js 16 App Router<em>React 19 server components</em></div>
+      </div>
+      <div class="layer">
+        <div class="lh">Vercel</div>
+        <div class="node">Server actions</div>
+        <div class="node">Route handlers<em>webhooks &amp; cron</em></div>
+      </div>
+      <div class="layer">
+        <div class="lh">Supabase</div>
+        <div class="node">Postgres + RLS</div>
+        <div class="node">Auth</div>
+        <div class="node">Storage<em>signed URLs</em></div>
+      </div>
+    </div>
+    <div class="arch-int">
+      <span class="lbl">External</span>
+      <span class="ichip live"><span class="d"></span>Stripe &middot; live</span>
+      <span class="ichip">LiveKit voice</span>
+      <span class="ichip">GoHighLevel + Wavv</span>
+      <span class="ichip">Web Push</span>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>&#128451; Data &amp; isolation</h3>
+        <ul>
+          <li><b>Postgres + Row Level Security</b> on Supabase; 105 ordered migrations.</li>
+          <li><b>Tenant isolation</b> routes through <code>SECURITY DEFINER</code> helpers, <code>current_agent_id()</code>, <code>current_agency_id()</code>, <code>is_admin()</code>, and RESTRICTIVE per-tenant policies.</li>
+          <li>Everything hangs off the <code>agents</code> table; a service-role client is scoped in app code.</li>
+          <li>Stores customer PII (health, meds, financials, DOB); deliberately <b>no SSN or banking</b>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>&#128268; Integrations</h3>
+        <ul>
+          <li><b>Stripe (live)</b>, lead-pool buy-ins, the per-FI token wallet, and agency invoices.</li>
+          <li><b>LiveKit</b>, the audio floor plus rep-side recording (egress) for coaching.</li>
+          <li><b>GoHighLevel + Wavv</b>, auto-ingest of rep call activity into contacts.</li>
+          <li><b>Cron</b> (<code>advance-offers</code>, <code>snapshot-market</code>, <code>rep-tracker-reminder</code>) + <b>Web Push</b> notifications.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:1.4rem">
+      <b>Honest handoff.</b> Two things to respect if you run this: Stripe is in <b>live</b> mode (every write moves real money), and the tenant-isolation surfaces are radioactive, a cross-tenant leak is the worst-case failure. The repo's <code>AGENTS.md</code> flags both in plain language; read it before the first deploy.
+    </div>
+  </div>
+</section>
+
+<section id="rebuild" class="anchor">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Rebuild it yourself</p>
+      <h2>The repo, and the shortest path to running it.</h2>
+      <p>The full source, migrations, and operating docs. Access is granted on request; from a clone, you are a few steps from a running instance.</p>
+    </div>
+
+    <div class="repo-line" style="margin-bottom:1.8rem">
+      <span>&#128193; git@github.com:andomccall/mint-app.git</span>
+      <span class="lock">&#128274; private &middot; access on request</span>
+    </div>
+
+    <div class="steps">
+      <div class="step"><div class="st"><h3>Clone &amp; install</h3><p>Next.js 16 / React 19 / TypeScript. Node + your package manager of choice.</p></div></div>
+      <div class="step"><div class="st"><h3>Provision the services</h3><p>A Supabase project (Postgres, Auth, Storage), Stripe keys, and optional LiveKit + GoHighLevel credentials. Copy them into your environment.</p></div></div>
+      <div class="step"><div class="st"><h3>Apply the schema</h3><p>Run the 105 migrations against your Supabase database, in order. They are applied to the database directly, not on deploy.</p></div></div>
+      <div class="step"><div class="st"><h3>Run, then deploy</h3><p>Local dev first, then Vercel for hosting and per-PR previews. The operating rules live in <code>AGENTS.md</code> and the live board in <code>STATUS.md</code>.</p></div></div>
+    </div>
+
+    <pre class="code" style="margin-top:1.6rem"><span class="c"># from a clone</span>
+git clone git@github.com:andomccall/mint-app.git
+cd mint-app && npm install
+cp .env.example .env.local        <span class="c"># fill Supabase / Stripe / LiveKit</span>
+node scripts/db-exec.mjs           <span class="c"># apply migrations to your Supabase</span>
+npm run dev                        <span class="g"># http://localhost:3000</span></pre>
+  </div>
+</section>
+
+<section class="open-band">
+  <div class="col">
+    <p class="eyebrow">Built in the open</p>
+    <h2>Take the blueprint. Build the thing.</h2>
+    <p class="lede">This is one build from Love, Ando: real products pushed into the world, with the method shown openly. Rebuild it yourself with the build kit, and come build alongside me.</p>
+    <div class="ctas">
+      <a class="cta" href="https://loveando.org">Read the newsletter &rarr;</a>
+      <a class="cta ghost" href="https://luma.com/calendar/cal-8gtnNToCfFhCZGP">Join the fireside &rarr;</a>
+    </div>
+    <p class="kicker" style="margin-top:1.6rem">Rebuilding it? <a href="/blueprint/mint-build-kit.md" style="color:#f0a58e;text-decoration:underline">Copy the build kit</a> straight into Claude Code. The newsletter and the monthly fireside are where the building continues.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Mint &middot; Product Dossier</span>
+    <span class="sep"></span>
+    <span>Built by Ando &middot; loveando.org</span>
+    <span>Reps &amp; customers shown are fictional</span>
+  </div>
+</footer>
+</body>
+</html>
