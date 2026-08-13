@@ -32,17 +32,9 @@
       <label for="nav-toggle" class="nav-toggle" aria-label="Toggle menu">☰ Menu</label>
 
       <nav class="site-nav" aria-label="Primary">
-        <a href="{{ '/' | relative_url }}"{% if cur == '/' %} class="active" aria-current="page"{% endif %}>Home</a>
         <a href="{{ '/blueprint' | relative_url }}"{% if cur == '/blueprint' %} class="active" aria-current="page"{% endif %}>Blueprint</a>
-        <a href="{{ '/join' | relative_url }}"{% if cur == '/join' %} class="active" aria-current="page"{% endif %}>Join</a>
+        <a href="{{ '/join' | relative_url }}"{% if cur == '/join' %} class="active" aria-current="page"{% endif %}>Newsletter</a>
         {% if site.data.fireside.active %}<a href="{{ '/fireside' | relative_url }}"{% if cur == '/fireside' %} class="active" aria-current="page"{% endif %}>Fireside</a>{% endif %}
-        <a href="{{ '/7300' | relative_url }}"{% if cur == '/7300' %} class="active" aria-current="page"{% endif %}>7300</a>
-        <a href="{{ '/recaps' | relative_url }}"{% if cur == '/recaps' %} class="active" aria-current="page"{% endif %}>Recaps</a>
-        <a href="{{ '/juice-box' | relative_url }}"{% if cur == '/juice-box' %} class="active" aria-current="page"{% endif %}>Juice Box</a>
-        <a href="{{ '/statement' | relative_url }}"{% if cur == '/statement' %} class="active" aria-current="page"{% endif %}>Statement</a>
-        <a href="{{ '/art-of-knocking' | relative_url }}"{% if cur == '/art-of-knocking' %} class="active" aria-current="page"{% endif %}>Art of Knocking</a>
-        <a href="{{ '/blanksy' | relative_url }}"{% if cur == '/blanksy' %} class="active" aria-current="page"{% endif %}>Blanksy</a>
-        <a class="nav-agents" href="{{ '/llms.txt' | relative_url }}">For agents →</a>
       </nav>
     </header>
 
@@ -55,7 +47,21 @@
     <footer class="site-footer">
       <span>Love, Ando: open-source life systems.</span>
       <span class="site-footer-sep">·</span>
-      <a href="{{ '/join' | relative_url }}">Join</a>
+      <a href="{{ '/blueprint' | relative_url }}">Blueprint</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/join' | relative_url }}">Newsletter</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/7300' | relative_url }}">7300</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/recaps' | relative_url }}">Recaps</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/juice-box' | relative_url }}">Juice Box</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/statement' | relative_url }}">Statement</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/art-of-knocking' | relative_url }}">Art of Knocking</a>
+      <span class="site-footer-sep">·</span>
+      <a href="{{ '/blanksy' | relative_url }}">Blanksy</a>
       <span class="site-footer-sep">·</span>
       <a href="{{ '/privacy' | relative_url }}">Privacy</a>
       <span class="site-footer-sep">·</span>

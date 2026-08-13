@@ -1,70 +1,24 @@
 <section class="home-hero">
-  <p class="home-hero-kicker">Open-source life systems</p>
-  <h1 class="home-hero-title">Build your own.</h1>
-  <p class="home-hero-line">I'm Ando. I give away the systems, habits, and questions I use to run a life,
-  free to read, fetch, and use. For people building in the open, and the agents working on their behalf.</p>
+  <p class="home-hero-kicker">The art of asking better questions</p>
+  <h1 class="home-hero-title">Clarity in a noisy world.</h1>
+  <p class="home-hero-line">Universal access changed the game: anyone can build anything now. So everyone races to answers, and the problem itself becomes an afterthought. Not here. I help leaders slow down to think first and ship second, then hand you the systems to do it yourself, free.</p>
   <div class="home-hero-actions">
-    <a class="home-hero-btn" href="#subscribe">Get the newsletter</a>
-    <a class="btn btn-ghost" href="/blueprint">Build your idea &rarr;</a>
+    <a class="home-hero-btn" href="/blueprint">Shred your idea &rarr;</a>
+    <a class="btn btn-ghost" href="#subscribe">Read the newsletter</a>
   </div>
 </section>
 
-<p class="section-label">Start with the keystone</p>
-
-<div class="keystone">
-  <div class="keystone-copy">
-    <span class="feature-kicker">7300 · The system everything hinges on</span>
-    <h3>A 20-year commitment to who I'm becoming</h3>
-    <p>Anchored to daily writing, this is the trunk the rest grows from. The long horizon is what earns
-    the clarity: room to find the right answer through action and contemplation, instead of jumping in
-    and shipping on instinct. Commit to who you're becoming first, and the rest follows.</p>
-    <div class="keystone-actions">
-      <a class="btn" href="https://7300.io" target="_blank" rel="noopener">Use the 7300 app &rarr;</a>
-      <a class="btn btn-ghost" href="/blueprint">Or build your own &rarr;</a>
-    </div>
-  </div>
-  <a class="keystone-phone" href="https://7300.io" target="_blank" rel="noopener" aria-label="Open the 7300 app at 7300.io">
-    <span class="phone">
-      <span class="phone-screen">
-        <span class="ps-status">
-          <span class="ps-time">10:44</span>
-          <span class="ps-stat">
-            <span class="b b1"></span><span class="b b2"></span><span class="b b3"></span><span class="b b4"></span>
-            <span class="ps-batt"></span>
-          </span>
-        </span>
-        <span class="ps-topnav">Log&nbsp;&nbsp;&nbsp;Settings&nbsp;&nbsp;&nbsp;Sign out</span>
-        <span class="ps-id">sq8jc0</span>
-        <span class="ps-count">4105</span>
-        <span class="ps-of">of 7300</span>
-        <span class="ps-bar"><i></i></span>
-        <span class="ps-years"><i>Yr 0</i><i>Yr 5</i><i>Yr 10</i><i>Yr 15</i><i>Yr 20</i></span>
-        <span class="ps-entry"><b>Day 4105</b><span>Yo yesterday was mostly a rest day but I was doing some Claude code obviously working...</span></span>
-        <span class="ps-glow"></span>
-        <span class="ps-mic"></span>
-        <span class="ps-mic-label">Add to Entry</span>
-        <span class="ps-tabs"><i class="on">Today</i><i>Artifacts</i><i>Capsule</i><i>People</i></span>
-      </span>
-    </span>
-  </a>
-</div>
-
-<p class="section-label">And the systems that build on it</p>
+<p class="section-label">Proof, not prompts</p>
 
 <div class="system-cards">
-  <a class="system-card" href="/recaps">
-    <h3>The Recaps</h3>
-    <p>The recap engine: the MIC / QCA / ASR question sets (monthly, quarterly, yearly) plus the daily mantras.</p>
-    <span class="card-go">Open &rarr;</span>
+  <a class="system-card" href="/blueprint/mint.html">
+    <h3>Mint</h3>
+    <p>A lead marketplace and system of record for sales agencies. Live, moving real money. Walk the build, or take the blueprint and rebuild it yourself.</p>
+    <span class="card-go">See it &rarr;</span>
   </a>
-  <a class="system-card" href="/juice-box">
-    <h3>Juice Box</h3>
-    <p>Do a thing 100 times to reach its essence. The three laws, proven across five separate runs.</p>
-    <span class="card-go">Open &rarr;</span>
-  </a>
-  <a class="system-card" href="/statement">
-    <h3>Statement · STATE·MINT</h3>
-    <p>Executive management and the GCCO operating system for scaling sales organizations.</p>
+  <a class="system-card" href="https://7300.io" target="_blank" rel="noopener">
+    <h3>7300</h3>
+    <p>A 20-year daily-writing commitment to who you're becoming. The trunk the rest grows from.</p>
     <span class="card-go">Open &rarr;</span>
   </a>
   <a class="system-card" href="/art-of-knocking">
@@ -75,28 +29,18 @@
 </div>
 
 <section class="home-signup" id="subscribe">
-  <h2>Get it in your inbox</h2>
-  <p>One letter a week, Sunday morning. A field note, one system worth keeping, and the same open door.
-  No spam, unsubscribe anytime.</p>
+  <h2>Think first. Ship second.</h2>
+  <p>One letter a week, Sunday morning. A field note, one system worth keeping, and the honest read on what the work actually taught me. No spam, unsubscribe anytime.</p>
   <div class="newsletter-embed">
     {% include newsletter-form.html %}
   </div>
   <p><a href="/join">See all the ways to follow &rarr;</a></p>
 </section>
 
-<section class="home-signup">
-  <h2>Not sure what to build?</h2>
-  <p>Answer a few questions and I'll map your idea to the right thing, a routine, an artifact, a web app,
-  or a full app, plus a prompt you can drop straight into Claude Code.</p>
-  <p style="margin-top:1rem;"><a class="btn" href="/blueprint">Get your free Blueprint &rarr;</a></p>
-</section>
-
 <div class="agents-note">
   <span class="agents-label">For agents</span>
   Every system here is plain Markdown, no scraping and no auth. Start at
-  <a href="/llms.txt"><code>/llms.txt</code></a> for the full index, or fetch any file directly, for example
-  <code>raw.githubusercontent.com/andomccall/love-ando/main/recaps.md</code>.
-  Read it, quote it with attribution, put it to work.
+  <a href="/llms.txt"><code>/llms.txt</code></a> for the full index, or fetch any file directly. Read it, quote it with attribution, put it to work.
 </div>
 
 <p class="section-label">Built on the books</p>
