@@ -1,14 +1,39 @@
 ---
 layout: default
-title: The Modern DIY App Blueprint
-description: Answer a few questions about your idea and get a free, personalized build blueprint you can drop straight into Claude Code, plus the right starting point, whether a routine, an artifact, a web app, or a full app.
+title: The Idea Shredder
+description: Drop your app idea in and get it shredded, why it won't work, who's already doing it better, and the honest verdict. If it survives, get the free build blueprint.
 ---
 
 <div class="bp">
-  <h1 class="bp-title">The Modern DIY App Blueprint</h1>
-  <p class="bp-lede">Claude can build it. The only missing piece is knowing <em>which</em> thing to build. Bring your own idea and I'll map it, or fork one of my proven systems and rebuild it as your own. Either way you leave with a prompt you can drop straight into Claude Code, free.</p>
-  <div class="bp-card" id="bp-card"></div>
-  <p class="bp-foot">No pitch, no paywall. I read every concept that comes through personally. If yours is a fit for the cohort I'll say so, and if it isn't I'll point you the right way anyway.</p>
+  <h1 class="bp-title">The Idea Shredder</h1>
+  <p class="bp-lede">Everyone will tell you your idea is great. I won't. Drop your app idea in and I'll tear it apart: why it won't work, who's already doing it better, and the honest verdict. If it survives the shredder, <em>then</em> we build.</p>
+
+  <div class="shred-box">
+    <textarea id="shred-idea" class="shred-input" rows="3" placeholder="In one or two sentences, what do you want to build?"></textarea>
+    <div class="shred-row">
+      <button id="shred-go" class="bp-btn bp-btn-primary">Shred it</button>
+      <span class="shred-hint">No sign-up. The shred runs in Claude.</span>
+    </div>
+    <div class="bp-err" id="shred-err"></div>
+  </div>
+
+  <div id="shred-out" class="shred-out" style="display:none">
+    <div class="bp-prompt-label"><span>Drop this into Claude to get shredded</span><button class="bp-copy" id="shred-copy">Copy</button></div>
+    <div class="bp-prompt" id="shred-prompt"></div>
+    <div class="shred-gate">
+      <p class="shred-gate-q">Still want to try?</p>
+      <p class="shred-gate-p">If it survived the shredding, good. Conviction after the hard questions is the whole point. Now let's build it right.</p>
+      <button id="shred-try" class="bp-btn bp-btn-primary">It survived, build it &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<div id="bp-build" style="display:none">
+  <div class="bp">
+    <p class="bp-lede" style="margin-top:.4rem">Good. Now the build. Bring your idea or fork one of my proven systems, and leave with a prompt you drop straight into Claude Code, free.</p>
+    <div class="bp-card" id="bp-card"></div>
+    <p class="bp-foot">No pitch, no paywall. I read every concept that comes through personally. If yours is a fit for the cohort I'll say so, and if it isn't I'll point you the right way anyway.</p>
+  </div>
 </div>
 
 <section class="bp-sample">
@@ -69,6 +94,15 @@ description: Answer a few questions about your idea and get a free, personalized
 .bp-sample-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
 .bp-sample-link{font-family:'Zilla Slab',serif;color:var(--la-rebel);font-weight:600;text-decoration:none;font-size:.95rem;}
 .bp-sample-link:hover{text-decoration:underline;}
+.shred-box{background:#fff;border:1px solid rgba(48,48,48,.15);border-radius:10px;padding:1.4rem;box-shadow:0 2px 14px rgba(48,48,48,.06);}
+.shred-input{box-sizing:border-box;width:100%;padding:.9rem 1rem;font-size:1.05rem;font-family:'Zilla Slab',serif;line-height:1.4;border:1px solid rgba(48,48,48,.25);border-radius:8px;background:#fff;color:var(--la-wealth);resize:vertical;}
+.shred-input:focus{outline:2px solid var(--la-highlighter);border-color:var(--la-highlighter);}
+.shred-row{display:flex;align-items:center;gap:1rem;margin-top:.9rem;flex-wrap:wrap;}
+.shred-hint{font-size:.85rem;color:var(--la-military);}
+.shred-out{margin-top:1.5rem;}
+.shred-gate{margin-top:1.6rem;padding:1.3rem 1.4rem;background:var(--la-canvas);border:1px solid rgba(48,48,48,.15);border-radius:10px;}
+.shred-gate-q{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.03em;font-size:1.4rem;line-height:1.1;margin:0 0 .35rem;}
+.shred-gate-p{font-size:1rem;line-height:1.5;color:var(--la-wealth);margin:0 0 1.1rem;}
 </style>
 
 {% raw %}
@@ -516,6 +550,53 @@ function renderResult(){
 }
 
 render();
+})();
+</script>
+{% endraw %}
+
+{% raw %}
+<script>
+(function(){
+  var idea = document.getElementById('shred-idea');
+  var go = document.getElementById('shred-go');
+  var out = document.getElementById('shred-out');
+  var promptEl = document.getElementById('shred-prompt');
+  var copyBtn = document.getElementById('shred-copy');
+  var tryBtn = document.getElementById('shred-try');
+  var buildWrap = document.getElementById('bp-build');
+  var err = document.getElementById('shred-err');
+  if(!idea || !go) return;
+
+  function shredPrompt(text){
+    return "You are a brutally honest venture critic and product strategist. Do NOT encourage me. Your job is to shred this idea so I only build it if it truly deserves to exist.\n\n"+
+      "MY IDEA:\n"+text+"\n\n"+
+      "Shred it, in this order:\n"+
+      "1. The 5 hardest reasons this fails. Be specific: market size, moat, distribution, why-now, and whether anyone will actually pay.\n"+
+      "2. Who is already doing this, or something close, and why they would beat me. Name real products or companies.\n"+
+      "3. The strongest honest case for NOT building this at all.\n"+
+      "4. A one-line brutal verdict.\n"+
+      "5. ONLY if there is a real, narrow wedge, tell me the single angle that could actually work and exactly what I would have to believe, and prove, for it to win.\n\n"+
+      "No hedging, no participation trophies. Cite real examples. If it is a bad idea, say so plainly and tell me what to build instead.";
+  }
+
+  function doShred(){
+    var text = (idea.value || '').trim();
+    if(text.length < 8){ err.textContent = 'Give me a real idea to shred, a sentence or two.'; return; }
+    err.textContent = '';
+    promptEl.textContent = shredPrompt(text);
+    out.style.display = 'block';
+    out.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  go.addEventListener('click', doShred);
+  idea.addEventListener('keydown', function(e){ if((e.metaKey || e.ctrlKey) && e.key === 'Enter') doShred(); });
+  copyBtn.addEventListener('click', function(){
+    navigator.clipboard.writeText(promptEl.textContent).then(function(){ copyBtn.textContent = 'Copied'; setTimeout(function(){ copyBtn.textContent = 'Copy'; }, 1600); });
+  });
+  tryBtn.addEventListener('click', function(){
+    buildWrap.style.display = 'block';
+    buildWrap.scrollIntoView({behavior:'smooth', block:'start'});
+  });
 })();
 </script>
 {% endraw %}
