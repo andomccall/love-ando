@@ -153,14 +153,7 @@
       <div class="sec">
         <h2>KIT</h2>
         <span class="lbl dim">TAP TO WEAR</span>
-        <div class="chips" id="kit">
-          <button class="chip" data-k="hat">BALL CAP</button>
-          <button class="chip" data-k="shades">SHADES</button>
-          <button class="chip" data-k="tee">T-SHIRT</button>
-          <button class="chip" data-k="hoodie">HOODIE</button>
-          <button class="chip" data-k="jeans">JEANS</button>
-          <button class="chip" data-k="sneakers">SNEAKERS</button>
-        </div>
+        <div class="chips" id="kit"></div>
       </div>
       <div class="sec">
         <span class="lbl">GARMENT COLOR</span>
@@ -168,6 +161,14 @@
         <div class="row" style="margin-top:10px">
           <input type="color" id="fitPick" value="#e7e9ec">
           <span class="hex" id="fitHex">#E7E9EC</span>
+        </div>
+      </div>
+      <div class="sec">
+        <span class="lbl">FOOTWEAR</span>
+        <div class="swatches" id="shoeSw"></div>
+        <div class="row" style="margin-top:10px">
+          <input type="color" id="shoePick" value="#d8232c">
+          <span class="hex" id="shoeHex">#D8232C</span>
         </div>
       </div>
       <div class="sec">
@@ -184,6 +185,16 @@
           <button class="btn ghost" id="reset">RE-CENTER</button>
         </div>
         <span class="lbl dim" style="margin-top:8px">W A S D · ARROWS · DRAG TO LOOK</span>
+      </div>
+      <hr>
+      <div class="sec">
+        <h2>EXPLORE</h2>
+        <span class="lbl dim">A PLACE TO ROAM, FREELY</span>
+        <div class="chips" id="explore">
+          <button data-x="block">THE BLOCK</button>
+          <button data-x="" aria-pressed="true">OFF</button>
+        </div>
+        <span class="lbl dim" style="margin-top:8px">Turns on WALK, W A S D or arrows to roam</span>
       </div>
       <hr>
       <div class="sec">
@@ -243,7 +254,7 @@
         <button class="btn ghost" id="anim" aria-pressed="true">ANIMATE: ON</button>
         <button class="btn" id="rand">RANDOM KIT</button>
       </div>
-      <p class="note">Band + glove prints carry their own colors — the band color tints them. Cap brim, sneaker soles and drawstrings follow the band + gloves color. Export from the stage toolbar — GLB carries colors and textures, OBJ + MTL carries colors only.</p>
+      <p class="note">Band + glove prints carry their own colors: the band color tints them. Sneaker soles, laces and hood drawcords follow the band + gloves color. Ribs, linings and stitching shade off the garment color, so a piece keeps its seams whatever you pick. Export from the stage toolbar: GLB carries colors and textures, OBJ + MTL carries colors only.</p>
     </aside>
   </main>
   <script src="three-d-stage.js"></script>
@@ -270,6 +281,12 @@
     const atmos = createAtmos(THREE, stage, envs);
     const { createWorlds } = await import('./blanksy-worlds.js');
     const worlds = createWorlds(THREE, stage, envs, atmos);
+    const { createWorldmap } = await import('./blanksy-worldmap.js');
+    const worldmap = createWorldmap(THREE, stage, envs);
+    // collision + ground source: the explorable world when active, else the built set
+    const activeCols = () => worldmap.isActive() ? worldmap.colliders() : envs.colliders();
+    const activeFloorY = () => worldmap.isActive() ? worldmap.floorY : envs.floorY;
+    const activeCeil = () => worldmap.isActive() ? null : envs.ceilingY();
 
     let pose = 'idle', animate = true, t0 = performance.now(), last = performance.now();
     let emote = null, jam = false, et0 = performance.now(), curMove = null;
@@ -303,7 +320,7 @@
         const dir = fw.multiplyScalar(f).add(rt.multiplyScalar(s));
         if (dir.lengthSq() > 0) {
           dir.normalize();
-          const cols = envs.colliders();
+          const cols = activeCols();
           const nx = g.position.x + dir.x * SPEED * dt;
           if (!blocked(nx, g.position.z, cols)) g.position.x = nx;
           const nz = g.position.z + dir.z * SPEED * dt;
@@ -318,8 +335,8 @@
       const off = cam.position.clone().sub(controls.target);
       const actualLen = off.length();
       if (Math.abs(actualLen - camAppliedLen) > 0.02) camWantLen = actualLen;  // user zoomed
-      controls.target.set(g.position.x, envs.floorY + 0.85, g.position.z);
-      const cols = envs.colliders();
+      controls.target.set(g.position.x, activeFloorY() + 0.85, g.position.z);
+      const cols = activeCols();
       let len = camWantLen;
       if (actualLen > 0.001) {
         const dir = off.divideScalar(actualLen);
@@ -327,14 +344,14 @@
           const l = camWantLen * (1 - i / 10);
           const px = controls.target.x + dir.x * l, pz = controls.target.z + dir.z * l;
           const py = controls.target.y + dir.y * l;
-          const inside = py < envs.floorY + 2.6 && cols.some(c =>
+          const inside = py < activeFloorY() + 2.6 && cols.some(c =>
             px > c.x0 - 0.25 && px < c.x1 + 0.25 && pz > c.z0 - 0.25 && pz < c.z1 + 0.25);
           len = Math.max(0.9, l);
           if (!inside) break;
         }
         cam.position.copy(controls.target).addScaledVector(dir, len);
-        const ceil = envs.ceilingY();
-        cam.position.y = Math.max(envs.floorY + 0.4, ceil ? Math.min(cam.position.y, ceil - 0.35) : cam.position.y);
+        const ceil = activeCeil();
+        cam.position.y = Math.max(activeFloorY() + 0.4, ceil ? Math.min(cam.position.y, ceil - 0.35) : cam.position.y);
       }
       camAppliedLen = len;
       controls.update();
@@ -377,7 +394,8 @@
     // ---------- controls ----------
     const SKINS = ['#141414','#f4f4f2','#3b4a63','#7a2d2d','#2f5d4a','#8a6a2f'];
     const ACCENTS = ['#f7f7f5','#141414','#e0452f','#2f6fe0','#39c07a','#f2b731'];
-    const FITS = ['#e7e9ec','#141414','#7a2d2d','#2f5d4a','#c9ced4','#f2b731'];
+    const FITS = ['#e7e9ec','#3f4347','#a2a8ac','#141414','#7a2d2d','#2f5d4a'];
+    const SHOES = ['#d8232c','#2a3450','#f1f0ea','#141414','#c9ced4','#f2b731'];
     const DENIMS = ['#3c4a63','#22283a','#6b7c96','#171717','#8a8f99','#4a3b2f'];
     const $ = s => document.querySelector(s);
     function buildSwatches(host, colors, apply, current) {
@@ -414,10 +432,18 @@
       $('#fitPick').value = c; $('#fitHex').textContent = c.toUpperCase();
       markSwatches($('#fitSw'), c);
     }
+    function setShoes(c) {
+      props.setColors({ footwear: c });
+      $('#shoePick').value = c; $('#shoeHex').textContent = c.toUpperCase();
+      markSwatches($('#shoeSw'), c);
+    }
     function setDenim(c) { props.setColors({ denim: c }); markSwatches($('#denimSw'), c); }
     buildSwatches($('#fitSw'), FITS, setFit, '#e7e9ec');
+    buildSwatches($('#shoeSw'), SHOES, setShoes, '#d8232c');
     buildSwatches($('#denimSw'), DENIMS, setDenim, '#3c4a63');
     $('#fitPick').oninput = e => setFit(e.target.value);
+    $('#shoePick').oninput = e => setShoes(e.target.value);
+    setFit('#e7e9ec'); setShoes('#d8232c');       // hand the garments their opening colors
 
     // texture buttons
     const texHost = $('#tex');
@@ -458,6 +484,7 @@
       b.className = 'chip'; b.type = 'button'; b.textContent = e.label;
       b.setAttribute('aria-pressed', String(e.id === null));
       b.onclick = () => {
+        clearExplore();                 // leaving the roamable block back to a built set
         if (worlds.isActive()) {        // leaving a real world back to a built set
           worlds.set(null);
           [...document.querySelectorAll('#world button')].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.wid === '')));
@@ -476,12 +503,48 @@
       b.className = 'chip'; b.type = 'button'; b.textContent = w.label; b.dataset.wid = w.id || '';
       b.setAttribute('aria-pressed', String(w.id === null));
       b.onclick = async () => {
+        if (w.id) clearExplore();       // entering a real world leaves the block
         [...worldHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
         if (w.id) [...envHost.children].forEach(x => x.setAttribute('aria-pressed', 'false'));
         await worlds.set(w.id || null);
       };
       worldHost.appendChild(b);
     });
+
+    // EXPLORE: THE BLOCK — a roamable neighborhood. Drops him in and turns on WALK.
+    const exploreHost = $('#explore');
+    function clearExplore() {
+      if (worldmap.isActive()) {
+        worldmap.show(false);
+        if (walkMode) $('#walk').click();
+        blanksy.group.position.set(0, 0, 0); blanksy.group.rotation.y = 0;
+      }
+      [...exploreHost.children].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.x === '')));
+    }
+    exploreHost.onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const on = b.dataset.x === 'block';
+      if (on) {
+        if (worlds.isActive()) {
+          worlds.set(null);
+          [...document.querySelectorAll('#world button')].forEach(x => x.setAttribute('aria-pressed', String(x.dataset.wid === '')));
+        }
+        envs.set(null);
+        [...envHost.children].forEach(x => x.setAttribute('aria-pressed', 'false'));
+        worldmap.show(true);
+        stage._ground.position.y = worldmap.floorY;
+        stage.style.setProperty('--stage-bg', worldmap.bg);
+        atmos.reassert();
+        blanksy.group.position.set(0, 0, 10); blanksy.group.rotation.y = Math.PI;   // by the street, facing the plaza
+        if (!walkMode) $('#walk').click();
+      } else {
+        worldmap.show(false);
+        if (walkMode) $('#walk').click();
+        blanksy.group.position.set(0, 0, 0); blanksy.group.rotation.y = 0;
+        envs.set(null);
+      }
+      [...exploreHost.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    };
 
     // atmosphere: time of day / weather / wind
     $('#time').onclick = e => {
@@ -500,11 +563,19 @@
       [...e.currentTarget.children].forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     };
 
-    $('#kit').onclick = e => {
+    const kitHost = $('#kit');
+    props.KIT.forEach(k => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.type = 'button'; b.dataset.k = k.id; b.textContent = k.label;
+      b.setAttribute('aria-pressed', 'false');
+      kitHost.appendChild(b);
+    });
+    const markKit = () => [...kitHost.children].forEach(x =>
+      x.setAttribute('aria-pressed', String(!!props.state[x.dataset.k])));
+    kitHost.onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
       props.set(b.dataset.k, !props.state[b.dataset.k]);
-      [...e.currentTarget.children].forEach(x =>
-        x.setAttribute('aria-pressed', String(!!props.state[x.dataset.k])));
+      markKit();
     };
 
     const FINISH = { matte:[0.72,0.0], satin:[0.34,0.15], gloss:[0.09,0.28] };
@@ -569,15 +640,16 @@
     };
     const pick = a => a[Math.floor(Math.random() * a.length)];
     $('#rand').onclick = () => {
-      setSkin(pick(SKINS)); setAccent(pick(ACCENTS)); setFit(pick(FITS)); setDenim(pick(DENIMS));
-      const top = pick(['tee', 'hoodie', null]);
-      ['hat','shades','tee','hoodie','jeans','sneakers'].forEach(k => props.set(k, false));
+      setSkin(pick(SKINS)); setAccent(pick(ACCENTS)); setFit(pick(FITS));
+      setShoes(pick(SHOES)); setDenim(pick(DENIMS));
+      props.KIT.forEach(k => props.set(k.id, false));
+      const top = pick(['crew', 'hoodie', null]);
+      const feet = pick(['sneakers', 'pumps', null]);
       if (top) props.set(top, true);
-      if (Math.random() < 0.6) props.set('hat', true);
+      if (feet) props.set(feet, true);
       if (Math.random() < 0.4) props.set('shades', true);
       if (Math.random() < 0.6) props.set('jeans', true);
-      if (Math.random() < 0.6) props.set('sneakers', true);
-      [...$('#kit').children].forEach(x => x.setAttribute('aria-pressed', String(!!props.state[x.dataset.k])));
+      markKit();
     };
   </script>
 </body>
