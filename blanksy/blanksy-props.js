@@ -1,6 +1,9 @@
-// Blanksy's kit: hat, shades, tee, hoodie, jeans, sneakers.
+// Blanksy's kit: shades, jeans, and the tailored wardrobe (crewneck, hooded pullover,
+// low-top sneakers, stiletto pumps) from blanksy-garments.js.
 // Everything is authored in an upright frame (Y up, +Z forward) in the model's own
 // units, then re-parented onto the bone it should ride with, so props follow the walk.
+
+import { createGarments, BONE } from './blanksy-garments.js';
 
 export function createProps(THREE, blanksy) {
   const { rig, bones, mat, landmarks } = blanksy;
@@ -9,40 +12,16 @@ export function createProps(THREE, blanksy) {
   frame.rotation.x = Math.PI / 2;
   rig.add(frame);
 
-  const outfit = new THREE.MeshStandardMaterial({ name: 'blanksy_outfit', color: '#e7e9ec', roughness: 0.72, metalness: 0.02, side: THREE.DoubleSide });
   const denim = new THREE.MeshStandardMaterial({ name: 'blanksy_denim', color: '#3c4a63', roughness: 0.85, metalness: 0.02, side: THREE.DoubleSide });
   const lens = new THREE.MeshStandardMaterial({ name: 'blanksy_lens', color: '#0b0b0c', roughness: 0.07, metalness: 0.55, side: THREE.DoubleSide });
-  const trim = mat.accent;                  // sole, brim underside, drawstrings — matches band + gloves
-
-  const src = v => new THREE.Vector3(v.x, v.z, -v.y);           // model space -> frame space
-  const bonePos = key => {
-    const b = bones[key];
-    if (!b) return new THREE.Vector3();
-    const m = matInRig(b);
-    return src(new THREE.Vector3().setFromMatrixPosition(m));
-  };
+  const trim = mat.accent;                  // soles, laces, drawcords — matches band + gloves
 
   const T = landmarks.torso;
   const C = new THREE.Vector3(T.center[0], T.center[2], -T.center[1]);
   const R = Math.max(T.size[0], T.size[1], T.size[2]) / 2;
 
-  const shell = (r, thetaStart, thetaLength, m) => new THREE.Mesh(
-    new THREE.SphereGeometry(r, 56, 32, 0, Math.PI * 2, thetaStart, thetaLength), m);
   const patch = (r, phiStart, phiLength, thetaStart, thetaLength, m) => new THREE.Mesh(
     new THREE.SphereGeometry(r, 36, 24, phiStart, phiLength, thetaStart, thetaLength), m);
-  const ring = (radius, tube, m) => {
-    const t = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 10, 56), m);
-    t.rotation.x = Math.PI / 2;
-    return t;
-  };
-  const tube = (from, to, r0, r1, m, name) => {
-    const d = new THREE.Vector3().subVectors(to, from);
-    const g = new THREE.Mesh(new THREE.CylinderGeometry(r1, r0, d.length(), 26, 1, true), m);
-    g.name = name;
-    g.position.copy(from).add(to).multiplyScalar(0.5);
-    g.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
-    return g;
-  };
 
   // Fit props in rig-local space: world matrices may be stale (and the stage can
   // transform the object), so compose the local chain explicitly instead.
@@ -64,36 +43,6 @@ export function createProps(THREE, blanksy) {
     return obj;
   }
 
-  // ---------- hat ----------
-  const hat = new THREE.Group(); hat.name = 'prop_hat';
-  {
-    const g = new THREE.Group();
-    g.position.copy(C);
-    g.rotation.x = 0.16;
-    const SPAN = 1.02;
-    const dome = shell(R * 1.06, 0, SPAN, outfit);
-    dome.scale.y = 1.06;
-    const domeMat = outfit.clone(); domeMat.side = THREE.DoubleSide;
-    dome.material = domeMat;
-    g.add(dome);
-    const edgeY = Math.cos(SPAN) * R * 1.06, edgeR = Math.sin(SPAN) * R * 1.06;
-    const brim = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.56, R * 0.56, 0.075, 44, 1, false, 0, Math.PI), outfit);
-    brim.rotation.set(0.26, -Math.PI / 2, 0);
-    brim.position.set(0, edgeY * 0.98, edgeR * 0.58);
-    brim.scale.z = 1.08;
-    g.add(brim);
-    const brimUnder = brim.clone();
-    brimUnder.material = trim;
-    brimUnder.scale.set(0.96, 0.35, 1.03);
-    brimUnder.position.y -= 0.045;
-    g.add(brimUnder);
-    const button = new THREE.Mesh(new THREE.SphereGeometry(0.05, 18, 12), trim);
-    button.position.y = R * 1.12; g.add(button);
-    hat.add(g);
-    frame.add(hat);
-    attach('neck', hat);
-  }
-
   // ---------- shades ----------
   const shades = new THREE.Group(); shades.name = 'prop_shades';
   {
@@ -111,77 +60,71 @@ export function createProps(THREE, blanksy) {
     attach('neck', shades);
   }
 
-  // ---------- sleeves (shared by tee + hoodie) ----------
-  // length is a fraction of the arm, so the cuff lands short of the glove instead of
-  // swallowing it
-  function sleeve(side, frac, radius, m) {
-    const a = bonePos(side + 'forearm'), h = bonePos(side + 'hand');
-    const d = new THREE.Vector3().subVectors(h, a);
-    const len = d.length();
-    d.normalize();
-    const from = a.clone().addScaledVector(d, -0.14);
-    const to = a.clone().addScaledVector(d, len * frac);
-    const s = new THREE.Group();
-    s.add(tube(from, to, radius, radius * 0.9, m, side + '_sleeve'));
-    const cuff = new THREE.Mesh(new THREE.TorusGeometry(radius * 0.84, 0.026, 10, 32), m);
-    cuff.position.copy(to);
-    cuff.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), d);
-    s.add(cuff);
-    // close the open end so you can't see up the sleeve from below
-    const cap = new THREE.Mesh(new THREE.CircleGeometry(radius * 0.9, 28), m);
-    cap.position.copy(to);
-    cap.quaternion.copy(cuff.quaternion);
-    s.add(cap);
-    frame.add(s);
-    return attach(side + 'forearm', s);
+  // ---------- the tailored wardrobe ----------
+  // Each piece is cut to this rig in blanksy-garments.js, facing -Z. Turn it a half
+  // circle to face the frame's +Z, then split it across bones: sleeves ride the
+  // forearms and shoes ride the feet, so the garment walks with him. That half turn
+  // swaps his sides, which is why BONE sends an authored 'left' piece to a right bone.
+  const garments = createGarments(THREE);
+  const wardrobe = {};
+  for (const g of garments.LIST) {
+    const root = g.build();
+    root.name = 'prop_' + g.id;
+    // soles, laces and drawcords share the band + glove material, as the old kit did
+    if (root.userData.accent.length) {
+      const accent = new Set(root.userData.accent);
+      root.traverse(o => { if (o.isMesh && accent.has(o.material)) o.material = trim; });
+    }
+    root.rotation.y = Math.PI;
+    frame.add(root);
+    const parts = [];
+    for (const child of [...root.children]) {
+      const boneKey = BONE[child.name];
+      if (boneKey) parts.push(attach(boneKey, child));
+    }
+    if (root.children.length) parts.push(attach('neck', root));   // shell, hood, pocket
+    wardrobe[g.id] = { slot: g.slot, tint: root.userData.tint, hidesBoots: !!g.hidesBoots, parts };
   }
 
-  // ---------- tee ----------
-  const tee = new THREE.Group(); tee.name = 'prop_tee';
-  {
-    const g = new THREE.Group();
-    g.position.copy(C);
-    // tops start below the shades band (theta 1.24-1.48) and run to the bottom of the
-    // ball so no belly shows between hem and jeans
-    const body = shell(R * 1.035, 1.52, 1.34, outfit);
-    body.material = (() => { const m = outfit.clone(); m.side = THREE.DoubleSide; return m; })();
-    g.add(body);
-    const collar = ring(Math.sin(1.52) * R * 0.99, 0.03, outfit);
-    collar.position.y = Math.cos(1.52) * R * 1.02; g.add(collar);
-    tee.add(g);
-    frame.add(tee);
-    attach('neck', tee);
-  }
-  const teeSleeves = ['left', 'right'].map(s => sleeve(s, 0.42, 0.20, outfit));
-  // ---------- hoodie ----------
-  const hoodie = new THREE.Group(); hoodie.name = 'prop_hoodie';
-  {
-    const g = new THREE.Group();
-    g.position.copy(C);
-    const START = 1.5;
-    const body = shell(R * 1.065, START, 1.38, outfit);
-    body.material = (() => { const m = outfit.clone(); m.side = THREE.DoubleSide; return m; })();
-    g.add(body);
-    const collar = ring(Math.sin(START) * R * 1.01, 0.042, outfit);
-    collar.position.y = Math.cos(START) * R * 1.03; g.add(collar);
-    const hoodBlob = new THREE.Mesh(new THREE.SphereGeometry(R * 0.42, 32, 20), outfit);
-    hoodBlob.scale.set(1.1, 0.6, 0.55);
-    hoodBlob.position.set(0, Math.cos(START) * R * 1.02 + 0.24, -R * 0.86);
-    g.add(hoodBlob);
-    for (const s of [-1, 1]) {
-      const str = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.3, 10), trim);
-      str.position.set(s * 0.16, Math.cos(START) * R * 1.02 - 0.14, R * 0.7);
-      str.rotation.x = 0.12;
-      g.add(str);
-      const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.05, 10), trim);
-      tip.position.set(s * 0.16, Math.cos(START) * R * 1.02 - 0.29, R * 0.72);
-      g.add(tip);
+  // Blanksy's boots are welded into his one skinned body mesh, so there is no group to
+  // switch off. The pumps are cut slimmer than his boot, so collapse the boot vertices
+  // onto a single point while they are on: every boot triangle goes zero-area and stops
+  // rasterizing, and the originals go back the moment the pumps come off.
+  const boots = (() => {
+    const geo = blanksy.mesh.geometry, pos = geo.attributes.position;
+    const si = geo.attributes.skinIndex, sw = geo.attributes.skinWeight;
+    const feet = new Set();
+    blanksy.mesh.skeleton.bones.forEach((b, i) => { if (/foot|toe/i.test(b.name)) feet.add(i); });
+    const idx = [];
+    for (let i = 0; i < pos.count; i++) {
+      let dom = 0, w = -1;
+      for (let k = 0; k < 4; k++) { const x = sw.getComponent(i, k); if (x > w) { w = x; dom = si.getComponent(i, k); } }
+      // the foot bones also own shin verts up the leg — keep only what is near the ground
+      if (feet.has(dom) && pos.getZ(i) < 0.7) idx.push(i);
     }
-    hoodie.add(g);
-    frame.add(hoodie);
-    attach('neck', hoodie);
-  }
-  const hoodSleeves = ['left', 'right'].map(s => sleeve(s, 0.8, 0.215, outfit));
+    const kept = new Float32Array(idx.length * 3);
+    idx.forEach((i, n) => { kept[n * 3] = pos.getX(i); kept[n * 3 + 1] = pos.getY(i); kept[n * 3 + 2] = pos.getZ(i); });
+    // one collapse point per foot, taken from that foot's own vertices
+    const hub = [[0, 0, 0, 0], [0, 0, 0, 0]];        // x, y, z, count — left then right
+    idx.forEach((i, n) => {
+      const h = hub[kept[n * 3] >= 0 ? 0 : 1];
+      h[0] += kept[n * 3]; h[1] += kept[n * 3 + 1]; h[2] += kept[n * 3 + 2]; h[3]++;
+    });
+    hub.forEach(h => { if (h[3]) { h[0] /= h[3]; h[1] /= h[3]; h[2] /= h[3]; } });
+    let on = true;
+    return {
+      show(v) {
+        if (v === on || !idx.length) return;
+        on = v;
+        idx.forEach((i, n) => {
+          const h = hub[kept[n * 3] >= 0 ? 0 : 1];
+          if (on) pos.setXYZ(i, kept[n * 3], kept[n * 3 + 1], kept[n * 3 + 2]);
+          else pos.setXYZ(i, h[0], h[1], h[2]);
+        });
+        pos.needsUpdate = true;
+      }
+    };
+  })();
 
   // ---------- pants: one skinned object, so knees bend without gaps ----------
   const srcPos = key => {
@@ -285,58 +228,44 @@ export function createProps(THREE, blanksy) {
     return pants;
   })()];
 
-  // ---------- sneakers ----------
-  const sneakers = [];
-  for (const side of ['left', 'right']) {
-    const lm = landmarks[side === 'left' ? 'bootL' : 'bootR'];
-    if (!lm) continue;
-    const c = new THREE.Vector3(lm.center[0], lm.center[2], -lm.center[1]);
-    const s = [lm.size[0], lm.size[2], lm.size[1]];       // w, h, d in frame axes
-    const g = new THREE.Group();
-    g.name = 'prop_sneaker_' + side;
-    const upper = new THREE.Mesh(new THREE.SphereGeometry(0.5, 34, 22), outfit);
-    upper.scale.set(s[0] * 1.03, s[1] * 1.0, s[2] * 1.01);
-    upper.position.copy(c).add(new THREE.Vector3(0, s[1] * 0.08, 0));
-    g.add(upper);
-    const sole = new THREE.Mesh(new THREE.SphereGeometry(0.5, 30, 16), trim);
-    sole.scale.set(s[0] * 1.04, s[1] * 0.42, s[2] * 0.99);
-    sole.position.copy(c).add(new THREE.Vector3(0, -s[1] * 0.30, 0));
-    g.add(sole);
-    for (const dir of [-1, 1]) {
-      const stripe = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), trim);
-      stripe.scale.set(0.02, s[1] * 0.13, s[2] * 0.34);
-      stripe.position.copy(c).add(new THREE.Vector3(dir * s[0] * 0.5, s[1] * 0.1, s[2] * 0.08));
-      g.add(stripe);
-    }
-    frame.add(g);
-    sneakers.push(attach(side + 'foot', g));
-  }
-
-  const SETS = {
-    hat: [hat],
-    shades: [shades],
-    tee: [tee, ...teeSleeves],
-    hoodie: [hoodie, ...hoodSleeves],
-    jeans,
-    sneakers
-  };
-  const state = { hat: false, shades: false, tee: false, hoodie: false, jeans: false, sneakers: false };
+  const SETS = { shades: [shades], jeans };
+  for (const id in wardrobe) SETS[id] = wardrobe[id].parts;
+  const state = {};
+  for (const id in SETS) state[id] = false;
 
   function set(id, on) {
     if (!(id in SETS)) return;
     state[id] = on;
-    if (on && id === 'tee') state.hoodie = false;      // one top at a time
-    if (on && id === 'hoodie') state.tee = false;
+    // one top at a time, one pair of shoes at a time
+    const slot = wardrobe[id]?.slot;
+    if (on && slot) for (const k in wardrobe) if (k !== id && wardrobe[k].slot === slot) state[k] = false;
     for (const k in SETS) SETS[k].forEach(o => { o.visible = state[k]; });
-  }
-  function setColors({ outfit: oc, denim: dc } = {}) {
-    if (oc) {
-      outfit.color.set(oc);
-      [hat, tee, hoodie, ...teeSleeves, ...hoodSleeves, ...sneakers].forEach(g =>
-        g.traverse(o => { if (o.isMesh && o.material !== trim && o.material !== denim && o.material !== lens) o.material.color.set(oc); }));
-    }
-    if (dc) denim.color.set(dc);
+    boots.show(!Object.keys(wardrobe).some(k => wardrobe[k].hidesBoots && state[k]));
   }
 
-  return { set, setColors, state, materials: { outfit, denim, lens } };
+  // Each garment's trims were cut as shades of its own cloth, so a chosen color is
+  // handed down the same way: the ribs, linings and stitching keep their relative
+  // depth instead of flattening into one flat block of color.
+  const _c = new THREE.Color();
+  function tint(slot, hex) {
+    _c.set(hex);
+    for (const id in wardrobe) {
+      if (wardrobe[id].slot !== slot) continue;
+      wardrobe[id].tint.forEach(([m, k]) => m.color.setRGB(_c.r * k, _c.g * k, _c.b * k));
+    }
+  }
+  function setColors({ outfit: oc, denim: dc, footwear: fc } = {}) {
+    if (oc) tint('top', oc);
+    if (dc) denim.color.set(dc);
+    if (fc) tint('feet', fc);
+  }
+
+  const KIT = [
+    ...garments.LIST.filter(g => g.slot === 'top').map(g => ({ id: g.id, label: g.label })),
+    { id: 'shades', label: 'SHADES' },
+    { id: 'jeans', label: 'JEANS' },
+    ...garments.LIST.filter(g => g.slot === 'feet').map(g => ({ id: g.id, label: g.label }))
+  ];
+
+  return { set, setColors, state, KIT, materials: { denim, lens } };
 }
