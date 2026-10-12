@@ -32,7 +32,6 @@
       <label for="nav-toggle" class="nav-toggle" aria-label="Toggle menu">☰ Menu</label>
 
       <nav class="site-nav" aria-label="Primary">
-        <a href="{{ '/blueprint' | relative_url }}"{% if cur == '/blueprint' %} class="active" aria-current="page"{% endif %}>Blueprint</a>
         <a href="{{ '/join' | relative_url }}"{% if cur == '/join' %} class="active" aria-current="page"{% endif %}>Newsletter</a>
         {% if site.data.fireside.active %}<a href="{{ '/fireside' | relative_url }}"{% if cur == '/fireside' %} class="active" aria-current="page"{% endif %}>Fireside</a>{% endif %}
       </nav>
@@ -46,8 +45,6 @@
 
     <footer class="site-footer">
       <span>Love, Ando: open-source life systems.</span>
-      <span class="site-footer-sep">·</span>
-      <a href="{{ '/blueprint' | relative_url }}">Blueprint</a>
       <span class="site-footer-sep">·</span>
       <a href="{{ '/join' | relative_url }}">Newsletter</a>
       <span class="site-footer-sep">·</span>

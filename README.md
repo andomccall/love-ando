@@ -3,8 +3,7 @@
   <h1 class="home-hero-title">Clarity in a noisy world.</h1>
   <p class="home-hero-line">Universal access changed the game: anyone can build anything now. So everyone races to answers, and the problem itself becomes an afterthought. Not here. I help leaders slow down to think first and ship second, then hand you the systems to do it yourself, free.</p>
   <div class="home-hero-actions">
-    <a class="home-hero-btn" href="/blueprint">Shred your idea &rarr;</a>
-    <a class="btn btn-ghost" href="#subscribe">Read the newsletter</a>
+    <a class="home-hero-btn" href="#subscribe">Read the newsletter &rarr;</a>
   </div>
 </section>
 
