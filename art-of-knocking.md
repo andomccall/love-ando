@@ -74,8 +74,6 @@ company" it sold before it shipped.
 
 - **Qual card + word-for-word pitch teardown** → gets its **own file** (a pitch
   breakdown is a different artifact than a brand story). Referenced from here.
-- **GCCO** (governance, cadence, compensation, objectives, key results) → lives in
-  [Statement](/statement) under executive management, **not** here.
 - Territory craft feeds Hexpin.
 
 ## See also

@@ -1,21 +1,15 @@
 ---
 layout: default
-title: Join the Newsletter
-description: Get Love, Ando in your inbox, open-source life systems, new drops, and the occasional field note.
+title: Follow Along
+description: Love, Ando lives on YouTube now. The builds, the systems, and what the work taught me.
 ---
 
-# Join the Newsletter
+# Follow Along
 
-> The art of asking better questions, delivered.
+The newsletter's parked. I'm putting the work on YouTube now: the builds, the
+systems, and the honest read on what the work actually taught me.
 
-Love, Ando is open-source and always free to read. The newsletter is how the new
-stuff finds you: fresh systems, updates to the ones already here, and the occasional
-field note from building a life with intention. No spam, no selling your address,
-unsubscribe in one click anytime.
-
-<div class="newsletter-embed">
-  {% include newsletter-form.html %}
-</div>
+[Watch on YouTube &rarr;](https://www.youtube.com/@Andomccall?sub_confirmation=1)
 
 Prefer to just watch the repo? Everything lands in the open first, [browse it on GitHub]({{ site.github.repository_url }}) or start at
 [/llms.txt](/llms.txt).
