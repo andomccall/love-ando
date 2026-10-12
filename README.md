@@ -10,11 +10,6 @@
 <p class="section-label">Proof, not prompts</p>
 
 <div class="system-cards">
-  <a class="system-card" href="/blueprint/mint.html">
-    <h3>Mint</h3>
-    <p>A lead marketplace and system of record for sales agencies. Live, moving real money. Walk the build, or take the blueprint and rebuild it yourself.</p>
-    <span class="card-go">See it &rarr;</span>
-  </a>
   <a class="system-card" href="https://7300.io" target="_blank" rel="noopener">
     <h3>7300</h3>
     <p>A 20-year daily-writing commitment to who you're becoming. The trunk the rest grows from.</p>
