@@ -80,8 +80,7 @@ Do not skip step 1. Start there now.
 
 ## Not sure this is the tier?
 
-Run the [Blueprint survey](/blueprint) again, or start one tier down with a
-[web app](/blueprint-webapp). Almost nobody regrets starting smaller.
+Start one tier down with a [web app](/blueprint-webapp). Almost nobody regrets starting smaller.
 
 ---
 
