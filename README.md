@@ -3,7 +3,7 @@
   <h1 class="home-hero-title">Clarity in a noisy world.</h1>
   <p class="home-hero-line">Universal access changed the game: anyone can build anything now. So everyone races to answers, and the problem itself becomes an afterthought. Not here. I help leaders slow down to think first and ship second, then hand you the systems to do it yourself, free.</p>
   <div class="home-hero-actions">
-    <a class="home-hero-btn" href="#subscribe">Read the newsletter &rarr;</a>
+    <a class="home-hero-btn" href="https://www.youtube.com/@Andomccall?sub_confirmation=1" target="_blank" rel="noopener">Watch on YouTube &rarr;</a>
   </div>
 </section>
 
@@ -22,13 +22,10 @@
   </a>
 </div>
 
-<section class="home-signup" id="subscribe">
+<section class="home-signup" id="watch">
   <h2>Think first. Ship second.</h2>
-  <p>One letter a week, Sunday morning. A field note, one system worth keeping, and the honest read on what the work actually taught me. No spam, unsubscribe anytime.</p>
-  <div class="newsletter-embed">
-    {% include newsletter-form.html %}
-  </div>
-  <p><a href="/join">See all the ways to follow &rarr;</a></p>
+  <p>I'm putting the work on YouTube now. The builds, the systems, and the honest read on what the work actually taught me.</p>
+  <p><a class="btn" href="https://www.youtube.com/@Andomccall?sub_confirmation=1" target="_blank" rel="noopener">Watch on YouTube &rarr;</a></p>
 </section>
 
 <div class="agents-note">

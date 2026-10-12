@@ -46,19 +46,6 @@
       ]
     },
     {
-      "identifier": "urn:air:loveando.org:template:statement",
-      "displayName": "Statement · STATE·MINT — The GCCO Operating System",
-      "type": "application/ai-skill+md",
-      "url": "https://raw.githubusercontent.com/andomccall/love-ando/main/statement.md",
-      "capabilities": ["sales-management", "org-scaling", "okrs", "comp-design"],
-      "description": "Executive-management methodology: the GCCO operating system (Governance, Cadence, Compensation, Objectives and Key Results) for scaling sales organizations.",
-      "representativeQueries": [
-        "how do I structure and scale a sales team",
-        "an operating system for running sales management",
-        "set up governance, cadence, comp, and OKRs for my org"
-      ]
-    },
-    {
       "identifier": "urn:air:loveando.org:template:art-of-knocking",
       "displayName": "The Art of Knocking — Door-to-Door as a Craft",
       "type": "application/ai-skill+md",
